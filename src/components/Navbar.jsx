@@ -80,10 +80,10 @@ export default function Navbar({ session }) {
             {/* Institution Logos on the far left */}
             <div className="flex items-center -space-x-3.5 shrink-0">
               <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-navy-900 bg-white shrink-0 shadow-md relative z-20">
-                <img src="/college_logo.png" alt="MTC Logo" className="w-full h-full object-cover" />
+                <img src={`${import.meta.env.BASE_URL}college_logo.png`} alt="MTC Logo" className="w-full h-full object-cover" />
               </div>
               <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-navy-900 bg-navy-950 shrink-0 shadow-md relative z-10">
-                <img src="/dbt_logo.jpg" alt="DBT Logo" className="w-full h-full object-cover" />
+                <img src={`${import.meta.env.BASE_URL}dbt_logo.jpg`} alt="DBT Logo" className="w-full h-full object-cover" />
               </div>
             </div>
 
