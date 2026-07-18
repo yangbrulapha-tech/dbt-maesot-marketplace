@@ -30,7 +30,7 @@ function Toast({ toasts, removeToast }) {
 
 function SkeletonCard() {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden animate-pulse">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden animate-pulse">
       <div className="aspect-[4/3] bg-slate-200" />
       <div className="p-4 space-y-3">
         <div className="h-4 bg-slate-200 rounded w-3/4" />
@@ -420,11 +420,11 @@ export default function ProductList({ session }) {
       </div>
 
       {/* Search & Filter */}
-      <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-200/80 mb-8 flex flex-col lg:flex-row gap-4 justify-between items-center">
+      <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700/80 mb-8 flex flex-col lg:flex-row gap-4 justify-between items-center">
         <div className="relative w-full lg:w-96">
           <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400"><Search className="h-5 w-5" /></span>
           <input type="text" placeholder="ค้นหาชื่อสินค้า..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-11 w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 sm:text-sm transition-all" />
+            className="pl-11 w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 sm:text-sm transition-all" />
         </div>
         <div className="flex items-center space-x-2 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0 scrollbar-none">
           <Filter className="h-4 w-4 text-slate-400 shrink-0 hidden sm:inline" />
@@ -445,10 +445,10 @@ export default function ProductList({ session }) {
           {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="bg-white rounded-3xl border border-slate-200/80 shadow-sm text-center py-20 px-4 max-w-xl mx-auto animate-scale-up">
+        <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-sm text-center py-20 px-4 max-w-xl mx-auto animate-scale-up">
           <Tag className="mx-auto h-16 w-16 text-primary-300 mb-4" />
           <h3 className="text-xl font-black text-navy-950">ไม่มีสินค้าในขณะนี้</h3>
-          <p className="text-slate-500 text-sm mt-2">คุณต้องการเป็นผู้ลงประกาศขายสินค้าชิ้นแรกไหม?</p>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-2">คุณต้องการเป็นผู้ลงประกาศขายสินค้าชิ้นแรกไหม?</p>
           {session && (
             <button onClick={() => setIsProductModalOpen(true)}
               className="mt-6 inline-flex items-center space-x-2 bg-navy-900 hover:bg-navy-800 text-white font-bold px-6 py-3 rounded-xl shadow-md transition-all">
@@ -487,16 +487,16 @@ export default function ProductList({ session }) {
 
               <div className="p-4 flex-1 flex flex-col justify-between">
                 <div>
-                  <h3 className="font-bold text-slate-900 text-sm sm:text-base line-clamp-1 group-hover:text-primary-600 transition-colors">{product.title}</h3>
-                  <p className="text-slate-500 text-xs mt-1.5 line-clamp-2 min-h-[2rem] font-light">{product.description || 'ไม่มีรายละเอียดเพิ่มเติม'}</p>
-                  <span className="text-lg font-black text-navy-900 font-outfit mt-2 block">
+                  <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base line-clamp-1 group-hover:text-primary-600 transition-colors">{product.title}</h3>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs mt-1.5 line-clamp-2 min-h-[2rem] font-light">{product.description || 'ไม่มีรายละเอียดเพิ่มเติม'}</p>
+                  <span className="text-lg font-black text-navy-900 dark:text-white font-outfit mt-2 block">
                     ฿{Number(product.price).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                   </span>
                 </div>
 
                 <div className="mt-4 pt-3 border-t border-slate-100">
                   <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center space-x-1 text-slate-500">
+                    <div className="flex items-center space-x-1 text-slate-500 dark:text-slate-400">
                       <User className="h-3.5 w-3.5 shrink-0 text-slate-400" />
                       <span className="text-[10px] font-bold truncate max-w-[100px]">{product.seller?.full_name || product.seller_id}</span>
                     </div>
@@ -504,7 +504,7 @@ export default function ProductList({ session }) {
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <button onClick={() => openMessage(product)}
-                      className="flex items-center justify-center space-x-1 border border-slate-300 hover:border-navy-600 hover:text-navy-900 bg-white text-slate-700 font-bold py-2 rounded-lg text-[10px] sm:text-xs transition-all">
+                      className="flex items-center justify-center space-x-1 border border-slate-300 hover:border-navy-600 hover:text-navy-900 dark:text-white bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold py-2 rounded-lg text-[10px] sm:text-xs transition-all">
                       <MessageSquare className="h-3.5 w-3.5" /><span>ส่งข้อความ</span>
                     </button>
                     <button onClick={() => openCheckout(product)}
@@ -521,32 +521,32 @@ export default function ProductList({ session }) {
     {/* MODAL: RIDER */}
     {isRiderModalOpen && (
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-        <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md overflow-hidden animate-scale-up">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-md overflow-hidden animate-scale-up">
           <div className="bg-gradient-to-r from-emerald-700 to-teal-600 text-white p-4 flex items-center justify-between">
             <div className="flex items-center space-x-2"><Truck className="h-5 w-5" /><h2 className="text-lg font-bold">สมัครเป็น Rider</h2></div>
             <button onClick={() => setIsRiderModalOpen(false)}><X className="h-5 w-5 text-emerald-100" /></button>
           </div>
           <form onSubmit={handleApplyRider} className="p-6 space-y-4">
-            <p className="text-xs text-slate-500 bg-slate-50 p-3 rounded-lg border border-slate-200">
-              รหัสนักศึกษา: <span className="font-bold text-navy-900">{userProfile?.student_id}</span> จะถูกบันทึกเป็น Rider อัตโนมัติ
+            <p className="text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700">
+              รหัสนักศึกษา: <span className="font-bold text-navy-900 dark:text-white">{userProfile?.student_id}</span> จะถูกบันทึกเป็น Rider อัตโนมัติ
             </p>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">ประเภทพาหนะ</label>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">ประเภทพาหนะ</label>
               <select value={riderForm.vehicle_type} onChange={(e) => setRiderForm({ ...riderForm, vehicle_type: e.target.value })}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
                 <option value="walking">เดินเท้า</option>
                 <option value="bicycle">จักรยาน</option>
                 <option value="motorcycle">รถมอเตอร์ไซค์</option>
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">ป้ายทะเบียน (ถ้ามี)</label>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">ป้ายทะเบียน (ถ้ามี)</label>
               <input type="text" value={riderForm.license_plate} onChange={(e) => setRiderForm({ ...riderForm, license_plate: e.target.value })}
                 placeholder="เช่น กข 1234 ตาก"
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
             </div>
             <div className="pt-2 flex justify-end space-x-3">
-              <button type="button" onClick={() => setIsRiderModalOpen(false)} className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 text-sm font-semibold hover:bg-slate-50">ยกเลิก</button>
+              <button type="button" onClick={() => setIsRiderModalOpen(false)} className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:bg-slate-900/50">ยกเลิก</button>
               <button type="submit" disabled={formLoading}
                 className="flex items-center space-x-1.5 px-5 py-2 bg-emerald-600 text-white rounded-lg text-sm font-bold hover:bg-emerald-500 disabled:opacity-50">
                 {formLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <span>ส่งใบสมัคร</span>}
@@ -560,26 +560,26 @@ export default function ProductList({ session }) {
     {/* MODAL: CHECKOUT */}
     {isCheckoutModalOpen && checkoutProduct && (
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-        <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md overflow-hidden animate-scale-up">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-md overflow-hidden animate-scale-up">
           <div className="bg-navy-900 text-white p-4 flex items-center justify-between">
             <div className="flex items-center space-x-2"><ShoppingCart className="h-5 w-5 text-primary-400" /><h2 className="text-lg font-bold">ยืนยันสั่งซื้อ</h2></div>
             <button onClick={() => setIsCheckoutModalOpen(false)}><X className="h-5 w-5 text-slate-400" /></button>
           </div>
           <form onSubmit={handleConfirmOrder} className="p-6 space-y-4">
-            <div className="flex space-x-3.5 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <div className="flex space-x-3.5 bg-slate-50 dark:bg-slate-900/50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
               <div className="h-16 w-16 bg-slate-200 rounded-lg overflow-hidden shrink-0">
                 <img src={checkoutProduct.image_url} alt={checkoutProduct.title} className="w-full h-full object-cover" />
               </div>
               <div>
-                <h4 className="font-bold text-sm text-slate-900">{checkoutProduct.title}</h4>
-                <p className="text-xs text-slate-500 mt-0.5">ผู้ขาย: {checkoutProduct.seller?.full_name || checkoutProduct.seller_id}</p>
-                <p className="text-sm font-black text-navy-900 mt-1">฿{Number(checkoutProduct.price).toLocaleString()}</p>
+                <h4 className="font-bold text-sm text-slate-900 dark:text-white">{checkoutProduct.title}</h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">ผู้ขาย: {checkoutProduct.seller?.full_name || checkoutProduct.seller_id}</p>
+                <p className="text-sm font-black text-navy-900 dark:text-white mt-1">฿{Number(checkoutProduct.price).toLocaleString()}</p>
               </div>
             </div>
 
             {/* ตัวเลือกรูปแบบการจัดส่ง (Radio Cards) */}
             <div className="space-y-2.5">
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">
+              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 รูปแบบการรับสินค้า <span className="text-red-500">*</span>
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -589,17 +589,17 @@ export default function ProductList({ session }) {
                   className={`p-3.5 rounded-xl border-2 cursor-pointer transition-all flex flex-col justify-between ${
                     !requestRider
                       ? 'border-navy-900 bg-navy-50/20 shadow-sm'
-                      : 'border-slate-200 hover:border-slate-300 bg-white'
+                      : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 bg-white dark:bg-slate-800'
                   }`}
                 >
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="font-extrabold text-xs text-navy-900">📦 นัดพบเจอเอง</span>
+                      <span className="font-extrabold text-xs text-navy-900 dark:text-white">📦 นัดพบเจอเอง</span>
                       <div className={`h-4 w-4 rounded-full border flex items-center justify-center ${!requestRider ? 'border-navy-900 bg-navy-900 text-white' : 'border-slate-300'}`}>
-                        {!requestRider && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
+                        {!requestRider && <div className="h-1.5 w-1.5 rounded-full bg-white dark:bg-slate-800" />}
                       </div>
                     </div>
-                    <p className="text-[10px] text-slate-500 leading-normal">
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-normal">
                       นัดหมายสถานที่และรับสินค้า/ชำระเงินกับผู้ขายโดยตรง
                     </p>
                   </div>
@@ -611,17 +611,17 @@ export default function ProductList({ session }) {
                   className={`p-3.5 rounded-xl border-2 cursor-pointer transition-all flex flex-col justify-between ${
                     requestRider
                       ? 'border-emerald-600 bg-emerald-50/20 shadow-sm'
-                      : 'border-slate-200 hover:border-slate-300 bg-white'
+                      : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 bg-white dark:bg-slate-800'
                   }`}
                 >
                   <div>
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-extrabold text-xs text-emerald-800">🛵 ใช้บริการ Rider</span>
                       <div className={`h-4 w-4 rounded-full border flex items-center justify-center ${requestRider ? 'border-emerald-600 bg-emerald-600 text-white' : 'border-slate-300'}`}>
-                        {requestRider && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
+                        {requestRider && <div className="h-1.5 w-1.5 rounded-full bg-white dark:bg-slate-800" />}
                       </div>
                     </div>
-                    <p className="text-[10px] text-slate-500 leading-normal">
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-normal">
                       ส่งออเดอร์ให้กลุ่ม Rider รับงานนำส่งสินค้าภายในสถาบัน
                     </p>
                   </div>
@@ -631,7 +631,7 @@ export default function ProductList({ session }) {
 
             {/* ช่องระบุสถานที่จัดส่ง/นัดรับ */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">
+              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 ระบุสถานที่จัดส่ง / นัดรับของ <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -645,7 +645,7 @@ export default function ProductList({ session }) {
 
             {/* ข้อความแจ้งเตือนด้านล่างตามตัวเลือก */}
             {!requestRider ? (
-              <p className="text-[11px] text-slate-500 bg-amber-50 p-3 rounded-lg border border-amber-200 leading-relaxed">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 bg-amber-50 p-3 rounded-lg border border-amber-200 leading-relaxed">
                 📍 **แนะนำ:** หลังกดสั่งซื้อเรียบร้อย กรุณาใช้ระบบกล่องข้อความทักไปคุยกับผู้ขายเพื่อนัดรับสินค้า
               </p>
             ) : (
@@ -656,7 +656,7 @@ export default function ProductList({ session }) {
 
 
             <div className="pt-2 flex justify-end space-x-3">
-              <button type="button" onClick={() => setIsCheckoutModalOpen(false)} className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 text-sm font-semibold hover:bg-slate-50">ยกเลิก</button>
+              <button type="button" onClick={() => setIsCheckoutModalOpen(false)} className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:bg-slate-900/50">ยกเลิก</button>
               <button type="submit" disabled={orderLoading}
                 className="flex items-center space-x-1.5 px-6 py-2 bg-primary-600 text-white rounded-lg text-sm font-bold hover:bg-primary-500 disabled:opacity-50">
                 {orderLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <span>ยืนยันสั่งซื้อ</span>}
@@ -670,19 +670,19 @@ export default function ProductList({ session }) {
     {/* MODAL: MESSAGE */}
     {isMessageModalOpen && messageProduct && (
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-        <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-scale-up">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-lg overflow-hidden animate-scale-up">
           <div className="bg-navy-900 text-white p-4 flex items-center justify-between">
             <div className="flex items-center space-x-2"><MessageSquare className="h-5 w-5 text-primary-400" /><h2 className="text-lg font-bold">ส่งข้อความหาผู้ขาย</h2></div>
             <button onClick={() => setIsMessageModalOpen(false)}><X className="h-5 w-5 text-slate-400" /></button>
           </div>
           <form onSubmit={handleSendMessage} className="p-6 space-y-4">
-            <div className="text-xs text-slate-500 bg-slate-50 p-3 rounded-lg border">
-              ส่งถึง: <span className="font-bold text-navy-900">{messageProduct.seller?.full_name || messageProduct.seller_id}</span> สำหรับสินค้า "<span className="font-bold">{messageProduct.title}</span>"
+            <div className="text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border">
+              ส่งถึง: <span className="font-bold text-navy-900 dark:text-white">{messageProduct.seller?.full_name || messageProduct.seller_id}</span> สำหรับสินค้า "<span className="font-bold">{messageProduct.title}</span>"
             </div>
             <textarea rows="4" required value={messageText} onChange={(e) => setMessageText(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
             <div className="pt-2 flex justify-end space-x-3">
-              <button type="button" onClick={() => setIsMessageModalOpen(false)} className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 text-sm font-semibold hover:bg-slate-50">ยกเลิก</button>
+              <button type="button" onClick={() => setIsMessageModalOpen(false)} className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:bg-slate-900/50">ยกเลิก</button>
               <button type="submit" disabled={msgLoading}
                 className="flex items-center space-x-1.5 px-5 py-2 bg-navy-900 text-white rounded-lg text-sm font-bold hover:bg-navy-800 disabled:opacity-50">
                 {msgLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Send className="h-4 w-4 text-primary-300" /><span>ส่งข้อความ</span></>}
@@ -696,23 +696,23 @@ export default function ProductList({ session }) {
     {/* MODAL: ADD PRODUCT */}
     {isProductModalOpen && (
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-        <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-scale-up max-h-[90vh] overflow-y-auto">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-lg overflow-hidden animate-scale-up max-h-[90vh] overflow-y-auto">
           <div className="bg-navy-900 text-white p-4 flex items-center justify-between sticky top-0 z-10">
             <h2 className="text-lg font-bold">ลงประกาศขายสินค้า</h2>
             <button onClick={() => { setIsProductModalOpen(false); setImagePreview(null); setProductFile(null) }}><X className="h-5 w-5 text-slate-400" /></button>
           </div>
           <form onSubmit={handleCreateProduct} className="p-6 space-y-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">ชื่อสินค้า (title)</label>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">ชื่อสินค้า (title)</label>
               <input type="text" required value={newProduct.title} onChange={(e) => setNewProduct({ ...newProduct, title: e.target.value })}
                 placeholder="เช่น หนังสือเรียนเขียนแบบ, เมาส์ไร้สาย"
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">หมวดหมู่</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">หมวดหมู่</label>
                 <select value={newProduct.category} onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white">
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-slate-800">
                   <option value="school_supplies">อุปกรณ์การเรียน</option>
                   <option value="electronics">อุปกรณ์อิเล็กทรอนิกส์</option>
                   <option value="books">หนังสือเรียน</option>
@@ -721,40 +721,40 @@ export default function ProductList({ session }) {
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">ราคา (บาท)</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">ราคา (บาท)</label>
                 <input type="number" step="0.01" min="0" required value={newProduct.price} onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
                   placeholder="250"
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">จำนวนสต็อก (ชิ้น)</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">จำนวนสต็อก (ชิ้น)</label>
                 <input type="number" min="1" step="1" required value={newProduct.stock} onChange={(e) => setNewProduct({ ...newProduct, stock: parseInt(e.target.value, 10) })}
                   placeholder="1"
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">รายละเอียด</label>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">รายละเอียด</label>
               <textarea rows="3" value={newProduct.description} onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
                 placeholder="สภาพสินค้า ตำหนิ สถานที่นัดรับ..."
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">รูปภาพสินค้า <span className="text-red-500">*</span></label>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">รูปภาพสินค้า <span className="text-red-500">*</span></label>
               <label htmlFor="img-upload"
-                className={`flex flex-col items-center justify-center w-full h-36 border-2 border-dashed rounded-xl cursor-pointer transition-all ${imagePreview ? 'border-primary-400 bg-primary-50' : 'border-slate-300 bg-slate-50 hover:border-primary-400'}`}>
+                className={`flex flex-col items-center justify-center w-full h-36 border-2 border-dashed rounded-xl cursor-pointer transition-all ${imagePreview ? 'border-primary-400 bg-primary-50' : 'border-slate-300 bg-slate-50 dark:bg-slate-900/50 hover:border-primary-400'}`}>
                 {imagePreview ? (
                   <img src={imagePreview} alt="preview" className="w-full h-full object-contain rounded-xl p-1" />
                 ) : (
-                  <><ImageIcon className="h-10 w-10 text-slate-300 mb-2" /><span className="text-xs font-bold text-slate-500">คลิกเพื่อเลือกรูป</span><span className="text-[10px] text-slate-400">JPG, PNG, WebP (สูงสุด 5MB)</span></>
+                  <><ImageIcon className="h-10 w-10 text-slate-300 mb-2" /><span className="text-xs font-bold text-slate-500 dark:text-slate-400">คลิกเพื่อเลือกรูป</span><span className="text-[10px] text-slate-400">JPG, PNG, WebP (สูงสุด 5MB)</span></>
                 )}
                 <input id="img-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
               </label>
             </div>
             <div className="pt-2 flex justify-end space-x-3">
               <button type="button" onClick={() => { setIsProductModalOpen(false); setImagePreview(null); setProductFile(null) }}
-                className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 text-sm font-semibold hover:bg-slate-50">ยกเลิก</button>
+                className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:bg-slate-900/50">ยกเลิก</button>
               <button type="submit" disabled={formLoading}
                 className="flex items-center space-x-1.5 px-5 py-2 bg-navy-900 text-white rounded-lg text-sm font-bold hover:bg-navy-800 disabled:opacity-50">
                 {formLoading ? <><Loader2 className="h-4 w-4 animate-spin" /><span>กำลังอัปโหลด...</span></> : <><Upload className="h-4 w-4 text-primary-400" /><span>ลงประกาศขาย</span></>}
@@ -768,23 +768,23 @@ export default function ProductList({ session }) {
     {/* MODAL: EDIT PRODUCT */}
     {isEditModalOpen && productToEdit && (
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-        <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-scale-up max-h-[90vh] overflow-y-auto">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-lg overflow-hidden animate-scale-up max-h-[90vh] overflow-y-auto">
           <div className="bg-navy-900 text-white p-4 flex items-center justify-between sticky top-0 z-10">
             <h2 className="text-lg font-bold">แก้ไขรายละเอียดสินค้า</h2>
             <button onClick={() => { setIsEditModalOpen(false); setEditImagePreview(null); setEditFile(null) }}><X className="h-5 w-5 text-slate-400" /></button>
           </div>
           <form onSubmit={handleUpdateProduct} className="p-6 space-y-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">ชื่อสินค้า (title)</label>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">ชื่อสินค้า (title)</label>
               <input type="text" required value={editForm.title} onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
                 placeholder="เช่น หนังสือเรียนเขียนแบบ, เมาส์ไร้สาย"
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">หมวดหมู่</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">หมวดหมู่</label>
                 <select value={editForm.category} onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white">
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-slate-800">
                   <option value="school_supplies">อุปกรณ์การเรียน</option>
                   <option value="electronics">อุปกรณ์อิเล็กทรอนิกส์</option>
                   <option value="books">หนังสือเรียน</option>
@@ -793,33 +793,33 @@ export default function ProductList({ session }) {
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">ราคา (บาท)</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">ราคา (บาท)</label>
                 <input type="number" step="0.01" min="0" required value={editForm.price} onChange={(e) => setEditForm({ ...editForm, price: e.target.value })}
                   placeholder="250"
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">จำนวนสต็อก (ชิ้น)</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">จำนวนสต็อก (ชิ้น)</label>
                 <input type="number" min="0" step="1" required value={editForm.stock} onChange={(e) => setEditForm({ ...editForm, stock: parseInt(e.target.value, 10) })}
                   placeholder="1"
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">รายละเอียด</label>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">รายละเอียด</label>
               <textarea rows="3" value={editForm.description} onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
                 placeholder="สภาพสินค้า ตำหนิ สถานที่นัดรับ..."
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">รูปภาพสินค้า (ปล่อยว่างไว้หากต้องการใช้รูปเดิม)</label>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">รูปภาพสินค้า (ปล่อยว่างไว้หากต้องการใช้รูปเดิม)</label>
               <label htmlFor="edit-img-upload"
-                className={`flex flex-col items-center justify-center w-full h-36 border-2 border-dashed rounded-xl cursor-pointer transition-all ${editImagePreview ? 'border-primary-400 bg-primary-50' : 'border-slate-300 bg-slate-50 hover:border-primary-400'}`}>
+                className={`flex flex-col items-center justify-center w-full h-36 border-2 border-dashed rounded-xl cursor-pointer transition-all ${editImagePreview ? 'border-primary-400 bg-primary-50' : 'border-slate-300 bg-slate-50 dark:bg-slate-900/50 hover:border-primary-400'}`}>
                 {editImagePreview ? (
                   <img src={editImagePreview} alt="preview" className="w-full h-full object-contain rounded-xl p-1" />
                 ) : (
-                  <><ImageIcon className="h-10 w-10 text-slate-300 mb-2" /><span className="text-xs font-bold text-slate-500">คลิกเพื่อเปลี่ยนรูป</span><span className="text-[10px] text-slate-400">JPG, PNG, WebP (สูงสุด 5MB)</span></>
+                  <><ImageIcon className="h-10 w-10 text-slate-300 mb-2" /><span className="text-xs font-bold text-slate-500 dark:text-slate-400">คลิกเพื่อเปลี่ยนรูป</span><span className="text-[10px] text-slate-400">JPG, PNG, WebP (สูงสุด 5MB)</span></>
                 )}
                 <input id="edit-img-upload" type="file" accept="image/*" className="hidden" onChange={(e) => {
                   const file = e.target.files[0]
@@ -832,7 +832,7 @@ export default function ProductList({ session }) {
             </div>
             <div className="pt-2 flex justify-end space-x-3">
               <button type="button" onClick={() => { setIsEditModalOpen(false); setEditImagePreview(null); setEditFile(null) }}
-                className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 text-sm font-semibold hover:bg-slate-50">ยกเลิก</button>
+                className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:bg-slate-900/50">ยกเลิก</button>
               <button type="submit" disabled={formLoading}
                 className="flex items-center space-x-1.5 px-5 py-2 bg-navy-900 text-white rounded-lg text-sm font-bold hover:bg-navy-800 disabled:opacity-50">
                 {formLoading ? <><Loader2 className="h-4 w-4 animate-spin" /><span>กำลังอัปโหลด...</span></> : <><Save className="h-4 w-4 text-primary-400" /><span>บันทึกการแก้ไข</span></>}
@@ -846,7 +846,7 @@ export default function ProductList({ session }) {
     {/* MODAL: DELETE CONFIRMATION */}
     {isDeleteModalOpen && productToDelete && (
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-        <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md overflow-hidden animate-scale-up">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-md overflow-hidden animate-scale-up">
           <div className="bg-red-700 text-white p-4 flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Trash2 className="h-5 w-5" />
@@ -864,13 +864,13 @@ export default function ProductList({ session }) {
             </div>
 
             {/* Product Preview */}
-            <div className="flex space-x-3.5 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <div className="flex space-x-3.5 bg-slate-50 dark:bg-slate-900/50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
               <div className="h-16 w-16 bg-slate-200 rounded-lg overflow-hidden shrink-0">
                 <img src={productToDelete.image_url} alt={productToDelete.title} className="w-full h-full object-cover" />
               </div>
               <div className="overflow-hidden">
-                <h4 className="font-bold text-sm text-slate-900 truncate">{productToDelete.title}</h4>
-                <p className="text-xs text-slate-500 mt-0.5 truncate">หมวดหมู่: {getCatLabel(productToDelete.category)}</p>
+                <h4 className="font-bold text-sm text-slate-900 dark:text-white truncate">{productToDelete.title}</h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">หมวดหมู่: {getCatLabel(productToDelete.category)}</p>
                 <p className="text-sm font-black text-red-700 mt-1">฿{Number(productToDelete.price).toLocaleString()}</p>
               </div>
             </div>
@@ -879,7 +879,7 @@ export default function ProductList({ session }) {
               <button 
                 type="button" 
                 onClick={() => { setIsDeleteModalOpen(false); setProductToDelete(null); }} 
-                className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 text-sm font-semibold hover:bg-slate-50 transition-colors"
+                className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:bg-slate-900/50 transition-colors"
               >
                 ยกเลิก
               </button>

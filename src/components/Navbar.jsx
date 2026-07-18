@@ -159,7 +159,7 @@ export default function Navbar({ session }) {
           <div className="flex items-center space-x-4 shrink-0">
             {/* Institution Logos on the far left */}
             <div className="flex items-center -space-x-3.5 shrink-0">
-              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-navy-900 dark:border-slate-950 bg-white shrink-0 shadow-md relative z-20">
+              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-navy-900 dark:border-slate-950 bg-white dark:bg-slate-800 shrink-0 shadow-md relative z-20">
                 <img src={`${import.meta.env.BASE_URL}college_logo.png`} alt="MTC Logo" className="w-full h-full object-cover" />
               </div>
               <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-navy-900 dark:border-slate-950 bg-navy-950 dark:bg-slate-900 shrink-0 shadow-md relative z-10">

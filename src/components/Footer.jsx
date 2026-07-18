@@ -71,7 +71,7 @@ export default function Footer() {
                 <span className="text-sky-400">MAE SOT</span>
               </span>
             </div>
-            <p className="text-xs leading-relaxed text-slate-500 max-w-sm">
+            <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400 max-w-sm">
               แพลตฟอร์มตลาดออนไลน์มือสองสำหรับนักเรียน นักศึกษา และบุคลากร วิทยาลัยเทคนิคแม่สอด เพื่ออำนวยความสะดวกในการซื้อขายแลกเปลี่ยนสินค้าภายในสถาบันอย่างปลอดภัย
             </p>
             <div className="text-[10px] text-slate-600 font-mono mt-4 pt-4 border-t border-navy-900/60">
@@ -113,7 +113,7 @@ export default function Footer() {
                         <h5 className="font-bold text-xs text-slate-200 group-hover:text-sky-400 transition-colors truncate">
                           {item.name}
                         </h5>
-                        <p className="text-[10px] text-slate-500 truncate mt-0.5">
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
                           {item.sub}
                         </p>
                       </div>
@@ -150,7 +150,7 @@ export default function Footer() {
                         <h5 className="font-bold text-xs text-slate-200 group-hover:text-pink-400 transition-colors truncate">
                           {item.name}
                         </h5>
-                        <p className="text-[10px] text-slate-500 truncate mt-0.5">
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
                           {item.sub}
                         </p>
                       </div>
@@ -166,7 +166,7 @@ export default function Footer() {
         {/* Footer Bottom Bar */}
         <div className="mt-12 pt-6 border-t border-navy-900 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-600 gap-4">
           <div className="flex items-center space-x-1.5">
-            <Shield className="h-3.5 w-3.5 text-slate-500" />
+            <Shield className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
             <span>ดูแลและสนับสนุนระบบโดย สาขาวิชาเทคโนโลยีธุรกิจดิจิทัล</span>
           </div>
           <div className="flex items-center space-x-1">

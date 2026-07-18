@@ -208,7 +208,7 @@ export default function Chat({ session }) {
           <div className={`w-full md:w-80 lg:w-96 border-r border-slate-200 dark:border-slate-800 flex flex-col ${selectedConv ? 'hidden md:flex' : 'flex'}`}>
             <div className="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
               <h2 className="text-sm font-extrabold text-navy-900 dark:text-white">การสนทนาทั้งหมด</h2>
-              <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{userProfile?.student_id} · {userProfile?.full_name}</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500 dark:text-slate-400 mt-0.5">{userProfile?.student_id} · {userProfile?.full_name}</p>
             </div>
             <div className="flex-1 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
               {conversations.length === 0 ? (
@@ -219,7 +219,7 @@ export default function Chat({ session }) {
                 </div>
               ) : conversations.map((conv) => (
                 <button key={conv.key} onClick={() => openConversation(conv)}
-                  className={`w-full text-left px-4 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors flex items-start space-x-3 ${selectedConv?.key === conv.key ? 'bg-primary-50 dark:bg-primary-900/20 border-l-2 border-primary-600' : ''}`}>
+                  className={`w-full text-left px-4 py-4 hover:bg-slate-50 dark:bg-slate-900/50 dark:hover:bg-slate-800/50 transition-colors flex items-start space-x-3 ${selectedConv?.key === conv.key ? 'bg-primary-50 dark:bg-primary-900/20 border-l-2 border-primary-600' : ''}`}>
                   <div className="h-10 w-10 bg-navy-900 dark:bg-slate-700 rounded-full flex items-center justify-center text-white font-bold shrink-0 text-sm">
                     {(conv.partnerName || 'U').charAt(0).toUpperCase()}
                   </div>
@@ -228,7 +228,7 @@ export default function Chat({ session }) {
                       <span className="text-sm font-bold text-navy-900 dark:text-white truncate">{conv.partnerName}</span>
                       {conv.unread > 0 && <span className="ml-1 px-1.5 py-0.5 bg-primary-600 text-white text-[9px] font-bold rounded-full shrink-0">{conv.unread}</span>}
                     </div>
-                    <p className="text-xs text-slate-500 truncate mt-0.5 font-mono">{conv.partnerId}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5 font-mono">{conv.partnerId}</p>
                     {conv.productId && <p className="text-[10px] text-primary-600 font-bold mt-0.5">📦 Product #{conv.productId}</p>}
                     <p className="text-[10px] text-slate-400 truncate mt-0.5">{conv.lastMsg}</p>
                   </div>
@@ -250,7 +250,7 @@ export default function Chat({ session }) {
                 {/* Chat Header */}
                 <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <button onClick={() => setSelectedConv(null)} className="md:hidden mr-1 text-slate-500 dark:text-slate-400 hover:text-navy-900 dark:hover:text-white">
+                    <button onClick={() => setSelectedConv(null)} className="md:hidden mr-1 text-slate-500 dark:text-slate-400 hover:text-navy-900 dark:text-white dark:hover:text-white">
                       <ArrowLeft className="h-5 w-5" />
                     </button>
                     <div className="h-9 w-9 bg-navy-900 dark:bg-slate-700 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0">
@@ -258,10 +258,10 @@ export default function Chat({ session }) {
                     </div>
                     <div>
                       <p className="text-sm font-bold text-navy-900 dark:text-white">{selectedConv.partnerName}</p>
-                      <p className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">{selectedConv.partnerId}</p>
+                      <p className="text-[10px] text-slate-400 dark:text-slate-500 dark:text-slate-400 font-mono">{selectedConv.partnerId}</p>
                     </div>
                   </div>
-                  <div className={`flex items-center space-x-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${isLive ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/50' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500'}`}>
+                  <div className={`flex items-center space-x-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${isLive ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/50' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 dark:text-slate-400'}`}>
                     {isLive ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3" />}
                     <span>{isLive ? 'Live' : 'Connecting...'}</span>
                   </div>

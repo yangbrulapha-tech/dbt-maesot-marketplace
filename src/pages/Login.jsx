@@ -117,17 +117,17 @@ export default function Login() {
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-slate-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-xl border border-slate-200">
+      <div className="max-w-md w-full space-y-8 bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700">
 
         {/* Header */}
         <div>
           <div className="mx-auto h-14 w-14 bg-navy-900 rounded-2xl flex items-center justify-center shadow-lg">
             <Store className="h-7 w-7 text-primary-400" />
           </div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-navy-900 font-outfit">
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-navy-900 dark:text-white font-outfit">
             {isSignUp ? 'สร้างบัญชีผู้ใช้งาน' : 'เข้าสู่ระบบ'}
           </h2>
-          <p className="mt-2 text-center text-sm text-slate-500">
+          <p className="mt-2 text-center text-sm text-slate-500 dark:text-slate-400">
             ระบบซื้อขายสินค้า Shop 2 MTC
           </p>
           <div className="mt-3 flex items-center justify-center space-x-1.5 text-xs text-amber-700 bg-amber-50 p-2.5 rounded-xl border border-amber-200">
@@ -154,7 +154,7 @@ export default function Login() {
           {/* ชื่อ-นามสกุล (เฉพาะสมัคร) */}
           {isSignUp && (
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-1.5">ชื่อ-นามสกุล</label>
+              <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">ชื่อ-นามสกุล</label>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
                   <User className="h-5 w-5" />
@@ -164,7 +164,7 @@ export default function Login() {
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="pl-11 w-full px-4 py-3 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm bg-slate-50 focus:bg-white transition-colors"
+                  className="pl-11 w-full px-4 py-3 border border-slate-300 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm bg-slate-50 focus:bg-white dark:bg-slate-800 transition-colors"
                   placeholder="เช่น วชิระ อิ่มเอิบ"
                 />
               </div>
@@ -173,7 +173,7 @@ export default function Login() {
 
           {/* รหัสนักศึกษา */}
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-1.5">
+            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">
               รหัสนักศึกษา
             </label>
             <div className="relative">
@@ -185,7 +185,7 @@ export default function Login() {
                 required
                 value={studentId}
                 onChange={(e) => setStudentId(e.target.value.replace(/\s/g, ''))}
-                className="pl-11 w-full px-4 py-3 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm bg-slate-50 focus:bg-white transition-colors font-outfit tracking-widest"
+                className="pl-11 w-full px-4 py-3 border border-slate-300 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm bg-slate-50 focus:bg-white dark:bg-slate-800 transition-colors font-outfit tracking-widest"
                 placeholder="เช่น 66302040001"
                 maxLength={20}
               />
@@ -195,7 +195,7 @@ export default function Login() {
           {/* แผนกวิชา (เฉพาะสมัคร) */}
           {isSignUp && (
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-1.5">แผนกวิชา</label>
+              <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">แผนกวิชา</label>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
                   <BookOpen className="h-5 w-5" />
@@ -203,7 +203,7 @@ export default function Login() {
                 <select
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
-                  className="pl-11 w-full px-4 py-3 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm bg-slate-50 focus:bg-white transition-colors"
+                  className="pl-11 w-full px-4 py-3 border border-slate-300 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm bg-slate-50 focus:bg-white dark:bg-slate-800 transition-colors"
                 >
                   <option value="เทคโนโลยีธุรกิจดิจิทัล">เทคโนโลยีธุรกิจดิจิทัล</option>
                   <option value="ช่างยนต์">ช่างยนต์</option>
@@ -220,7 +220,7 @@ export default function Login() {
 
           {/* รหัสผ่าน */}
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-1.5">รหัสผ่าน</label>
+            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">รหัสผ่าน</label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
                 <Lock className="h-5 w-5" />
@@ -230,7 +230,7 @@ export default function Login() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pl-11 pr-11 w-full px-4 py-3 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm bg-slate-50 focus:bg-white transition-colors"
+                className="pl-11 pr-11 w-full px-4 py-3 border border-slate-300 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm bg-slate-50 focus:bg-white dark:bg-slate-800 transition-colors"
                 placeholder="อย่างน้อย 6 ตัวอักษร"
                 minLength={6}
               />

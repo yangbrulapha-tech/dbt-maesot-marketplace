@@ -137,7 +137,7 @@ export default function Reports({ session }) {
         )
       case 'dismissed':
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200 dark:border-slate-700">
             ยกเลิก/ไม่พบปัญหา
           </span>
         )
@@ -161,17 +161,17 @@ export default function Reports({ session }) {
     return (
       <div className="flex flex-col justify-center items-center py-24 space-y-4">
         <Loader2 className="h-10 w-10 text-primary-600 animate-spin" />
-        <p className="text-slate-500 text-sm">กำลังโหลดประวัติการรายงานปัญหา...</p>
+        <p className="text-slate-500 dark:text-slate-400 text-sm">กำลังโหลดประวัติการรายงานปัญหา...</p>
       </div>
     )
   }
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 pb-4 border-b border-slate-200">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 pb-4 border-b border-slate-200 dark:border-slate-700">
         <div>
-          <h1 className="text-3xl font-extrabold text-navy-900 tracking-tight">รายงานปัญหาความปลอดภัย</h1>
-          <p className="mt-1 text-slate-500">แจ้งเรื่องร้องเรียน สินค้าไม่ตรงปก หรือพฤติกรรมที่ไม่น่าไว้วางใจเพื่อสังคมที่ปลอดภัย</p>
+          <h1 className="text-3xl font-extrabold text-navy-900 dark:text-white tracking-tight">รายงานปัญหาความปลอดภัย</h1>
+          <p className="mt-1 text-slate-500 dark:text-slate-400">แจ้งเรื่องร้องเรียน สินค้าไม่ตรงปก หรือพฤติกรรมที่ไม่น่าไว้วางใจเพื่อสังคมที่ปลอดภัย</p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
@@ -197,43 +197,43 @@ export default function Reports({ session }) {
       )}
 
       {/* Reports History */}
-      <h2 className="text-lg font-bold text-navy-900 mb-4 flex items-center space-x-2">
+      <h2 className="text-lg font-bold text-navy-900 dark:text-white mb-4 flex items-center space-x-2">
         <ClipboardList className="h-5 w-5 text-slate-400" />
         <span>ประวัติการรายงานปัญหาของคุณ</span>
       </h2>
 
       {reports.length === 0 ? (
-        <div className="bg-white rounded-xl border border-slate-200 text-center py-20 px-4">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-center py-20 px-4">
           <CheckCircle2 className="mx-auto h-12 w-12 text-emerald-400 mb-4" />
-          <h3 className="text-lg font-bold text-navy-900">ไม่มีรายงานปัญหาความประพฤติ</h3>
-          <p className="text-slate-500 text-sm mt-1">ยินดีด้วย! คุณไม่พบปัญหาการหลอกลวงหรือสินค้าผิดกฎระเบียบในการใช้งาน</p>
+          <h3 className="text-lg font-bold text-navy-900 dark:text-white">ไม่มีรายงานปัญหาความประพฤติ</h3>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">ยินดีด้วย! คุณไม่พบปัญหาการหลอกลวงหรือสินค้าผิดกฎระเบียบในการใช้งาน</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-slate-200 text-left">
-              <thead className="bg-slate-50">
+              <thead className="bg-slate-50 dark:bg-slate-900/50">
                 <tr>
-                  <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">หมายเลขรายงาน</th>
-                  <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">ชื่อสินค้าที่รายงาน</th>
-                  <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">หมวดหมู่ปัญหา</th>
-                  <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">วันที่ส่งรายงาน</th>
-                  <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">สถานะ</th>
+                  <th className="px-6 py-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">หมายเลขรายงาน</th>
+                  <th className="px-6 py-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">ชื่อสินค้าที่รายงาน</th>
+                  <th className="px-6 py-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">หมวดหมู่ปัญหา</th>
+                  <th className="px-6 py-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">วันที่ส่งรายงาน</th>
+                  <th className="px-6 py-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">สถานะ</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200 bg-white">
+              <tbody className="divide-y divide-slate-200 bg-white dark:bg-slate-800">
                 {reports.map((report) => (
-                  <tr key={report.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-navy-900 font-outfit">
+                  <tr key={report.id} className="hover:bg-slate-50 dark:bg-slate-900/50 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-navy-900 dark:text-white font-outfit">
                       #REP-{report.id}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 dark:text-white">
                       {report.product?.title || 'สินค้า (ถูกลบออกแล้ว)'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
                       {getIssueLabel(report.issue_type)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-xs text-slate-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">
                       {new Date(report.created_at).toLocaleDateString('th-TH', {
                         year: 'numeric',
                         month: 'short',
@@ -254,7 +254,7 @@ export default function Reports({ session }) {
       {/* Add Report Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-scale-up">
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-lg overflow-hidden animate-scale-up">
 
             <div className="bg-red-700 text-white p-4 flex items-center justify-between">
               <div className="flex items-center space-x-2">
@@ -276,12 +276,12 @@ export default function Reports({ session }) {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">เลือกสินค้าที่มีปัญหา</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">เลือกสินค้าที่มีปัญหา</label>
                 <select
                   required
                   value={productId}
                   onChange={(e) => setProductId(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                 >
                   <option value="">-- กรุณาเลือกรายการสินค้า --</option>
                   {products.map((p) => (
@@ -293,11 +293,11 @@ export default function Reports({ session }) {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">ประเภทของปัญหา</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">ประเภทของปัญหา</label>
                 <select
                   value={issueType}
                   onChange={(e) => setIssueType(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                 >
                   {issueCategories.map((cat) => (
                     <option key={cat.value} value={cat.value}>
@@ -308,14 +308,14 @@ export default function Reports({ session }) {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">รายละเอียดเพิ่มเติม</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">รายละเอียดเพิ่มเติม</label>
                 <textarea
                   rows="4"
                   required
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="กรุณาบรรยายข้อเท็จจริง เช่น สภาพของสินค้าไม่ตรงตามตกลงในจุดใดบ้าง หรือพฤติกรรมที่ไม่สุภาพ..."
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                 ></textarea>
               </div>
 
@@ -323,7 +323,7 @@ export default function Reports({ session }) {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 text-sm font-semibold hover:bg-slate-50 transition-colors"
+                  className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:bg-slate-900/50 transition-colors"
                 >
                   ยกเลิก
                 </button>

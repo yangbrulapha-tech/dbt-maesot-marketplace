@@ -106,15 +106,15 @@ export default function Profile({ session }) {
   if (loading) return (
     <div className="flex flex-col justify-center items-center py-24 space-y-4">
       <Loader2 className="h-10 w-10 text-primary-600 animate-spin" />
-      <p className="text-slate-500 text-sm">กำลังโหลดโปรไฟล์...</p>
+      <p className="text-slate-500 dark:text-slate-400 text-sm">กำลังโหลดโปรไฟล์...</p>
     </div>
   )
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
       <div className="mb-8">
-        <h1 className="text-3xl font-extrabold text-navy-900 tracking-tight">โปรไฟล์ของฉัน</h1>
-        <p className="mt-1 text-slate-500">จัดการข้อมูลส่วนตัวสำหรับการซื้อขายในระบบ</p>
+        <h1 className="text-3xl font-extrabold text-navy-900 dark:text-white tracking-tight">โปรไฟล์ของฉัน</h1>
+        <p className="mt-1 text-slate-500 dark:text-slate-400">จัดการข้อมูลส่วนตัวสำหรับการซื้อขายในระบบ</p>
       </div>
 
       {successMsg && (
@@ -131,7 +131,7 @@ export default function Profile({ session }) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Left: Avatar Card */}
         <div className="md:col-span-1">
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm text-center">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm text-center">
             
             {/* กล่องแสดงผลรูปโปรไฟล์พร้อมปุ่มอัปโหลดรูปภาพ */}
             <div className="relative w-24 h-24 mx-auto mb-4 group">
@@ -158,14 +158,14 @@ export default function Profile({ session }) {
               </label>
             </div>
 
-            <h2 className="text-lg font-bold text-navy-900">{fullName || 'ผู้ใช้งาน'}</h2>
+            <h2 className="text-lg font-bold text-navy-900 dark:text-white">{fullName || 'ผู้ใช้งาน'}</h2>
 
             <span className={`inline-block mt-1 px-3 py-1 rounded-full text-xs font-bold border ${getRoleBadge(profile?.role)}`}>
               {getRoleLabel(profile?.role)}
             </span>
 
             {profile?.student_id && (
-              <div className="mt-4 flex items-center justify-center space-x-1.5 text-xs text-slate-500">
+              <div className="mt-4 flex items-center justify-center space-x-1.5 text-xs text-slate-500 dark:text-slate-400">
                 <Hash className="h-3.5 w-3.5" />
                 <span className="font-mono font-bold">{profile.student_id}</span>
               </div>
@@ -173,7 +173,7 @@ export default function Profile({ session }) {
 
             <div className="mt-6 pt-6 border-t border-slate-100">
               <span className="text-xs text-slate-400 font-bold block mb-1">สมาชิกตั้งแต่</span>
-              <span className="text-sm font-bold text-navy-900">
+              <span className="text-sm font-bold text-navy-900 dark:text-white">
                 {profile?.created_at
                   ? new Date(profile.created_at).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })
                   : '-'}
@@ -184,8 +184,8 @@ export default function Profile({ session }) {
 
         {/* Right: Edit Form */}
         <div className="md:col-span-2">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
-            <h3 className="text-base font-bold text-navy-900 border-b border-slate-100 pb-3 mb-6">ข้อมูลบัญชีผู้ใช้งาน</h3>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6 sm:p-8">
+            <h3 className="text-base font-bold text-navy-900 dark:text-white border-b border-slate-100 pb-3 mb-6">ข้อมูลบัญชีผู้ใช้งาน</h3>
 
             <form onSubmit={handleUpdateProfile} className="space-y-5">
               {/* Email (Read-only) */}
@@ -193,7 +193,7 @@ export default function Profile({ session }) {
                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">อีเมลสถาบัน (ไม่สามารถเปลี่ยนได้)</label>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400"><Mail className="h-4 w-4" /></span>
-                  <input type="text" disabled value={session?.user?.email || ''} className="pl-9 w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-500 text-sm focus:outline-none" />
+                  <input type="text" disabled value={session?.user?.email || ''} className="pl-9 w-full px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-500 dark:text-slate-400 text-sm focus:outline-none" />
                 </div>
               </div>
 
@@ -202,18 +202,18 @@ export default function Profile({ session }) {
                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">บทบาท (ไม่สามารถเปลี่ยนได้)</label>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400"><Shield className="h-4 w-4" /></span>
-                  <input type="text" disabled value={getRoleLabel(profile?.role)} className="pl-9 w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-500 text-sm focus:outline-none" />
+                  <input type="text" disabled value={getRoleLabel(profile?.role)} className="pl-9 w-full px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-500 dark:text-slate-400 text-sm focus:outline-none" />
                 </div>
               </div>
 
               {/* Editable Full Name */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">ชื่อ-นามสกุลจริง</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">ชื่อ-นามสกุลจริง</label>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400"><User className="h-4 w-4" /></span>
                   <input
                     type="text" required value={fullName} onChange={(e) => setFullName(e.target.value)}
-                    className="pl-9 w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="pl-9 w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                     placeholder="ป้อนชื่อและนามสกุล"
                   />
                 </div>

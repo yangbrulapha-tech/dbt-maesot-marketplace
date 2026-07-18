@@ -239,14 +239,14 @@ export default function AdminDashboard({ session }) {
   if (authLoading) return (
     <div className="flex flex-col justify-center items-center py-24 space-y-4">
       <Loader2 className="h-10 w-10 text-primary-600 animate-spin" />
-      <p className="text-slate-500 text-sm">กำลังตรวจสอบสิทธิ์ Admin...</p>
+      <p className="text-slate-500 dark:text-slate-400 text-sm">กำลังตรวจสอบสิทธิ์ Admin...</p>
     </div>
   )
   if (!isAdmin) return (
     <div className="max-w-xl mx-auto px-4 py-24 text-center">
       <ShieldCheck className="mx-auto h-16 w-16 text-red-300 mb-4" />
-      <h1 className="text-2xl font-extrabold text-navy-900 mb-2">ไม่มีสิทธิ์เข้าถึง</h1>
-      <p className="text-slate-500">หน้านี้สำหรับ Admin เท่านั้น — บทบาทปัจจุบัน: <span className="font-bold">{getRoleLabel(userProfile?.role)}</span></p>
+      <h1 className="text-2xl font-extrabold text-navy-900 dark:text-white mb-2">ไม่มีสิทธิ์เข้าถึง</h1>
+      <p className="text-slate-500 dark:text-slate-400">หน้านี้สำหรับ Admin เท่านั้น — บทบาทปัจจุบัน: <span className="font-bold">{getRoleLabel(userProfile?.role)}</span></p>
     </div>
   )
 
@@ -259,11 +259,11 @@ export default function AdminDashboard({ session }) {
           <div className="flex items-center space-x-2 mb-1">
             <span className="px-3 py-1 bg-red-100 border border-red-200 rounded-full text-xs font-extrabold text-red-700 uppercase tracking-widest">Admin Panel</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-navy-900 tracking-tight">แดชบอร์ดผู้ดูแลระบบ</h1>
-          <p className="mt-1 text-slate-500">จัดการสินค้า ผู้ใช้งาน ไรเดอร์ และออเดอร์ทั้งหมด</p>
+          <h1 className="text-3xl font-extrabold text-navy-900 dark:text-white tracking-tight">แดชบอร์ดผู้ดูแลระบบ</h1>
+          <p className="mt-1 text-slate-500 dark:text-slate-400">จัดการสินค้า ผู้ใช้งาน ไรเดอร์ และออเดอร์ทั้งหมด</p>
         </div>
         <button onClick={loadAllData} disabled={dataLoading}
-          className="flex items-center space-x-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all disabled:opacity-50">
+          className="flex items-center space-x-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:bg-slate-900/50 shadow-sm transition-all disabled:opacity-50">
           <RefreshCw className={`h-4 w-4 ${dataLoading ? 'animate-spin' : ''}`} /><span>รีเฟรช</span>
         </button>
       </div>
@@ -278,7 +278,7 @@ export default function AdminDashboard({ session }) {
         ].map((s) => {
           const Icon = s.icon
           return (
-            <div key={s.label} className={`p-5 rounded-2xl border ${s.color} flex items-center space-x-3 shadow-sm bg-white`}>
+            <div key={s.label} className={`p-5 rounded-2xl border ${s.color} flex items-center space-x-3 shadow-sm bg-white dark:bg-slate-800`}>
               <div className={`h-11 w-11 rounded-xl flex items-center justify-center shadow-sm border ${s.color}`}>
                 <Icon className="h-5 w-5" />
               </div>
@@ -289,7 +289,7 @@ export default function AdminDashboard({ session }) {
       </div>
 
       {/* Tabs */}
-      <div className="flex flex-wrap gap-1 bg-white p-1 rounded-2xl border border-slate-200 mb-6 shadow-sm">
+      <div className="flex flex-wrap gap-1 bg-white dark:bg-slate-800 p-1 rounded-2xl border border-slate-200 dark:border-slate-700 mb-6 shadow-sm">
         {[
           { key: 'products', label: 'สินค้า', icon: Package },
           { key: 'users', label: 'ผู้ใช้งาน', icon: Users },
@@ -298,7 +298,7 @@ export default function AdminDashboard({ session }) {
           { key: 'refunds', label: 'คืนเงิน', icon: ShieldAlert }
         ].map(({ key, label, icon: Icon }) => (
           <button key={key} onClick={() => setActiveTab(key)}
-            className={`flex-1 flex items-center justify-center space-x-2 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${activeTab === key ? 'bg-navy-900 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50'}`}>
+            className={`flex-1 flex items-center justify-center space-x-2 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${activeTab === key ? 'bg-navy-900 text-white shadow-md' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-900/50'}`}>
             <Icon className="h-4 w-4" /><span>{label}</span>
           </button>
         ))}
@@ -308,32 +308,32 @@ export default function AdminDashboard({ session }) {
       <div className="relative mb-6">
         <Search className="absolute left-4 top-3 h-4 w-4 text-slate-400" />
         <input type="text" placeholder="ค้นหา..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-11 w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-sm" />
+          className="pl-11 w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-sm" />
       </div>
 
       {dataLoading ? (
         <div className="flex items-center justify-center py-16"><Loader2 className="h-8 w-8 text-primary-600 animate-spin" /></div>
       ) : (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             {activeTab === 'products' && (
               <table className="w-full text-sm">
-                <thead className="bg-slate-50 border-b border-slate-200">
+                <thead className="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
                   <tr>
                     {['สินค้า (title)', 'ผู้ขาย (student_id)', 'ราคา', 'หมวดหมู่', 'สถานะ', 'จัดการ'].map((h) => (
-                      <th key={h} className="text-left px-5 py-3.5 text-xs font-extrabold text-slate-500 uppercase tracking-wider">{h}</th>
+                      <th key={h} className="text-left px-5 py-3.5 text-xs font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{h}</th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {filteredProducts.length === 0 ? (
                     <tr><td colSpan={6} className="text-center py-12 text-slate-400">ไม่พบสินค้า</td></tr>
                   ) : filteredProducts.map((p) => (
-                    <tr key={p.product_id} className="hover:bg-slate-50 transition-colors">
-                      <td className="px-5 py-4"><span className="font-bold text-navy-900 line-clamp-1">{p.title}</span></td>
+                    <tr key={p.product_id} className="hover:bg-slate-50 dark:bg-slate-900/50 transition-colors">
+                      <td className="px-5 py-4"><span className="font-bold text-navy-900 dark:text-white line-clamp-1">{p.title}</span></td>
                       <td className="px-5 py-4"><span className="text-xs font-mono text-slate-600">{p.seller_id}</span></td>
-                      <td className="px-5 py-4"><span className="font-black text-navy-900 font-outfit">฿{Number(p.price).toLocaleString()}</span></td>
-                      <td className="px-5 py-4"><span className="px-2.5 py-0.5 bg-slate-100 text-slate-700 rounded-full text-xs font-bold">{p.category}</span></td>
+                      <td className="px-5 py-4"><span className="font-black text-navy-900 dark:text-white font-outfit">฿{Number(p.price).toLocaleString()}</span></td>
+                      <td className="px-5 py-4"><span className="px-2.5 py-0.5 bg-slate-100 text-slate-700 dark:text-slate-300 rounded-full text-xs font-bold">{p.category}</span></td>
                       <td className="px-5 py-4">
                         <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${p.status === 'available' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-100 text-slate-600'}`}>{p.status}</span>
                       </td>
@@ -352,24 +352,24 @@ export default function AdminDashboard({ session }) {
 
             {activeTab === 'users' && (
               <table className="w-full text-sm">
-                <thead className="bg-slate-50 border-b border-slate-200">
+                <thead className="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
                   <tr>
                     {['ชื่อ', 'รหัสนักศึกษา (PK)', 'อีเมล', 'บทบาท'].map((h) => (
-                      <th key={h} className="text-left px-5 py-3.5 text-xs font-extrabold text-slate-500 uppercase tracking-wider">{h}</th>
+                      <th key={h} className="text-left px-5 py-3.5 text-xs font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{h}</th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {filteredUsers.length === 0 ? (
                     <tr><td colSpan={4} className="text-center py-12 text-slate-400">ไม่พบผู้ใช้</td></tr>
                   ) : filteredUsers.map((u) => (
-                    <tr key={u.student_id} className="hover:bg-slate-50 transition-colors">
+                    <tr key={u.student_id} className="hover:bg-slate-50 dark:bg-slate-900/50 transition-colors">
                       <td className="px-5 py-4">
                         <div className="flex items-center space-x-3">
                           <div className="h-8 w-8 bg-navy-900 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0">
                             {(u.full_name || 'U').charAt(0).toUpperCase()}
                           </div>
-                          <span className="font-bold text-navy-900">{u.full_name || 'ไม่ระบุ'}</span>
+                          <span className="font-bold text-navy-900 dark:text-white">{u.full_name || 'ไม่ระบุ'}</span>
                         </div>
                       </td>
                       <td className="px-5 py-4"><span className="text-xs font-mono text-slate-600">{u.student_id}</span></td>
@@ -385,28 +385,28 @@ export default function AdminDashboard({ session }) {
 
             {activeTab === 'riders' && (
               <table className="w-full text-sm">
-                <thead className="bg-slate-50 border-b border-slate-200">
+                <thead className="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
                   <tr>
                     {['ชื่อผู้ให้บริการ', 'รหัสนักศึกษา', 'ประเภทรถ', 'ป้ายทะเบียน', 'สถานะ', 'จัดการ'].map((h) => (
-                      <th key={h} className="text-left px-5 py-3.5 text-xs font-extrabold text-slate-500 uppercase tracking-wider">{h}</th>
+                      <th key={h} className="text-left px-5 py-3.5 text-xs font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{h}</th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {filteredRiders.length === 0 ? (
                     <tr><td colSpan={6} className="text-center py-12 text-slate-400">ไม่พบข้อมูลผู้สมัคร Rider</td></tr>
                   ) : filteredRiders.map((r) => (
-                    <tr key={r.student_id} className="hover:bg-slate-50 transition-colors">
+                    <tr key={r.student_id} className="hover:bg-slate-50 dark:bg-slate-900/50 transition-colors">
                       <td className="px-5 py-4">
                         <div className="flex items-center space-x-3">
                           <div className="h-8 w-8 bg-emerald-700 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0">
                             {(r.full_name || 'R').charAt(0).toUpperCase()}
                           </div>
-                          <span className="font-bold text-navy-900">{r.full_name}</span>
+                          <span className="font-bold text-navy-900 dark:text-white">{r.full_name}</span>
                         </div>
                       </td>
                       <td className="px-5 py-4"><span className="text-xs font-mono text-slate-600">{r.student_id}</span></td>
-                      <td className="px-5 py-4"><span className="text-xs font-semibold text-slate-700">{getVehicleLabel(r.vehicle_type)}</span></td>
+                      <td className="px-5 py-4"><span className="text-xs font-semibold text-slate-700 dark:text-slate-300">{getVehicleLabel(r.vehicle_type)}</span></td>
                       <td className="px-5 py-4"><span className="text-xs font-mono font-bold text-slate-600">{r.license_plate || '-'}</span></td>
                       <td className="px-5 py-4">
                         {r.is_active ? (
@@ -442,20 +442,20 @@ export default function AdminDashboard({ session }) {
 
             {activeTab === 'orders' && (
               <table className="w-full text-sm">
-                <thead className="bg-slate-50 border-b border-slate-200">
+                <thead className="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
                   <tr>
                     {['ออเดอร์', 'สินค้า (title)', 'ผู้ซื้อ (student_id)', 'สถานะ'].map((h) => (
-                      <th key={h} className="text-left px-5 py-3.5 text-xs font-extrabold text-slate-500 uppercase tracking-wider">{h}</th>
+                      <th key={h} className="text-left px-5 py-3.5 text-xs font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{h}</th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {orders.length === 0 ? (
                     <tr><td colSpan={4} className="text-center py-12 text-slate-400">ไม่มีออเดอร์</td></tr>
                   ) : orders.map((o) => (
-                    <tr key={o.order_id} className="hover:bg-slate-50 transition-colors">
-                      <td className="px-5 py-4"><span className="font-mono font-bold text-navy-900 text-xs">#ORD-{o.order_id}</span></td>
-                      <td className="px-5 py-4"><span className="font-medium text-slate-700 line-clamp-1">{o.product?.title || '-'}</span></td>
+                    <tr key={o.order_id} className="hover:bg-slate-50 dark:bg-slate-900/50 transition-colors">
+                      <td className="px-5 py-4"><span className="font-mono font-bold text-navy-900 dark:text-white text-xs">#ORD-{o.order_id}</span></td>
+                      <td className="px-5 py-4"><span className="font-medium text-slate-700 dark:text-slate-300 line-clamp-1">{o.product?.title || '-'}</span></td>
                       <td className="px-5 py-4"><span className="text-xs font-mono text-slate-600">{o.buyer_id}</span></td>
                       <td className="px-5 py-4">
                         {o.status === 'completed' && <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold">สำเร็จ</span>}
@@ -474,24 +474,24 @@ export default function AdminDashboard({ session }) {
                 {refunds.length === 0 ? (
                   <div className="text-center py-12 text-slate-400">ไม่มีคำร้องขอคืนเงิน</div>
                 ) : refunds.map(r => (
-                  <div key={r.id} className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col md:flex-row gap-4 justify-between items-start">
+                  <div key={r.id} className="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl p-4 flex flex-col md:flex-row gap-4 justify-between items-start">
                     <div className="space-y-2 flex-1">
                       <div className="flex items-center space-x-2">
-                        <span className="font-mono font-bold text-navy-900 text-sm">#ORD-{r.order_id}</span>
+                        <span className="font-mono font-bold text-navy-900 dark:text-white text-sm">#ORD-{r.order_id}</span>
                         {r.status === 'pending' && <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded-full">รอดำเนินการ</span>}
                         {r.status === 'approved' && <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded-full">อนุมัติแล้ว</span>}
                         {r.status === 'rejected' && <span className="px-2 py-0.5 bg-red-100 text-red-800 text-[10px] font-bold rounded-full">ปฏิเสธ</span>}
                       </div>
-                      <p className="text-xs text-slate-500">ผู้ขอคืนเงิน: <span className="font-bold">{r.buyer_id}</span></p>
-                      <p className="text-sm text-slate-700 bg-white p-2 border border-slate-200 rounded-lg">เหตุผล: {r.reason}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">ผู้ขอคืนเงิน: <span className="font-bold">{r.buyer_id}</span></p>
+                      <p className="text-sm text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 p-2 border border-slate-200 dark:border-slate-700 rounded-lg">เหตุผล: {r.reason}</p>
                       {r.admin_reply && (
-                        <p className="text-sm text-slate-700 bg-indigo-50 border border-indigo-100 p-2 rounded-lg">แอดมินตอบกลับ: {r.admin_reply}</p>
+                        <p className="text-sm text-slate-700 dark:text-slate-300 bg-indigo-50 border border-indigo-100 p-2 rounded-lg">แอดมินตอบกลับ: {r.admin_reply}</p>
                       )}
                     </div>
                     {r.evidence_url && (
                       <div className="shrink-0">
                         <a href={r.evidence_url} target="_blank" rel="noreferrer">
-                          <img src={r.evidence_url} alt="หลักฐาน" className="w-24 h-24 object-cover rounded-lg border border-slate-200 shadow-sm hover:opacity-80" />
+                          <img src={r.evidence_url} alt="หลักฐาน" className="w-24 h-24 object-cover rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm hover:opacity-80" />
                         </a>
                       </div>
                     )}

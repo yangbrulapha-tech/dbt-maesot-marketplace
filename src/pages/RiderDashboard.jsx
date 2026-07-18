@@ -305,7 +305,7 @@ export default function RiderDashboard({ session }) {
   if (authLoading) return (
     <div className="flex flex-col justify-center items-center py-24 space-y-4">
       <Loader2 className="h-10 w-10 text-emerald-600 animate-spin" />
-      <p className="text-slate-500 text-sm">กำลังตรวจสอบข้อมูลสมาชิกไรเดอร์...</p>
+      <p className="text-slate-500 dark:text-slate-400 text-sm">กำลังตรวจสอบข้อมูลสมาชิกไรเดอร์...</p>
     </div>
   )
 
@@ -313,8 +313,8 @@ export default function RiderDashboard({ session }) {
   if (!isRider) return (
     <div className="max-w-xl mx-auto px-4 py-20 text-center animate-scale-up">
       <Truck className="mx-auto h-16 w-16 text-slate-300 mb-4" />
-      <h1 className="text-2xl font-extrabold text-navy-900 mb-2">ยังไม่ได้ลงทะเบียนเป็น Rider</h1>
-      <p className="text-slate-500 mb-6">ลงสมัครทำงานพิเศษรับส่งสินค้าภายในสถาบัน ปลอดภัย ได้รับรายได้</p>
+      <h1 className="text-2xl font-extrabold text-navy-900 dark:text-white mb-2">ยังไม่ได้ลงทะเบียนเป็น Rider</h1>
+      <p className="text-slate-500 dark:text-slate-400 mb-6">ลงสมัครทำงานพิเศษรับส่งสินค้าภายในสถาบัน ปลอดภัย ได้รับรายได้</p>
       <a href="/" className="inline-flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl shadow-md transition-all">
         <span>ไปสมัครที่หน้าหลัก</span>
       </a>
@@ -326,11 +326,11 @@ export default function RiderDashboard({ session }) {
       <div className="h-16 w-16 bg-amber-50 border border-amber-200 rounded-2xl flex items-center justify-center mx-auto mb-4 text-amber-500">
         <AlertTriangle className="h-8 w-8" />
       </div>
-      <h1 className="text-2xl font-extrabold text-navy-900 mb-2">รอผู้ดูแลอนุมัติใบสมัคร</h1>
-      <p className="text-slate-500 max-w-sm mx-auto mb-6">
+      <h1 className="text-2xl font-extrabold text-navy-900 dark:text-white mb-2">รอผู้ดูแลอนุมัติใบสมัคร</h1>
+      <p className="text-slate-500 dark:text-slate-400 max-w-sm mx-auto mb-6">
         ใบสมัครของคุณอยู่ในขั้นตอนการตรวจสอบโดยคณะอาจารย์หรือแอดมิน เพื่อความปลอดภัยของผู้ใช้งานภายในระบบ
       </p>
-      <div className="text-xs text-slate-400 bg-slate-50 p-4 rounded-xl border border-slate-100 font-mono">
+      <div className="text-xs text-slate-400 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-100 font-mono">
         <p>ชื่อ: {userProfile?.full_name}</p>
         <p>รหัส: {riderInfo.student_id}</p>
         <p>พาหนะ: {getVehicleLabel(riderInfo.vehicle_type)}</p>
@@ -341,15 +341,15 @@ export default function RiderDashboard({ session }) {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
       {/* Header */}
-      <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-5">
+      <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 dark:border-slate-700 pb-5">
         <div>
           <div className="flex items-center space-x-2 mb-1">
             <span className="px-3 py-1 bg-emerald-100 border border-emerald-200 rounded-full text-[10px] font-extrabold text-emerald-700 uppercase tracking-widest flex items-center gap-1">
               <Truck className="h-3 w-3" /> Rider Active
             </span>
           </div>
-          <h1 className="text-3xl font-extrabold text-navy-900 tracking-tight">ระบบบริการรับส่งสินค้า (Rider)</h1>
-          <p className="mt-1 text-slate-500">รับออเดอร์ จัดส่งของ และควบคุมการให้บริการภายในวิทยาลัย</p>
+          <h1 className="text-3xl font-extrabold text-navy-900 dark:text-white tracking-tight">ระบบบริการรับส่งสินค้า (Rider)</h1>
+          <p className="mt-1 text-slate-500 dark:text-slate-400">รับออเดอร์ จัดส่งของ และควบคุมการให้บริการภายในวิทยาลัย</p>
         </div>
         <div className="text-xs text-slate-400 bg-slate-100 px-4 py-2 rounded-xl text-right">
           <p>ผู้ให้บริการ: <span className="font-bold text-navy-950">{userProfile?.full_name}</span></p>
@@ -371,17 +371,17 @@ export default function RiderDashboard({ session }) {
       )}
 
       {/* Tabs */}
-      <div className="flex border border-slate-200 bg-white p-1 rounded-2xl mb-8 shadow-sm">
+      <div className="flex border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-1 rounded-2xl mb-8 shadow-sm">
         <button onClick={() => setActiveTab('available')}
-          className={`flex-1 py-3 text-sm font-extrabold rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 ${activeTab === 'available' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50'}`}>
+          className={`flex-1 py-3 text-sm font-extrabold rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 ${activeTab === 'available' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-900/50'}`}>
           <ClipboardList className="h-4 w-4" /><span>งานรับจัดส่งทั่วไป ({availableOrders.length})</span>
         </button>
         <button onClick={() => setActiveTab('my_jobs')}
-          className={`flex-1 py-3 text-sm font-extrabold rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 ${activeTab === 'my_jobs' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50'}`}>
+          className={`flex-1 py-3 text-sm font-extrabold rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 ${activeTab === 'my_jobs' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-900/50'}`}>
           <Navigation className="h-4 w-4" /><span>งานจัดส่งปัจจุบัน ({myJobs.length})</span>
         </button>
         <button onClick={() => setActiveTab('history')}
-          className={`flex-1 py-3 text-sm font-extrabold rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 ${activeTab === 'history' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50'}`}>
+          className={`flex-1 py-3 text-sm font-extrabold rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 ${activeTab === 'history' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-900/50'}`}>
           <CheckCircle2 className="h-4 w-4" /><span>ส่งของสำเร็จแล้ว ({historyJobs.length})</span>
         </button>
       </div>
@@ -393,15 +393,15 @@ export default function RiderDashboard({ session }) {
           {/* TAB 1: AVAILABLE JOBS */}
           {activeTab === 'available' && (
             availableOrders.length === 0 ? (
-              <div className="bg-white rounded-2xl border border-slate-200 text-center py-16 px-4">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-center py-16 px-4">
                 <ClipboardList className="mx-auto h-12 w-12 text-slate-300 mb-3" />
-                <h3 className="text-lg font-bold text-navy-900">ไม่มีงานจัดส่งในขณะนี้</h3>
-                <p className="text-slate-500 text-sm mt-1">ออเดอร์ใหม่จากผู้ใช้งานที่ต้องการไรเดอร์ส่งของจะแสดงขึ้นตรงนี้</p>
+                <h3 className="text-lg font-bold text-navy-900 dark:text-white">ไม่มีงานจัดส่งในขณะนี้</h3>
+                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">ออเดอร์ใหม่จากผู้ใช้งานที่ต้องการไรเดอร์ส่งของจะแสดงขึ้นตรงนี้</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {availableOrders.map((order) => (
-                  <div key={order.order_id} className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex flex-col justify-between hover:border-emerald-300 transition-colors">
+                  <div key={order.order_id} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm flex flex-col justify-between hover:border-emerald-300 transition-colors">
                     <div>
                       <div className="flex justify-between items-start mb-3 border-b border-slate-100 pb-3">
                         <div>
@@ -413,14 +413,14 @@ export default function RiderDashboard({ session }) {
                         </span>
                       </div>
 
-                      <div className="space-y-2 text-xs text-slate-600 mb-4 bg-slate-50 p-3 rounded-lg border border-slate-200/50">
+                      <div className="space-y-2 text-xs text-slate-600 mb-4 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700/50">
                         <div className="flex items-center space-x-2">
                           <User className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                          <span>ผู้รับเงิน/ผู้ขาย: <span className="font-bold text-slate-800">{order.seller?.full_name || order.product?.seller_id}</span></span>
+                          <span>ผู้รับเงิน/ผู้ขาย: <span className="font-bold text-slate-800 dark:text-slate-200">{order.seller?.full_name || order.product?.seller_id}</span></span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <User className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                          <span>ผู้จ่ายเงิน/ผู้ซื้อ: <span className="font-bold text-slate-800">{order.buyer?.full_name || order.buyer_id}</span></span>
+                          <span>ผู้จ่ายเงิน/ผู้ซื้อ: <span className="font-bold text-slate-800 dark:text-slate-200">{order.buyer?.full_name || order.buyer_id}</span></span>
                         </div>
                         <div className="flex items-start space-x-2 bg-emerald-100/50 p-2 rounded border border-emerald-200 mt-1">
                           <MapPin className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
@@ -442,19 +442,19 @@ export default function RiderDashboard({ session }) {
           {/* TAB 2: MY JOBS */}
           {activeTab === 'my_jobs' && (
             myJobs.length === 0 ? (
-              <div className="bg-white rounded-2xl border border-slate-200 text-center py-16 px-4">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-center py-16 px-4">
                 <Navigation className="mx-auto h-12 w-12 text-slate-300 mb-3" />
-                <h3 className="text-lg font-bold text-navy-900">ไม่มีงานกำลังจัดส่ง</h3>
-                <p className="text-slate-500 text-sm mt-1">คุณสามารถไปที่แท็บ "งานจัดส่งทั่วไป" เพื่อกดเลือกรับงานได้เลย</p>
+                <h3 className="text-lg font-bold text-navy-900 dark:text-white">ไม่มีงานกำลังจัดส่ง</h3>
+                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">คุณสามารถไปที่แท็บ "งานจัดส่งทั่วไป" เพื่อกดเลือกรับงานได้เลย</p>
               </div>
             ) : (
               <div className="space-y-6">
                 {myJobs.map((order) => (
-                  <div key={order.order_id} className="bg-white rounded-2xl border border-emerald-400/80 shadow-md overflow-hidden animate-scale-up">
+                  <div key={order.order_id} className="bg-white dark:bg-slate-800 rounded-2xl border border-emerald-400/80 shadow-md overflow-hidden animate-scale-up">
                     <div className="bg-emerald-50 px-6 py-4 border-b border-emerald-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                       <div>
                         <span className="text-[10px] text-emerald-800 font-extrabold uppercase font-mono bg-emerald-100 px-2 py-0.5 rounded-md">ออเดอร์ระหว่างจัดส่ง</span>
-                        <span className="text-xs font-bold text-slate-500 ml-2">#ORD-{order.order_id}</span>
+                        <span className="text-xs font-bold text-slate-500 dark:text-slate-400 ml-2">#ORD-{order.order_id}</span>
                       </div>
                       <span className="text-base font-black text-emerald-600 font-outfit">฿{Number(order.product?.price || 0).toLocaleString()}</span>
                     </div>
@@ -462,12 +462,12 @@ export default function RiderDashboard({ session }) {
                     <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
                       {/* Product Detail */}
                       <div className="flex items-start space-x-4">
-                        <div className="h-20 w-20 bg-slate-100 rounded-xl overflow-hidden shrink-0 border border-slate-200">
+                        <div className="h-20 w-20 bg-slate-100 rounded-xl overflow-hidden shrink-0 border border-slate-200 dark:border-slate-700">
                           <img src={order.product?.image_url} alt={order.product?.title} className="w-full h-full object-cover" />
                         </div>
                         <div>
-                          <h4 className="font-extrabold text-navy-900 text-sm sm:text-base">{order.product?.title || 'สินค้าทั่วไป'}</h4>
-                          <p className="text-xs text-slate-500 mt-1">
+                          <h4 className="font-extrabold text-navy-900 dark:text-white text-sm sm:text-base">{order.product?.title || 'สินค้าทั่วไป'}</h4>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                             รับของจากฝั่งผู้ขายแล้วนำไปเก็บเงิน+ส่งมอบให้ฝั่งผู้ซื้อ นัดหมายส่งของภายในวิทยาลัย
                           </p>
                         </div>
@@ -476,16 +476,16 @@ export default function RiderDashboard({ session }) {
                       {/* Contact Buyer/Seller */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {/* Seller Contact */}
-                        <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
                           <span className="text-[9px] font-extrabold text-amber-700 uppercase tracking-wider block mb-1">1. นัดรับสินค้าจาก (ผู้ขาย)</span>
-                          <p className="text-sm font-bold text-slate-800">{order.seller?.full_name || '-'}</p>
+                          <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{order.seller?.full_name || '-'}</p>
                           <p className="text-[10px] text-slate-400 font-mono mt-0.5">รหัส: {order.product?.seller_id}</p>
                         </div>
 
                         {/* Buyer Contact */}
-                        <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
                           <span className="text-[9px] font-extrabold text-primary-700 uppercase tracking-wider block mb-1">2. นัดส่งมอบและรับเงินจาก (ผู้ซื้อ)</span>
-                          <p className="text-sm font-bold text-slate-800">{order.buyer?.full_name || '-'}</p>
+                          <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{order.buyer?.full_name || '-'}</p>
                           <p className="text-[10px] text-slate-400 font-mono mt-0.5">รหัส: {order.buyer_id}</p>
                           
                           <div className="mt-2 bg-emerald-100/50 p-2 rounded border border-emerald-200 flex items-start space-x-1.5">
@@ -500,12 +500,12 @@ export default function RiderDashboard({ session }) {
 
                     {/* อัปโหลดหลักฐานส่งของ */}
                     <div className="px-6 pb-5 pt-1 border-t border-slate-100 bg-emerald-50/20">
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase tracking-wider">
                         📸 รูปภาพหลักฐานยืนยันการจัดส่ง <span className="text-red-500">*</span>
                       </label>
                       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                         <label htmlFor={`proof-upload-${order.order_id}`}
-                          className="px-4 py-2 border border-dashed border-emerald-400 bg-white hover:bg-emerald-50/50 rounded-xl text-xs font-bold text-emerald-800 cursor-pointer transition-colors shrink-0">
+                          className="px-4 py-2 border border-dashed border-emerald-400 bg-white dark:bg-slate-800 hover:bg-emerald-50/50 rounded-xl text-xs font-bold text-emerald-800 cursor-pointer transition-colors shrink-0">
                           {proofFiles[order.order_id] ? 'เปลี่ยนรูปภาพ' : 'เลือก/ถ่ายรูปหลักฐาน'}
                           <input
                             id={`proof-upload-${order.order_id}`}
@@ -516,7 +516,7 @@ export default function RiderDashboard({ session }) {
                           />
                         </label>
                         {proofPreviews[order.order_id] ? (
-                          <div className="h-16 w-24 rounded-lg overflow-hidden border border-slate-200 bg-white p-0.5 shrink-0">
+                          <div className="h-16 w-24 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-0.5 shrink-0">
                             <img src={proofPreviews[order.order_id]} alt="proof-preview" className="w-full h-full object-cover rounded-md" />
                           </div>
                         ) : (
@@ -526,9 +526,9 @@ export default function RiderDashboard({ session }) {
                     </div>
 
                     {/* Actions */}
-                    <div className="bg-slate-50 px-6 py-4 border-t border-slate-100 flex justify-end space-x-3">
+                    <div className="bg-slate-50 dark:bg-slate-900/50 px-6 py-4 border-t border-slate-100 flex justify-end space-x-3">
                       <button onClick={() => handleCancelJob(order.order_id)} disabled={actionLoadingId === order.order_id}
-                        className="px-4 py-2 border border-slate-300 rounded-lg text-xs font-semibold text-slate-600 bg-white hover:bg-slate-50 disabled:opacity-50">
+                        className="px-4 py-2 border border-slate-300 rounded-lg text-xs font-semibold text-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:bg-slate-900/50 disabled:opacity-50">
                         คืนงานจัดส่ง
                       </button>
                       <button onClick={() => handleCompleteJob(order.order_id)} disabled={actionLoadingId === order.order_id}
@@ -545,31 +545,31 @@ export default function RiderDashboard({ session }) {
           {/* TAB 3: HISTORY */}
           {activeTab === 'history' && (
             historyJobs.length === 0 ? (
-              <div className="bg-white rounded-2xl border border-slate-200 text-center py-16 px-4">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-center py-16 px-4">
                 <CheckCircle2 className="mx-auto h-12 w-12 text-slate-300 mb-3" />
-                <h3 className="text-lg font-bold text-navy-900">ไม่มีประวัติการส่งสำเร็จ</h3>
-                <p className="text-slate-500 text-sm mt-1">ประวัติงานที่คุณส่งสำเร็จจะแสดงขึ้นตรงนี้หลังกดรับงานและส่งมอบแล้ว</p>
+                <h3 className="text-lg font-bold text-navy-900 dark:text-white">ไม่มีประวัติการส่งสำเร็จ</h3>
+                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">ประวัติงานที่คุณส่งสำเร็จจะแสดงขึ้นตรงนี้หลังกดรับงานและส่งมอบแล้ว</p>
               </div>
             ) : (
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-slate-200 text-left text-xs sm:text-sm">
-                    <thead className="bg-slate-50">
+                    <thead className="bg-slate-50 dark:bg-slate-900/50">
                       <tr>
                         {['หมายเลขออเดอร์', 'ชื่อสินค้า', 'ราคาสินค้า', 'รูปหลักฐาน', 'วันที่จัดส่งสำเร็จ'].map((h) => (
-                          <th key={h} className="px-6 py-3.5 font-extrabold text-slate-500 uppercase tracking-wider">{h}</th>
+                          <th key={h} className="px-6 py-3.5 font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{h}</th>
                         ))}
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-200 bg-white">
+                    <tbody className="divide-y divide-slate-200 bg-white dark:bg-slate-800">
                       {historyJobs.map((order) => (
-                        <tr key={order.order_id} className="hover:bg-slate-50 transition-colors">
+                        <tr key={order.order_id} className="hover:bg-slate-50 dark:bg-slate-900/50 transition-colors">
                           <td className="px-6 py-4 font-mono font-bold text-navy-950">#ORD-{order.order_id}</td>
-                          <td className="px-6 py-4 font-bold text-slate-800">{order.product?.title || 'สินค้าทั่วไป'}</td>
+                          <td className="px-6 py-4 font-bold text-slate-800 dark:text-slate-200">{order.product?.title || 'สินค้าทั่วไป'}</td>
                           <td className="px-6 py-4 font-black text-emerald-600 font-outfit">฿{Number(order.product?.price || 0).toLocaleString()}</td>
                           <td className="px-6 py-4">
                             {order.delivery_image_url ? (
-                              <a href={order.delivery_image_url} target="_blank" rel="noreferrer" className="inline-block h-10 w-14 rounded overflow-hidden border border-slate-200 bg-slate-50 hover:opacity-85 transition-opacity">
+                              <a href={order.delivery_image_url} target="_blank" rel="noreferrer" className="inline-block h-10 w-14 rounded overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 hover:opacity-85 transition-opacity">
                                 <img src={order.delivery_image_url} alt="delivery-proof" className="w-full h-full object-cover" />
                               </a>
                             ) : (

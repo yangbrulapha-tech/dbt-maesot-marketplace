@@ -240,15 +240,15 @@ export default function Orders({ session }) {
   if (loading) return (
     <div className="flex flex-col justify-center items-center py-24 space-y-4">
       <Loader2 className="h-10 w-10 text-primary-600 animate-spin" />
-      <p className="text-slate-500 text-sm">กำลังโหลดรายการสั่งซื้อ...</p>
+      <p className="text-slate-500 dark:text-slate-400 text-sm">กำลังโหลดรายการสั่งซื้อ...</p>
     </div>
   )
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
       <div className="mb-8">
-        <h1 className="text-3xl font-extrabold text-navy-900 tracking-tight">รายการสั่งซื้อของฉัน</h1>
-        <p className="mt-1 text-slate-500">ติดตามสถานะออเดอร์และการติดต่อผู้ซื้อผู้ขาย</p>
+        <h1 className="text-3xl font-extrabold text-navy-900 dark:text-white tracking-tight">รายการสั่งซื้อของฉัน</h1>
+        <p className="mt-1 text-slate-500 dark:text-slate-400">ติดตามสถานะออเดอร์และการติดต่อผู้ซื้อผู้ขาย</p>
       </div>
 
       {successMsg && (
@@ -263,35 +263,35 @@ export default function Orders({ session }) {
       )}
 
       {/* Tabs */}
-      <div className="flex border border-slate-200 bg-white p-1 rounded-2xl mb-6">
+      <div className="flex border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-1 rounded-2xl mb-6">
         <button onClick={() => setActiveTab('buyer')}
-          className={`flex-1 py-3 text-sm font-extrabold rounded-xl transition-all duration-200 ${activeTab === 'buyer' ? 'bg-navy-900 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50'}`}>
+          className={`flex-1 py-3 text-sm font-extrabold rounded-xl transition-all duration-200 ${activeTab === 'buyer' ? 'bg-navy-900 text-white shadow-md' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-900/50'}`}>
           ฉันเป็นผู้ซื้อ ({buyerOrders.length})
         </button>
         <button onClick={() => setActiveTab('seller')}
-          className={`flex-1 py-3 text-sm font-extrabold rounded-xl transition-all duration-200 ${activeTab === 'seller' ? 'bg-navy-900 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50'}`}>
+          className={`flex-1 py-3 text-sm font-extrabold rounded-xl transition-all duration-200 ${activeTab === 'seller' ? 'bg-navy-900 text-white shadow-md' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-900/50'}`}>
           ฉันเป็นผู้ขาย ({sellerOrders.length})
         </button>
       </div>
 
       {displayed.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-slate-200 text-center py-20 px-4">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-center py-20 px-4">
           <ShoppingBag className="mx-auto h-12 w-12 text-slate-300 mb-4" />
-          <h3 className="text-lg font-bold text-navy-900">ไม่มีรายการสั่งซื้อ</h3>
-          <p className="text-slate-500 text-sm mt-1">{activeTab === 'buyer' ? 'คุณยังไม่มีประวัติการซื้อ' : 'ยังไม่มีออเดอร์สำหรับสินค้าของคุณ'}</p>
+          <h3 className="text-lg font-bold text-navy-900 dark:text-white">ไม่มีรายการสั่งซื้อ</h3>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{activeTab === 'buyer' ? 'คุณยังไม่มีประวัติการซื้อ' : 'ยังไม่มีออเดอร์สำหรับสินค้าของคุณ'}</p>
         </div>
       ) : (
         <div className="space-y-6">
           {displayed.map((order) => (
-            <div key={order.order_id} className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div key={order.order_id} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
               {/* Header */}
-              <div className="bg-slate-50 px-6 py-4 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+              <div className="bg-slate-50 dark:bg-slate-900/50 px-6 py-4 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                 <div>
                   <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">ใบสั่งซื้อ</span>
-                  <span className="text-sm font-extrabold text-navy-900 font-outfit">#ORD-{order.order_id}</span>
+                  <span className="text-sm font-extrabold text-navy-900 dark:text-white font-outfit">#ORD-{order.order_id}</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <span className="text-[10px] text-slate-500 hidden sm:block">
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block">
                     {new Date(order.created_at).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                   </span>
                   {getStatusBadge(order.status)}
@@ -302,15 +302,15 @@ export default function Orders({ session }) {
               <div className="p-6 flex flex-col lg:flex-row justify-between gap-6">
                 {/* Product */}
                 <div className="flex items-start space-x-4 flex-1">
-                  <div className="h-20 w-20 bg-slate-100 rounded-xl overflow-hidden shrink-0 border border-slate-200">
+                  <div className="h-20 w-20 bg-slate-100 rounded-xl overflow-hidden shrink-0 border border-slate-200 dark:border-slate-700">
                     <img src={order.product?.image_url} alt={order.product?.title}
                       className="w-full h-full object-cover"
                       onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=200' }} />
                   </div>
                   <div className="space-y-1">
-                    <h3 className="font-bold text-slate-900 text-sm sm:text-base">{order.product?.title || 'สินค้า (ถูกลบแล้ว)'}</h3>
-                    <p className="text-xs text-slate-500">ผู้ขาย: <span className="font-bold">{order.seller?.full_name || order.product?.seller_id}</span></p>
-                    <p className="text-xs text-slate-500">ผู้ซื้อ: <span className="font-bold">{order.buyer?.full_name || order.buyer_id}</span></p>
+                    <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">{order.product?.title || 'สินค้า (ถูกลบแล้ว)'}</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">ผู้ขาย: <span className="font-bold">{order.seller?.full_name || order.product?.seller_id}</span></p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">ผู้ซื้อ: <span className="font-bold">{order.buyer?.full_name || order.buyer_id}</span></p>
                     
                     {/* ข้อมูล Rider */}
                     <div className="pt-1.5 flex flex-wrap gap-1.5 items-center">
@@ -325,22 +325,22 @@ export default function Orders({ session }) {
                           </span>
                         )
                       ) : (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 text-slate-500 border border-slate-200">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
                           📦 นัดรับและจ่ายเงินทั่วไป
                         </span>
                       )}
                     </div>
 
-                    <p className="text-base font-black text-navy-900 pt-1.5 font-outfit">
+                    <p className="text-base font-black text-navy-900 dark:text-white pt-1.5 font-outfit">
                       ฿{Number(order.product?.price || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </p>
 
                     {/* แสดงจุดส่งของ/นัดรับ */}
                     {order.delivery_location && (
-                      <div className="mt-2 bg-slate-50 border border-slate-200 rounded-lg p-2.5 flex items-start space-x-2">
+                      <div className="mt-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg p-2.5 flex items-start space-x-2">
                         <MapPin className="h-4 w-4 text-primary-500 shrink-0 mt-0.5" />
                         <div className="text-xs">
-                          <span className="font-bold text-slate-700 block mb-0.5">สถานที่นัดรับ / จัดส่ง:</span>
+                          <span className="font-bold text-slate-700 dark:text-slate-300 block mb-0.5">สถานที่นัดรับ / จัดส่ง:</span>
                           <span className="text-slate-600">{order.delivery_location}</span>
                         </div>
                       </div>
@@ -350,7 +350,7 @@ export default function Orders({ session }) {
                     {order.delivery_image_url && (
                       <div className="mt-3 pt-3 border-t border-slate-100">
                         <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">📸 รูปหลักฐานการจัดส่งจาก Rider</span>
-                        <a href={order.delivery_image_url} target="_blank" rel="noreferrer" className="inline-block h-16 w-24 rounded-lg overflow-hidden border border-slate-200 bg-white p-0.5 hover:opacity-85 transition-opacity">
+                        <a href={order.delivery_image_url} target="_blank" rel="noreferrer" className="inline-block h-16 w-24 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-0.5 hover:opacity-85 transition-opacity">
                           <img src={order.delivery_image_url} alt="delivery-proof" className="w-full h-full object-cover rounded-md" />
                         </a>
                       </div>
@@ -360,8 +360,8 @@ export default function Orders({ session }) {
 
 
                 {/* Contact */}
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 min-w-[220px]">
-                  <div className="flex justify-between items-center border-b border-slate-200 pb-2 mb-2.5">
+                <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700 min-w-[220px]">
+                  <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-700 pb-2 mb-2.5">
                     <h4 className="text-[10px] font-extrabold text-navy-950 uppercase tracking-widest">
                       {activeTab === 'buyer' ? 'ติดต่อผู้ขาย' : 'ติดต่อผู้ซื้อ'}
                     </h4>
@@ -380,15 +380,15 @@ export default function Orders({ session }) {
                   )}
                   {activeTab === 'buyer' ? (
                     <div className="space-y-1">
-                      <p className="text-sm font-bold text-slate-800">{order.seller?.full_name || '-'}</p>
-                      <p className="text-xs text-slate-500 font-mono">{order.product?.seller_id}</p>
-                      <p className="text-xs text-slate-500">{order.seller?.email || '-'}</p>
+                      <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{order.seller?.full_name || '-'}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">{order.product?.seller_id}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">{order.seller?.email || '-'}</p>
                     </div>
                   ) : (
                     <div className="space-y-1">
-                      <p className="text-sm font-bold text-slate-800">{order.buyer?.full_name || '-'}</p>
-                      <p className="text-xs text-slate-500 font-mono">{order.buyer_id}</p>
-                      <p className="text-xs text-slate-500">{order.buyer?.email || '-'}</p>
+                      <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{order.buyer?.full_name || '-'}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">{order.buyer_id}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">{order.buyer?.email || '-'}</p>
                     </div>
                   )}
                 </div>
@@ -396,11 +396,11 @@ export default function Orders({ session }) {
 
               {/* Seller / Buyer Actions */}
               {(activeTab === 'seller' || activeTab === 'buyer') && (
-                <div className="bg-slate-50 px-6 py-3 border-t border-slate-100 flex justify-end space-x-3">
+                <div className="bg-slate-50 dark:bg-slate-900/50 px-6 py-3 border-t border-slate-100 flex justify-end space-x-3">
                   {/* ผู้ซื้อขอย้อนหลังเรียกไรเดอร์ภายหลัง */}
                   {activeTab === 'buyer' && order.status === 'pending' && !order.needs_delivery && (
                     <button onClick={() => handleRequestRiderLater(order.order_id)} disabled={actionLoading === order.order_id}
-                      className="flex items-center space-x-1 px-4 py-2 border border-emerald-300 hover:bg-emerald-50 text-emerald-700 bg-white rounded-lg text-xs font-bold transition-all disabled:opacity-50">
+                      className="flex items-center space-x-1 px-4 py-2 border border-emerald-300 hover:bg-emerald-50 text-emerald-700 bg-white dark:bg-slate-800 rounded-lg text-xs font-bold transition-all disabled:opacity-50">
                       <span>🛵 เรียกใช้บริการ Rider</span>
                     </button>
                   )}
@@ -409,7 +409,7 @@ export default function Orders({ session }) {
                   {activeTab === 'seller' && order.status === 'pending' && (
                     <>
                       <button onClick={() => handleUpdateStatus(order.order_id, 'cancelled')} disabled={actionLoading === order.order_id}
-                        className="px-4 py-2 border border-red-300 rounded-lg text-xs font-semibold text-red-700 bg-white hover:bg-red-50 disabled:opacity-50">
+                        className="px-4 py-2 border border-red-300 rounded-lg text-xs font-semibold text-red-700 bg-white dark:bg-slate-800 hover:bg-red-50 disabled:opacity-50">
                         ปฏิเสธ
                       </button>
                       <button onClick={() => handleUpdateStatus(order.order_id, 'completed')} disabled={actionLoading === order.order_id}
@@ -429,19 +429,19 @@ export default function Orders({ session }) {
       {/* Message Modal */}
       {isMsgModalOpen && messageTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-scale-up">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-lg overflow-hidden animate-scale-up">
             <div className="bg-navy-900 text-white p-4 flex items-center justify-between">
               <div className="flex items-center space-x-2"><MessageSquare className="h-5 w-5 text-primary-400" /><h2 className="text-lg font-bold">ส่งข้อความ</h2></div>
               <button onClick={() => setIsMsgModalOpen(false)}><X className="h-5 w-5 text-slate-400" /></button>
             </div>
             <form onSubmit={handleSendOrderMessage} className="p-6 space-y-4">
-              <div className="text-xs text-slate-500 bg-slate-50 p-3 rounded-lg border">
+              <div className="text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border">
                 ส่งถึง: <span className="font-bold text-navy-950">{messageTarget.partnerName}</span> เรื่อง "<span className="font-bold">{messageTarget.productTitle}</span>"
               </div>
               <textarea rows="4" required value={messageText} onChange={(e) => setMessageText(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
               <div className="pt-2 flex justify-end space-x-3">
-                <button type="button" onClick={() => setIsMsgModalOpen(false)} className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 text-sm font-semibold hover:bg-slate-50">ยกเลิก</button>
+                <button type="button" onClick={() => setIsMsgModalOpen(false)} className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:bg-slate-900/50">ยกเลิก</button>
                 <button type="submit" disabled={msgLoading}
                   className="flex items-center space-x-1.5 px-5 py-2 bg-navy-900 text-white rounded-lg text-sm font-bold hover:bg-navy-800 disabled:opacity-50">
                   {msgLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Send className="h-4 w-4 text-primary-300" /><span>ส่ง</span></>}
@@ -455,7 +455,7 @@ export default function Orders({ session }) {
       {/* Refund Modal */}
       {isRefundModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-scale-up">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-lg overflow-hidden animate-scale-up">
             <div className="bg-red-600 text-white p-4 flex items-center justify-between">
               <div className="flex items-center space-x-2"><ShieldAlert className="h-5 w-5" /><h2 className="text-lg font-bold">ยื่นคำขอคืนเงิน</h2></div>
               <button onClick={() => setIsRefundModalOpen(false)}><X className="h-5 w-5 text-red-200 hover:text-white transition-colors" /></button>
@@ -466,28 +466,28 @@ export default function Orders({ session }) {
               </div>
               
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">เหตุผลการขอคืนเงิน</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">เหตุผลการขอคืนเงิน</label>
                 <textarea rows="4" required value={refundReason} onChange={(e) => setRefundReason(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
                   placeholder="อธิบายปัญหาที่เกิดขึ้นกับสินค้า..." />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">รูปภาพหลักฐาน (ถ้ามี)</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">รูปภาพหลักฐาน (ถ้ามี)</label>
                 <div className="flex items-center justify-center w-full">
-                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 border-dashed rounded-lg cursor-pointer bg-slate-50 hover:bg-slate-100 transition-colors">
+                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 border-dashed rounded-lg cursor-pointer bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100 transition-colors">
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                       <ImagePlus className="w-8 h-8 mb-2 text-slate-400" />
-                      <p className="mb-2 text-sm text-slate-500"><span className="font-semibold">คลิกเพื่ออัปโหลด</span></p>
+                      <p className="mb-2 text-sm text-slate-500 dark:text-slate-400"><span className="font-semibold">คลิกเพื่ออัปโหลด</span></p>
                       <p className="text-xs text-slate-400">PNG, JPG (แนะนำขนาดไม่เกิน 2MB)</p>
                     </div>
                     <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
                   </label>
                 </div>
                 {refundEvidence && (
-                  <div className="mt-3 relative w-24 h-24 rounded-lg overflow-hidden border border-slate-200">
+                  <div className="mt-3 relative w-24 h-24 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700">
                     <img src={refundEvidence} alt="Evidence Preview" className="w-full h-full object-cover" />
-                    <button type="button" onClick={() => setRefundEvidence('')} className="absolute top-1 right-1 bg-white rounded-full p-0.5 shadow">
+                    <button type="button" onClick={() => setRefundEvidence('')} className="absolute top-1 right-1 bg-white dark:bg-slate-800 rounded-full p-0.5 shadow">
                       <X className="h-3 w-3 text-red-500" />
                     </button>
                   </div>
@@ -495,7 +495,7 @@ export default function Orders({ session }) {
               </div>
 
               <div className="pt-4 flex justify-end space-x-3">
-                <button type="button" onClick={() => setIsRefundModalOpen(false)} className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 text-sm font-semibold hover:bg-slate-50">ยกเลิก</button>
+                <button type="button" onClick={() => setIsRefundModalOpen(false)} className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:bg-slate-900/50">ยกเลิก</button>
                 <button type="submit" disabled={refundLoading}
                   className="flex items-center space-x-1.5 px-5 py-2 bg-red-600 text-white rounded-lg text-sm font-bold hover:bg-red-700 disabled:opacity-50 transition-colors">
                   {refundLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <span>ยืนยันขอคืนเงิน</span>}

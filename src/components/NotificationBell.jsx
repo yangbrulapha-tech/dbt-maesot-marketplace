@@ -113,7 +113,7 @@ export default function NotificationBell({ session }) {
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)}></div>
           <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 z-50 overflow-hidden animate-scale-up origin-top-right">
             <div className="flex items-center justify-between px-4 py-3 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
-              <h3 className="font-bold text-slate-800 dark:text-white">การแจ้งเตือน</h3>
+              <h3 className="font-bold text-slate-800 dark:text-slate-200 dark:text-white">การแจ้งเตือน</h3>
               {unreadCount > 0 && (
                 <button onClick={markAllAsRead} className="text-xs text-primary-600 dark:text-primary-400 font-semibold hover:underline flex items-center space-x-1">
                   <Check className="h-3 w-3" />
@@ -135,7 +135,7 @@ export default function NotificationBell({ session }) {
                       key={n.id} 
                       to={n.link || '#'} 
                       onClick={() => { markAsRead(n.id); setIsOpen(false) }}
-                      className={`block p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors ${!n.is_read ? 'bg-sky-50/50 dark:bg-sky-900/10' : ''}`}
+                      className={`block p-4 hover:bg-slate-50 dark:bg-slate-900/50 dark:hover:bg-slate-700/50 transition-colors ${!n.is_read ? 'bg-sky-50/50 dark:bg-sky-900/10' : ''}`}
                     >
                       <div className="flex gap-3">
                         <div className="flex-1 min-w-0">
@@ -145,7 +145,7 @@ export default function NotificationBell({ session }) {
                           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2">
                             {n.message}
                           </p>
-                          <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1.5 font-medium">
+                          <p className="text-[10px] text-slate-400 dark:text-slate-500 dark:text-slate-400 mt-1.5 font-medium">
                             {new Date(n.created_at).toLocaleString('th-TH', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' })}
                           </p>
                         </div>
