@@ -134,26 +134,26 @@ export default function Navbar({ session }) {
   })
 
   return (
-    <nav className="bg-navy-900 text-white border-b border-navy-800 sticky top-0 z-50 shadow-md">
+    <nav className="bg-navy-900 dark:bg-slate-950 text-white border-b border-navy-800 dark:border-slate-900 sticky top-0 z-50 shadow-md transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center space-x-4">
             {/* Institution Logos on the far left */}
             <div className="flex items-center -space-x-3.5 shrink-0">
-              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-navy-900 bg-white shrink-0 shadow-md relative z-20">
+              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-navy-900 dark:border-slate-950 bg-white shrink-0 shadow-md relative z-20">
                 <img src={`${import.meta.env.BASE_URL}college_logo.png`} alt="MTC Logo" className="w-full h-full object-cover" />
               </div>
-              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-navy-900 bg-navy-950 shrink-0 shadow-md relative z-10">
+              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-navy-900 dark:border-slate-950 bg-navy-950 dark:bg-slate-900 shrink-0 shadow-md relative z-10">
                 <img src={`${import.meta.env.BASE_URL}dbt_logo.jpg`} alt="DBT Logo" className="w-full h-full object-cover" />
               </div>
             </div>
 
             {/* Vertical Divider line */}
-            <div className="h-10 w-px bg-navy-800 shrink-0" />
+            <div className="h-10 w-px bg-navy-800 dark:bg-slate-800 shrink-0" />
 
             {/* Main store logo link */}
-            <Link to="/" className="flex items-center space-x-3 group">
+            <Link to="/" className="flex items-center space-x-3 group shrink-0">
               <div className="p-2 bg-gradient-to-tr from-primary-600 to-sky-500 rounded-xl text-white shadow-md shadow-sky-500/10 group-hover:scale-105 transition-all duration-300">
                 <Store className="h-5 w-5" />
               </div>
@@ -170,7 +170,7 @@ export default function Navbar({ session }) {
           </div>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-1">
+          <div className="hidden xl:flex items-center space-x-1">
             {visibleItems.map((item) => {
               const Icon = item.icon
               const isAdminItem = item.adminOnly
@@ -180,7 +180,7 @@ export default function Navbar({ session }) {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                     isActive(item.path)
                       ? isAdminItem
                         ? 'bg-red-600 text-white shadow-md'
@@ -188,10 +188,10 @@ export default function Navbar({ session }) {
                           ? 'bg-emerald-600 text-white shadow-md'
                           : 'bg-primary-600 text-white shadow-md'
                       : isAdminItem
-                        ? 'text-red-300 hover:bg-red-900/30 hover:text-red-200'
+                        ? 'text-red-300 hover:bg-red-900/30 dark:hover:bg-red-900/40 hover:text-red-200'
                         : isRiderItem
-                          ? 'text-emerald-300 hover:bg-emerald-900/30 hover:text-emerald-200'
-                          : 'text-slate-300 hover:bg-navy-800 hover:text-white'
+                          ? 'text-emerald-300 hover:bg-emerald-900/30 dark:hover:bg-emerald-900/40 hover:text-emerald-200'
+                          : 'text-slate-300 hover:bg-navy-800 dark:hover:bg-slate-800 hover:text-white'
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -215,7 +215,7 @@ export default function Navbar({ session }) {
             {session ? (
               <div className="flex items-center space-x-3">
                 <NotificationBell session={session} />
-                <div className="hidden lg:flex items-center space-x-2 text-sky-200/90 border-r border-navy-700 pr-3 pl-1" title={userProfile?.full_name || session.user.email}>
+                <div className="hidden lg:flex items-center space-x-2 text-sky-200/90 border-r border-navy-700 dark:border-slate-800 pr-3 pl-1" title={userProfile?.full_name || session.user.email}>
                   {userProfile?.avatar_url ? (
                     <img 
                       src={userProfile.avatar_url.startsWith('http') ? userProfile.avatar_url : `${import.meta.env.BASE_URL}${userProfile.avatar_url.startsWith('/') ? userProfile.avatar_url.slice(1) : userProfile.avatar_url}`}
@@ -231,18 +231,18 @@ export default function Navbar({ session }) {
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-1 bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-md text-xs font-semibold shadow-sm transition-all duration-200"
+                  className="flex items-center space-x-1 bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-md text-xs font-semibold shadow-sm transition-all duration-200 whitespace-nowrap shrink-0"
                 >
-                  <LogOut className="h-3.5 w-3.5" />
+                  <LogOut className="h-3.5 w-3.5 shrink-0" />
                   <span className="hidden sm:inline">ออกจากระบบ</span>
                 </button>
               </div>
             ) : (
               <Link
                 to="/login"
-                className="flex items-center space-x-1 bg-primary-600 hover:bg-primary-500 text-white px-4 py-1.5 rounded-md text-sm font-semibold shadow-md transition-all duration-200"
+                className="flex items-center space-x-1 bg-primary-600 hover:bg-primary-500 text-white px-4 py-1.5 rounded-md text-sm font-semibold shadow-md transition-all duration-200 whitespace-nowrap shrink-0"
               >
-                <User className="h-4 w-4" />
+                <User className="h-4 w-4 shrink-0" />
                 <span>เข้าสู่ระบบ</span>
               </Link>
             )}
@@ -252,7 +252,7 @@ export default function Navbar({ session }) {
 
       {/* Mobile Bottom Navigation */}
       {session && (
-        <div className="md:hidden bg-navy-950 border-t border-navy-800 flex justify-around py-2">
+        <div className="xl:hidden bg-navy-950 dark:bg-slate-950 border-t border-navy-800 dark:border-slate-900 flex justify-around py-2 transition-colors">
           {visibleItems.map((item) => {
             const Icon = item.icon
             const badgeCount = menuBadges[item.path] || 0
