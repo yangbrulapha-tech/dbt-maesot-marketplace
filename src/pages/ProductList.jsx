@@ -227,12 +227,14 @@ export default function ProductList({ session }) {
   }
 
   const [requestRider, setRequestRider] = useState(false)
+  const [deliveryLocation, setDeliveryLocation] = useState('')
 
   const openCheckout = (product) => {
     if (!session || !userProfile) { addToast('กรุณาเข้าสู่ระบบก่อน', 'error'); return }
     if (userProfile.student_id === product.seller_id) { addToast('ไม่สามารถสั่งซื้อสินค้าตัวเองได้', 'error'); return }
     setCheckoutProduct(product)
     setRequestRider(false) // reset ทุกครั้งที่เปิด
+    setDeliveryLocation('')
     setIsCheckoutModalOpen(true)
   }
 
@@ -246,6 +248,7 @@ export default function ProductList({ session }) {
         buyer_id: userProfile.student_id,
         status: 'pending',
         needs_delivery: requestRider, // บันทึกคำขอ Rider
+        delivery_location: deliveryLocation.trim() || null,
       })
       if (error) throw error
 
@@ -624,6 +627,20 @@ export default function ProductList({ session }) {
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* ช่องระบุสถานที่จัดส่ง/นัดรับ */}
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">
+                ระบุสถานที่จัดส่ง / นัดรับของ <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                required
+                value={deliveryLocation}
+                onChange={(e) => setDeliveryLocation(e.target.value)}
+                placeholder={requestRider ? "ระบุสถานที่ให้ไรเดอร์ไปส่งให้ชัดเจน (เช่น หน้าตึก A, โรงอาหาร)" : "ระบุสถานที่ที่คุณจะไปนัดเจอผู้ขาย"}
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all resize-none h-16 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+              />
             </div>
 
             {/* ข้อความแจ้งเตือนด้านล่างตามตัวเลือก */}

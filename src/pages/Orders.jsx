@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { supabase, getUserProfile } from '../supabaseClient'
-import { ShoppingBag, CheckCircle2, XCircle, Clock, Loader2, MessageSquare, AlertCircle, Send, X, ShieldAlert, ImagePlus } from 'lucide-react'
+import { ShoppingBag, CheckCircle2, XCircle, Clock, Loader2, MessageSquare, AlertCircle, Send, X, ShieldAlert, ImagePlus, MapPin } from 'lucide-react'
 
 // Schema จริง:
 // orders: order_id(PK), product_id, buyer_id(student_id varchar), rider_id, status, created_at
@@ -334,6 +334,17 @@ export default function Orders({ session }) {
                     <p className="text-base font-black text-navy-900 pt-1.5 font-outfit">
                       ฿{Number(order.product?.price || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </p>
+
+                    {/* แสดงจุดส่งของ/นัดรับ */}
+                    {order.delivery_location && (
+                      <div className="mt-2 bg-slate-50 border border-slate-200 rounded-lg p-2.5 flex items-start space-x-2">
+                        <MapPin className="h-4 w-4 text-primary-500 shrink-0 mt-0.5" />
+                        <div className="text-xs">
+                          <span className="font-bold text-slate-700 block mb-0.5">สถานที่นัดรับ / จัดส่ง:</span>
+                          <span className="text-slate-600">{order.delivery_location}</span>
+                        </div>
+                      </div>
+                    )}
 
                     {/* แสดงรูปภาพหลักฐานการจัดส่งของ Rider */}
                     {order.delivery_image_url && (

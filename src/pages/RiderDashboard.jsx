@@ -419,8 +419,12 @@ export default function RiderDashboard({ session }) {
                           <span>ผู้รับเงิน/ผู้ขาย: <span className="font-bold text-slate-800">{order.seller?.full_name || order.product?.seller_id}</span></span>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                          <User className="h-3.5 w-3.5 text-slate-400 shrink-0" />
                           <span>ผู้จ่ายเงิน/ผู้ซื้อ: <span className="font-bold text-slate-800">{order.buyer?.full_name || order.buyer_id}</span></span>
+                        </div>
+                        <div className="flex items-start space-x-2 bg-emerald-100/50 p-2 rounded border border-emerald-200 mt-1">
+                          <MapPin className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                          <span className="text-emerald-900 font-medium">จุดส่ง: <span className="font-bold">{order.delivery_location || 'ไม่ได้ระบุ'}</span></span>
                         </div>
                       </div>
                     </div>
@@ -483,6 +487,13 @@ export default function RiderDashboard({ session }) {
                           <span className="text-[9px] font-extrabold text-primary-700 uppercase tracking-wider block mb-1">2. นัดส่งมอบและรับเงินจาก (ผู้ซื้อ)</span>
                           <p className="text-sm font-bold text-slate-800">{order.buyer?.full_name || '-'}</p>
                           <p className="text-[10px] text-slate-400 font-mono mt-0.5">รหัส: {order.buyer_id}</p>
+                          
+                          <div className="mt-2 bg-emerald-100/50 p-2 rounded border border-emerald-200 flex items-start space-x-1.5">
+                            <MapPin className="h-3 w-3 text-emerald-600 mt-0.5 shrink-0" />
+                            <p className="text-[11px] text-emerald-900 font-medium">
+                              จุดส่ง: <span className="font-bold">{order.delivery_location || 'ไม่ได้ระบุ'}</span>
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
