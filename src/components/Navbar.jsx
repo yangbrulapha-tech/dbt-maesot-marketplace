@@ -138,7 +138,7 @@ export default function Navbar({ session }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 shrink-0">
             {/* Institution Logos on the far left */}
             <div className="flex items-center -space-x-3.5 shrink-0">
               <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-navy-900 dark:border-slate-950 bg-white shrink-0 shadow-md relative z-20">
@@ -170,7 +170,7 @@ export default function Navbar({ session }) {
           </div>
 
           {/* Desktop Nav */}
-          <div className="hidden xl:flex items-center space-x-1">
+          <div className="hidden xl:flex flex-1 mx-2 items-center justify-center space-x-1 overflow-x-auto scrollbar-none">
             {visibleItems.map((item) => {
               const Icon = item.icon
               const isAdminItem = item.adminOnly
@@ -208,7 +208,7 @@ export default function Navbar({ session }) {
 
 
           {/* Right Actions */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 shrink-0">
             <button onClick={toggleDarkMode} className="p-2 text-slate-300 hover:text-white transition-colors" title="สลับโหมดหน้าจอ">
               {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
