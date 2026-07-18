@@ -1,4 +1,4 @@
-import{t as e}from"./circle-alert-AvTHuxk8.js";import{t}from"./circle-check-B1qebTij.js";import{t as n}from"./clipboard-list-CocvM_1_.js";import{t as r}from"./map-pin-BA8mwIFO.js";import{t as i}from"./triangle-alert-CaWTBJnm.js";import{t as a}from"./x-sTSWxk_B.js";import{_ as o,b as s,d as c,f as l,h as u,l as d,n as f,t as p,u as m,y as h}from"./index-C4ZYEB6x.js";var g=m(`navigation`,[[`polygon`,{points:`3 11 22 2 13 21 11 13 3 11`,key:`1ltx0t`}]]),_=s(h(),1),v=u();function y({session:s}){let[u,m]=(0,_.useState)(null),[h,y]=(0,_.useState)(null),[b,x]=(0,_.useState)(!0),[S,C]=(0,_.useState)(!1),[w,T]=(0,_.useState)(`available`),[E,D]=(0,_.useState)([]),[O,k]=(0,_.useState)([]),[A,j]=(0,_.useState)([]),[M,N]=(0,_.useState)(!0),[P,F]=(0,_.useState)(null),[I,L]=(0,_.useState)(null),[R,z]=(0,_.useState)(``),[B,V]=(0,_.useState)(``),[H,U]=(0,_.useState)(null),[W,G]=(0,_.useState)(new Set);(0,_.useEffect)(()=>{s&&K()},[s]);let K=async()=>{x(!0);try{let{data:e,error:t}=await c();if(t)throw t;if(m(e),e){let{data:t,error:n}=await l.from(`riders`).select(`*`).eq(`student_id`,e.student_id).maybeSingle();t?(C(!0),y(t),t.is_active&&await q(e.student_id)):C(!1)}}catch(e){V(`เกิดข้อผิดพลาดในการโหลดข้อมูลสิทธิ์: `+e.message)}finally{x(!1)}},q=async e=>{N(!0),V(``);try{let{data:t,error:n}=await l.from(`orders`).select(`
+import{t as e}from"./circle-alert-DjxsRaMG.js";import{t}from"./circle-check-AuX49jfl.js";import{t as n}from"./clipboard-list-KD9ydzJS.js";import{t as r}from"./map-pin-BXTD-1q5.js";import{t as i}from"./triangle-alert-vPMQgYBA.js";import{t as a}from"./x-Dzvo3hFH.js";import{_ as o,b as s,d as c,f as l,h as u,l as d,n as f,t as p,u as m,y as h}from"./index-CYO0LSkc.js";var g=m(`navigation`,[[`polygon`,{points:`3 11 22 2 13 21 11 13 3 11`,key:`1ltx0t`}]]),_=s(h(),1),v=u();function y({session:s}){let[u,m]=(0,_.useState)(null),[h,y]=(0,_.useState)(null),[b,x]=(0,_.useState)(!0),[S,C]=(0,_.useState)(!1),[w,T]=(0,_.useState)(`available`),[E,D]=(0,_.useState)([]),[O,k]=(0,_.useState)([]),[A,j]=(0,_.useState)([]),[M,N]=(0,_.useState)(!0),[P,F]=(0,_.useState)(null),[I,L]=(0,_.useState)(null),[R,z]=(0,_.useState)(``),[B,V]=(0,_.useState)(``),[H,U]=(0,_.useState)(null),[W,G]=(0,_.useState)(new Set);(0,_.useEffect)(()=>{s&&K()},[s]);let K=async()=>{x(!0);try{let{data:e,error:t}=await c();if(t)throw t;if(m(e),e){let{data:t,error:n}=await l.from(`riders`).select(`*`).eq(`student_id`,e.student_id).maybeSingle();t?(C(!0),y(t),t.is_active&&await q(e.student_id)):C(!1)}}catch(e){V(`เกิดข้อผิดพลาดในการโหลดข้อมูลสิทธิ์: `+e.message)}finally{x(!1)}},q=async e=>{N(!0),V(``);try{let{data:t,error:n}=await l.from(`orders`).select(`
           *,
           product:products (
             product_id,
@@ -7,11 +7,11 @@ import{t as e}from"./circle-alert-AvTHuxk8.js";import{t}from"./circle-check-B1qe
             image_url,
             seller_id
           ),
-          buyer:users!orders_buyer_id_fkey (
+          buyer:profiles!orders_buyer_id_fkey (
             student_id,
             full_name
           )
-        `).eq(`status`,`pending`).eq(`needs_delivery`,!0).eq(`seller_accepted`,!0).is(`rider_id`,null).neq(`buyer_id`,e).order(`created_at`,{ascending:!1});if(n)throw n;D(await Promise.all((t||[]).map(async e=>{if(e.product?.seller_id){let{data:t}=await l.from(`users`).select(`student_id, full_name`).eq(`student_id`,e.product.seller_id).single();return{...e,seller:t}}return{...e,seller:null}})));let{data:r,error:i}=await l.from(`orders`).select(`
+        `).eq(`status`,`pending`).eq(`needs_delivery`,!0).eq(`seller_accepted`,!0).is(`rider_id`,null).neq(`buyer_id`,e).order(`created_at`,{ascending:!1});if(n)throw n;D(await Promise.all((t||[]).map(async e=>{if(e.product?.seller_id){let{data:t}=await l.from(`profiles`).select(`student_id, full_name`).eq(`id`,e.product.seller_id).single();return{...e,seller:t}}return{...e,seller:null}})));let{data:r,error:i}=await l.from(`orders`).select(`
           *,
           product:products (
             product_id,
@@ -20,11 +20,11 @@ import{t as e}from"./circle-alert-AvTHuxk8.js";import{t}from"./circle-check-B1qe
             image_url,
             seller_id
           ),
-          buyer:users!orders_buyer_id_fkey (
+          buyer:profiles!orders_buyer_id_fkey (
             student_id,
             full_name
           )
-        `).eq(`rider_id`,e).in(`status`,[`shipping`,`pending`]).order(`created_at`,{ascending:!1});if(i)throw i;k((await Promise.all((r||[]).map(async e=>{if(e.product?.seller_id){let{data:t}=await l.from(`users`).select(`student_id, full_name`).eq(`student_id`,e.product.seller_id).single();return{...e,seller:t}}return{...e,seller:null}}))).filter(e=>e.status!==`completed`&&e.status!==`cancelled`));let{data:a,error:o}=await l.from(`orders`).select(`
+        `).eq(`rider_id`,e).in(`status`,[`shipping`,`pending`]).order(`created_at`,{ascending:!1});if(i)throw i;k((await Promise.all((r||[]).map(async e=>{if(e.product?.seller_id){let{data:t}=await l.from(`profiles`).select(`student_id, full_name`).eq(`id`,e.product.seller_id).single();return{...e,seller:t}}return{...e,seller:null}}))).filter(e=>e.status!==`completed`&&e.status!==`cancelled`));let{data:a,error:o}=await l.from(`orders`).select(`
           *,
           product:products (
             title,
