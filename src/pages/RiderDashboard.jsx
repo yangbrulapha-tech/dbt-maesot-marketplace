@@ -351,9 +351,9 @@ export default function RiderDashboard({ session }) {
           <h1 className="text-3xl font-extrabold text-navy-900 dark:text-white tracking-tight">ระบบบริการรับส่งสินค้า (Rider)</h1>
           <p className="mt-1 text-slate-500 dark:text-slate-300">รับออเดอร์ จัดส่งของ และควบคุมการให้บริการภายในวิทยาลัย</p>
         </div>
-        <div className="text-xs text-slate-400 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-xl text-right">
-          <p>ผู้ให้บริการ: <span className="font-bold text-navy-950">{userProfile?.full_name}</span></p>
-          <p>พาหนะ: <span className="font-bold text-emerald-700">{getVehicleLabel(riderInfo?.vehicle_type)}</span></p>
+        <div className="text-xs text-slate-400 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/80 px-4 py-2 rounded-xl text-right">
+          <p>ผู้ให้บริการ: <span className="font-bold text-navy-950 dark:text-slate-200">{userProfile?.full_name}</span></p>
+          <p>พาหนะ: <span className="font-bold text-emerald-700 dark:text-emerald-400">{getVehicleLabel(riderInfo?.vehicle_type)}</span></p>
         </div>
       </div>
 
