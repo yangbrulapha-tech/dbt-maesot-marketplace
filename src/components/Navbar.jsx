@@ -218,7 +218,7 @@ export default function Navbar({ session }) {
                 <div className="hidden lg:flex items-center space-x-2 text-sky-200/90 border-r border-navy-700 pr-3 pl-1" title={userProfile?.full_name || session.user.email}>
                   {userProfile?.avatar_url ? (
                     <img 
-                      src={userProfile.avatar_url.startsWith('http') ? userProfile.avatar_url : `${import.meta.env.BASE_URL}${userProfile.avatar_url.replace(/^\\//, '')}`}
+                      src={userProfile.avatar_url.startsWith('http') ? userProfile.avatar_url : `${import.meta.env.BASE_URL}${userProfile.avatar_url.startsWith('/') ? userProfile.avatar_url.slice(1) : userProfile.avatar_url}`}
                       alt="profile" 
                       className="w-6 h-6 rounded-full object-cover ring-2 ring-primary-500/50 shrink-0"
                     />
