@@ -564,7 +564,7 @@ export default function RiderDashboard({ session }) {
                     <tbody className="divide-y divide-slate-200 bg-white dark:bg-slate-800">
                       {historyJobs.map((order) => (
                         <tr key={order.order_id} className="hover:bg-slate-50 dark:bg-slate-900/50 transition-colors">
-                          <td className="px-6 py-4 font-mono font-bold text-navy-950">#ORD-{order.order_id}</td>
+                          <td className="px-6 py-4 font-mono font-bold text-navy-950 dark:text-slate-300">#ORD-{order.order_id}</td>
                           <td className="px-6 py-4 font-bold text-slate-800 dark:text-slate-200">{order.product?.title || 'สินค้าทั่วไป'}</td>
                           <td className="px-6 py-4 font-black text-emerald-600 font-outfit">฿{Number(order.product?.price || 0).toLocaleString()}</td>
                           <td className="px-6 py-4">
