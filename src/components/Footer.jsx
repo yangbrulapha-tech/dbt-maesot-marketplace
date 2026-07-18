@@ -35,26 +35,26 @@ export default function Footer() {
     {
       name: 'ชมรมวิชาชีพเทคโนโลยีธุรกิจดิจิทัล',
       sub: 'วิทยาลัยเทคนิคแม่สอด',
-      avatar: '/dbt_logo.jpg',
+      avatar: `${import.meta.env.BASE_URL}dbt_logo.jpg`,
       link: 'https://www.facebook.com/search/top?q=ชมรมวิชาชีพเทคโนโลยีธุรกิจดิจิทัล%20วิทยาลัยเทคนิคแม่สอด'
     },
     {
       name: 'ผู้จัดทำเว็บ (Marshal Mars)',
       sub: 'Marshal Mars (Facebook)',
-      avatar: '/marshal_avatar.png',
+      avatar: `${import.meta.env.BASE_URL}marshal_avatar.png`,
       link: 'https://www.facebook.com/search/top?q=Marshal%20Mars'
     },
     {
       name: 'ผู้จัดทำเว็บ (Instagram)',
       sub: 'kkhxphidph (Instagram)',
-      avatar: '/marshal_avatar.png',
+      avatar: `${import.meta.env.BASE_URL}marshal_avatar.png`,
       link: 'https://www.instagram.com/kkhxphidph/',
       isInstagram: true
     },
     {
       name: 'งานประชาสัมพันธ์ วิทยาลัยเทคนิคแม่สอด',
       sub: 'PRMTC. (Facebook)',
-      avatar: '/prmtc_logo.png',
+      avatar: `${import.meta.env.BASE_URL}prmtc_logo.png`,
       link: 'https://www.facebook.com/search/top?q=งานประชาสัมพันธ์%20วิทยาลัยเทคนิคแม่สอด%20PRMTC'
     }
   ]
