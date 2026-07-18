@@ -1,4 +1,4 @@
-import{t as e}from"./circle-alert-T-yz2bse.js";import{t}from"./circle-check-Cq42Z1fE.js";import{t as n}from"./clipboard-list-BEwciqPJ.js";import{t as r}from"./map-pin-DJAhhWBt.js";import{t as i}from"./triangle-alert-CXYO21wa.js";import{t as a}from"./x-gt7OQgGS.js";import{_ as o,b as s,d as c,f as l,h as u,l as d,n as f,t as p,u as m,y as h}from"./index-DXsn8CbJ.js";var g=m(`navigation`,[[`polygon`,{points:`3 11 22 2 13 21 11 13 3 11`,key:`1ltx0t`}]]),_=s(h(),1),v=u();function y({session:s}){let[u,m]=(0,_.useState)(null),[h,y]=(0,_.useState)(null),[b,x]=(0,_.useState)(!0),[S,C]=(0,_.useState)(!1),[w,T]=(0,_.useState)(`available`),[E,D]=(0,_.useState)([]),[O,k]=(0,_.useState)([]),[A,j]=(0,_.useState)([]),[M,N]=(0,_.useState)(!0),[P,F]=(0,_.useState)(null),[I,L]=(0,_.useState)(null),[R,z]=(0,_.useState)(``),[B,V]=(0,_.useState)(``),[H,U]=(0,_.useState)(null),[W,G]=(0,_.useState)(new Set);(0,_.useEffect)(()=>{s&&K()},[s]);let K=async()=>{x(!0);try{let{data:e,error:t}=await c();if(t)throw t;if(m(e),e){let{data:t,error:n}=await l.from(`riders`).select(`*`).eq(`student_id`,e.student_id).maybeSingle();t?(C(!0),y(t),t.is_active&&await q(e.student_id)):C(!1)}}catch(e){V(`เกิดข้อผิดพลาดในการโหลดข้อมูลสิทธิ์: `+e.message)}finally{x(!1)}},q=async e=>{N(!0),V(``);try{let{data:t,error:n}=await l.from(`orders`).select(`
+import{t as e}from"./circle-alert-DzGIybFs.js";import{t}from"./circle-check-C4zLy4fP.js";import{t as n}from"./clipboard-list-gXvQvvUu.js";import{t as r}from"./map-pin-Bgah_Goz.js";import{t as i}from"./triangle-alert-CAR8o6vD.js";import{t as a}from"./x-C9sB1LL7.js";import{_ as o,b as s,d as c,f as l,h as u,l as d,n as f,t as p,u as m,y as h}from"./index-NZVdkzjf.js";var g=m(`navigation`,[[`polygon`,{points:`3 11 22 2 13 21 11 13 3 11`,key:`1ltx0t`}]]),_=s(h(),1),v=u();function y({session:s}){let[u,m]=(0,_.useState)(null),[h,y]=(0,_.useState)(null),[b,x]=(0,_.useState)(!0),[S,C]=(0,_.useState)(!1),[w,T]=(0,_.useState)(`available`),[E,D]=(0,_.useState)([]),[O,k]=(0,_.useState)([]),[A,j]=(0,_.useState)([]),[M,N]=(0,_.useState)(!0),[P,F]=(0,_.useState)(null),[I,L]=(0,_.useState)(null),[R,z]=(0,_.useState)(``),[B,V]=(0,_.useState)(``),[H,U]=(0,_.useState)(null),[W,G]=(0,_.useState)(new Set);(0,_.useEffect)(()=>{s&&K()},[s]);let K=async()=>{x(!0);try{let{data:e,error:t}=await c();if(t)throw t;if(m(e),e){let{data:t,error:n}=await l.from(`riders`).select(`*`).eq(`student_id`,e.student_id).maybeSingle();t?(C(!0),y(t),t.is_active&&await q(e.student_id)):C(!1)}}catch(e){V(`เกิดข้อผิดพลาดในการโหลดข้อมูลสิทธิ์: `+e.message)}finally{x(!1)}},q=async e=>{N(!0),V(``);try{let{data:t,error:n}=await l.from(`orders`).select(`
           *,
           product:products (
             product_id,
@@ -7,10 +7,8 @@ import{t as e}from"./circle-alert-T-yz2bse.js";import{t}from"./circle-check-Cq42
             image_url,
             seller_id
           ),
-          buyer:profiles!orders_buyer_id_fkey (
-            student_id,
-            full_name
-          )
+          buyer_id,
+          seller_id
         `).eq(`status`,`pending`).eq(`needs_delivery`,!0).eq(`seller_accepted`,!0).is(`rider_id`,null).neq(`buyer_id`,e).order(`created_at`,{ascending:!1});if(n)throw n;D(await Promise.all((t||[]).map(async e=>{if(e.product?.seller_id){let{data:t}=await l.from(`profiles`).select(`student_id, full_name`).eq(`id`,e.product.seller_id).single();return{...e,seller:t}}return{...e,seller:null}})));let{data:r,error:i}=await l.from(`orders`).select(`
           *,
           product:products (
@@ -20,10 +18,8 @@ import{t as e}from"./circle-alert-T-yz2bse.js";import{t}from"./circle-check-Cq42
             image_url,
             seller_id
           ),
-          buyer:profiles!orders_buyer_id_fkey (
-            student_id,
-            full_name
-          )
+          buyer_id,
+          seller_id
         `).eq(`rider_id`,e).in(`status`,[`shipping`,`pending`]).order(`created_at`,{ascending:!1});if(i)throw i;k((await Promise.all((r||[]).map(async e=>{if(e.product?.seller_id){let{data:t}=await l.from(`profiles`).select(`student_id, full_name`).eq(`id`,e.product.seller_id).single();return{...e,seller:t}}return{...e,seller:null}}))).filter(e=>e.status!==`completed`&&e.status!==`cancelled`));let{data:a,error:o}=await l.from(`orders`).select(`
           *,
           product:products (
