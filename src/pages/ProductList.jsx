@@ -18,8 +18,8 @@ function Toast({ toasts, removeToast }) {
   return (
     <div className="fixed top-5 right-5 z-[100] space-y-2 max-w-sm w-full">
       {toasts.map((t) => (
-        <div key={t.id} className={`flex items-start space-x-3 p-4 rounded-xl shadow-lg border animate-slide-in-right ${t.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-red-50 border-red-200 text-red-800'}`}>
-          {t.type === 'success' ? <CheckCircle2 className="h-5 w-5 shrink-0 mt-0.5 text-emerald-500" /> : <AlertCircle className="h-5 w-5 shrink-0 mt-0.5 text-red-500" />}
+        <div key={t.id} className={`flex items-start space-x-3 p-4 rounded-xl shadow-lg border animate-slide-in-right ${t.type === 'success' ? 'bg-emerald-50 dark:bg-emerald-900/40 border-emerald-200 dark:border-emerald-800/50 text-emerald-800 dark:text-emerald-300' : 'bg-red-50 dark:bg-red-900/40 border-red-200 dark:border-red-800/50 text-red-800 dark:text-red-300'}`}>
+          {t.type === 'success' ? <CheckCircle2 className="h-5 w-5 shrink-0 mt-0.5 text-emerald-500 dark:text-emerald-400" /> : <AlertCircle className="h-5 w-5 shrink-0 mt-0.5 text-red-500 dark:text-red-400" />}
           <p className="text-sm font-medium flex-1">{t.message}</p>
           <button onClick={() => removeToast(t.id)}><X className="h-4 w-4 opacity-50 hover:opacity-100" /></button>
         </div>
@@ -645,11 +645,11 @@ export default function ProductList({ session }) {
 
             {/* ข้อความแจ้งเตือนด้านล่างตามตัวเลือก */}
             {!requestRider ? (
-              <p className="text-[11px] text-slate-500 dark:text-slate-300 bg-amber-50 p-3 rounded-lg border border-amber-200 leading-relaxed">
+              <p className="text-[11px] text-slate-500 dark:text-slate-300 bg-amber-50 dark:bg-amber-900/40 p-3 rounded-lg border border-amber-200 dark:border-amber-800/50 leading-relaxed">
                 📍 **แนะนำ:** หลังกดสั่งซื้อเรียบร้อย กรุณาใช้ระบบกล่องข้อความทักไปคุยกับผู้ขายเพื่อนัดรับสินค้า
               </p>
             ) : (
-              <p className="text-[11px] text-emerald-800 bg-emerald-50 p-3 rounded-lg border border-emerald-200 leading-relaxed">
+              <p className="text-[11px] text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/40 p-3 rounded-lg border border-emerald-200 dark:border-emerald-800/50 leading-relaxed">
                 🛵 **ข้อมูล:** งานจะถูกส่งเข้าหน้าแดชบอร์ดของกลุ่มไรเดอร์ เมื่อมีไรเดอร์รับงานจะนำสินค้าไปส่งมอบให้คุณ ณ จุดนัดรับภายในสถาบัน
               </p>
             )}

@@ -4,6 +4,17 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  input, textarea, select {
+    @apply bg-white dark:bg-slate-800 dark:border-slate-700 dark:text-white dark:focus:bg-slate-800 transition-colors;
+  }
+  
+  /* Fallback for bg-transparent inputs */
+  input.bg-transparent, textarea.bg-transparent, select.bg-transparent {
+    @apply dark:bg-transparent;
+  }
+}
+
 body {
   font-family: 'Sarabun', 'Outfit', sans-serif;
   @apply bg-[#f8fafc] dark:bg-slate-900 text-slate-900 dark:text-slate-100 min-h-screen antialiased transition-colors duration-200;
