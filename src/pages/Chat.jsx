@@ -191,26 +191,26 @@ export default function Chat({ session }) {
   if (loading) return (
     <div className="flex flex-col justify-center items-center py-24 space-y-4">
       <Loader2 className="h-10 w-10 text-primary-600 animate-spin" />
-      <p className="text-slate-500 text-sm">กำลังโหลดการสนทนา...</p>
+      <p className="text-slate-500 dark:text-slate-400 text-sm">กำลังโหลดการสนทนา...</p>
     </div>
   )
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 animate-fade-in">
       <div className="mb-6">
-        <h1 className="text-3xl font-extrabold text-navy-900 tracking-tight">ข้อความ</h1>
-        <p className="mt-1 text-slate-500">ติดต่อผู้ซื้อผู้ขายโดยตรง</p>
+        <h1 className="text-3xl font-extrabold text-navy-900 dark:text-white tracking-tight">ข้อความ</h1>
+        <p className="mt-1 text-slate-500 dark:text-slate-400">ติดต่อผู้ซื้อผู้ขายโดยตรง</p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden" style={{ height: '70vh' }}>
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden transition-colors" style={{ height: '70vh' }}>
         <div className="flex h-full">
           {/* Sidebar */}
-          <div className={`w-full md:w-80 lg:w-96 border-r border-slate-200 flex flex-col ${selectedConv ? 'hidden md:flex' : 'flex'}`}>
-            <div className="p-4 border-b border-slate-100 bg-slate-50">
-              <h2 className="text-sm font-extrabold text-navy-900">การสนทนาทั้งหมด</h2>
-              <p className="text-xs text-slate-400 mt-0.5">{userProfile?.student_id} · {userProfile?.full_name}</p>
+          <div className={`w-full md:w-80 lg:w-96 border-r border-slate-200 dark:border-slate-800 flex flex-col ${selectedConv ? 'hidden md:flex' : 'flex'}`}>
+            <div className="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+              <h2 className="text-sm font-extrabold text-navy-900 dark:text-white">การสนทนาทั้งหมด</h2>
+              <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{userProfile?.student_id} · {userProfile?.full_name}</p>
             </div>
-            <div className="flex-1 overflow-y-auto divide-y divide-slate-100">
+            <div className="flex-1 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
               {conversations.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center p-8">
                   <MessageSquare className="h-12 w-12 text-slate-200 mb-4" />
@@ -219,13 +219,13 @@ export default function Chat({ session }) {
                 </div>
               ) : conversations.map((conv) => (
                 <button key={conv.key} onClick={() => openConversation(conv)}
-                  className={`w-full text-left px-4 py-4 hover:bg-slate-50 transition-colors flex items-start space-x-3 ${selectedConv?.key === conv.key ? 'bg-primary-50 border-l-2 border-primary-600' : ''}`}>
-                  <div className="h-10 w-10 bg-navy-900 rounded-full flex items-center justify-center text-white font-bold shrink-0 text-sm">
+                  className={`w-full text-left px-4 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors flex items-start space-x-3 ${selectedConv?.key === conv.key ? 'bg-primary-50 dark:bg-primary-900/20 border-l-2 border-primary-600' : ''}`}>
+                  <div className="h-10 w-10 bg-navy-900 dark:bg-slate-700 rounded-full flex items-center justify-center text-white font-bold shrink-0 text-sm">
                     {(conv.partnerName || 'U').charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-baseline">
-                      <span className="text-sm font-bold text-navy-900 truncate">{conv.partnerName}</span>
+                      <span className="text-sm font-bold text-navy-900 dark:text-white truncate">{conv.partnerName}</span>
                       {conv.unread > 0 && <span className="ml-1 px-1.5 py-0.5 bg-primary-600 text-white text-[9px] font-bold rounded-full shrink-0">{conv.unread}</span>}
                     </div>
                     <p className="text-xs text-slate-500 truncate mt-0.5 font-mono">{conv.partnerId}</p>
@@ -248,27 +248,27 @@ export default function Chat({ session }) {
             ) : (
               <>
                 {/* Chat Header */}
-                <div className="p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+                <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <button onClick={() => setSelectedConv(null)} className="md:hidden mr-1 text-slate-500 hover:text-navy-900">
+                    <button onClick={() => setSelectedConv(null)} className="md:hidden mr-1 text-slate-500 dark:text-slate-400 hover:text-navy-900 dark:hover:text-white">
                       <ArrowLeft className="h-5 w-5" />
                     </button>
-                    <div className="h-9 w-9 bg-navy-900 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0">
+                    <div className="h-9 w-9 bg-navy-900 dark:bg-slate-700 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0">
                       {(selectedConv.partnerName || 'U').charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-navy-900">{selectedConv.partnerName}</p>
-                      <p className="text-[10px] text-slate-400 font-mono">{selectedConv.partnerId}</p>
+                      <p className="text-sm font-bold text-navy-900 dark:text-white">{selectedConv.partnerName}</p>
+                      <p className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">{selectedConv.partnerId}</p>
                     </div>
                   </div>
-                  <div className={`flex items-center space-x-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${isLive ? 'bg-emerald-50 text-emerald-600 border border-emerald-200' : 'bg-slate-100 text-slate-400'}`}>
+                  <div className={`flex items-center space-x-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${isLive ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/50' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500'}`}>
                     {isLive ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3" />}
                     <span>{isLive ? 'Live' : 'Connecting...'}</span>
                   </div>
                 </div>
 
                 {/* Messages */}
-                <div ref={scrollContainerRef} className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50">
+                <div ref={scrollContainerRef} className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 dark:bg-slate-900/50">
                   {msgLoading ? (
                     <div className="flex items-center justify-center h-full"><Loader2 className="h-6 w-6 text-primary-500 animate-spin" /></div>
                   ) : messages.length === 0 ? (
@@ -281,11 +281,11 @@ export default function Chat({ session }) {
                     return (
                       <div key={msg.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
                         {!isOwn && (
-                          <div className="h-7 w-7 bg-navy-900 rounded-full flex items-center justify-center text-white text-xs font-bold mr-2 shrink-0 self-end">
+                          <div className="h-7 w-7 bg-navy-900 dark:bg-slate-700 rounded-full flex items-center justify-center text-white text-xs font-bold mr-2 shrink-0 self-end">
                             {(selectedConv.partnerName || 'U').charAt(0).toUpperCase()}
                           </div>
                         )}
-                        <div className={`max-w-[70%] px-4 py-2.5 rounded-2xl text-sm shadow-sm ${isOwn ? 'bg-navy-900 text-white rounded-br-md' : 'bg-white text-slate-900 border border-slate-200 rounded-bl-md'} ${msg._optimistic ? 'opacity-70' : ''}`}>
+                        <div className={`max-w-[70%] px-4 py-2.5 rounded-2xl text-sm shadow-sm ${isOwn ? 'bg-navy-900 text-white rounded-br-md' : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 rounded-bl-md'} ${msg._optimistic ? 'opacity-70' : ''}`}>
                           <p className="leading-relaxed">{msg.content}</p>
                           <p className={`text-[10px] mt-1.5 ${isOwn ? 'text-slate-400 text-right' : 'text-slate-400'}`}>{formatTime(msg.created_at)}</p>
                         </div>
@@ -295,7 +295,7 @@ export default function Chat({ session }) {
                 </div>
 
                 {/* Input */}
-                <form onSubmit={handleSend} className="p-4 border-t border-slate-200 bg-white flex items-end space-x-3">
+                <form onSubmit={handleSend} className="p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-end space-x-3">
                   <div className="flex-1 relative">
                     <textarea
                       rows={1}
@@ -303,12 +303,12 @@ export default function Chat({ session }) {
                       onChange={(e) => setInputText(e.target.value)}
                       onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(e) } }}
                       placeholder="พิมพ์ข้อความ..."
-                      className="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
+                      className="w-full px-4 py-2.5 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none transition-colors"
                     />
                   </div>
                   <button type="submit" disabled={sendLoading || !inputText.trim()}
-                    className="p-3 bg-navy-900 hover:bg-navy-800 text-white rounded-xl shadow-md transition-all disabled:opacity-50 shrink-0">
-                    {sendLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5 text-primary-400" />}
+                    className="p-3 bg-navy-900 dark:bg-primary-600 hover:bg-navy-800 dark:hover:bg-primary-500 text-white rounded-xl shadow-md transition-all disabled:opacity-50 shrink-0">
+                    {sendLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5 text-white" />}
                   </button>
                 </form>
               </>
