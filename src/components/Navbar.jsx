@@ -170,7 +170,7 @@ export default function Navbar({ session }) {
           </div>
 
           {/* Desktop Nav */}
-          <div className="hidden xl:flex flex-1 mx-2 items-center justify-center space-x-1 overflow-x-auto scrollbar-none">
+          <div className="hidden xl:flex flex-1 mx-2 items-center justify-start space-x-1 overflow-x-auto scrollbar-none">
             {visibleItems.map((item) => {
               const Icon = item.icon
               const isAdminItem = item.adminOnly
@@ -180,7 +180,7 @@ export default function Navbar({ session }) {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap ${
+                  className={`flex items-center space-x-1.5 px-2.5 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                     isActive(item.path)
                       ? isAdminItem
                         ? 'bg-red-600 text-white shadow-md'
