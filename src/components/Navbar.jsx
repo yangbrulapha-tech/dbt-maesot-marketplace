@@ -143,9 +143,20 @@ export default function Navbar({ session }) {
           <div className="flex items-center space-x-4">
             {session ? (
               <div className="flex items-center space-x-3">
-                 <span className="hidden lg:inline text-xs text-sky-200/90 border-r border-navy-700 pr-3 font-semibold truncate max-w-[180px]" title={userProfile?.full_name || session.user.email}>
-                  👤 {userProfile?.full_name || session.user.email}
-                </span>
+                <div className="hidden lg:flex items-center space-x-2 text-sky-200/90 border-r border-navy-700 pr-3" title={userProfile?.full_name || session.user.email}>
+                  {userProfile?.avatar_url ? (
+                    <img 
+                      src={userProfile.avatar_url.startsWith('http') ? userProfile.avatar_url : `${import.meta.env.BASE_URL}${userProfile.avatar_url.replace(/^\\//, '')}`}
+                      alt="profile" 
+                      className="w-6 h-6 rounded-full object-cover ring-2 ring-primary-500/50 shrink-0"
+                    />
+                  ) : (
+                    <User className="h-5 w-5 text-sky-300 shrink-0" />
+                  )}
+                  <span className="text-xs font-semibold truncate max-w-[150px]">
+                    {userProfile?.full_name || session.user.email}
+                  </span>
+                </div>
                 <button
                   onClick={handleLogout}
                   className="flex items-center space-x-1 bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-md text-xs font-semibold shadow-sm transition-all duration-200"
