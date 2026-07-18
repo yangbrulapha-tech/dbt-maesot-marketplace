@@ -17,7 +17,7 @@ export default function Chat({ session }) {
   const [inputText, setInputText] = useState('')
   const [sendLoading, setSendLoading] = useState(false)
   const [isLive, setIsLive] = useState(false)
-  const messagesEndRef = useRef(null)
+  const scrollContainerRef = useRef(null)
   const channelRef = useRef(null)
 
   useEffect(() => {
@@ -26,7 +26,9 @@ export default function Chat({ session }) {
   }, [session])
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight
+    }
   }, [messages])
 
   const initChat = async () => {
@@ -266,7 +268,7 @@ export default function Chat({ session }) {
                 </div>
 
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50">
+                <div ref={scrollContainerRef} className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50">
                   {msgLoading ? (
                     <div className="flex items-center justify-center h-full"><Loader2 className="h-6 w-6 text-primary-500 animate-spin" /></div>
                   ) : messages.length === 0 ? (
@@ -290,7 +292,6 @@ export default function Chat({ session }) {
                       </div>
                     )
                   })}
-                  <div ref={messagesEndRef} />
                 </div>
 
                 {/* Input */}
