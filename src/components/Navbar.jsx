@@ -11,6 +11,14 @@ export default function Navbar({ session }) {
   const [userProfile, setUserProfile] = useState(null)
   const [userRole, setUserRole] = useState(null)
   const [isRiderActive, setIsRiderActive] = useState(false)
+  
+  const [menuBadges, setMenuBadges] = useState({
+    '/chat': 0,
+    '/orders': 0,
+    '/rider': 0,
+    '/admin': 0,
+  })
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
@@ -47,6 +55,53 @@ export default function Navbar({ session }) {
       }
     } catch (_) {
       // ignore
+    }
+  }
+
+  useEffect(() => {
+    if (session && userProfile) {
+      fetchMenuBadges()
+      const interval = setInterval(fetchMenuBadges, 30000)
+      return () => clearInterval(interval)
+    }
+  }, [session, userProfile, isRiderActive, userRole])
+
+  const fetchMenuBadges = async () => {
+    try {
+      const badges = { '/chat': 0, '/orders': 0, '/rider': 0, '/admin': 0 }
+
+      const { count: chatCount } = await supabase.from('messages')
+        .select('*', { count: 'exact', head: true })
+        .eq('receiver_id', userProfile.student_id)
+        .eq('is_read', false)
+      if (chatCount) badges['/chat'] = chatCount
+
+      const { count: orderCount } = await supabase.from('notifications')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userProfile.student_id)
+        .eq('link', '/orders')
+        .eq('is_read', false)
+      if (orderCount) badges['/orders'] = orderCount
+
+      if (isRiderActive) {
+        const { count: riderCount } = await supabase.from('orders')
+          .select('*', { count: 'exact', head: true })
+          .eq('needs_delivery', true)
+          .is('rider_id', null)
+          .eq('status', 'pending')
+        if (riderCount) badges['/rider'] = riderCount
+      }
+
+      if (userRole === 'admin') {
+        const { count: adminCount } = await supabase.from('refund_requests')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'pending')
+        if (adminCount) badges['/admin'] = adminCount
+      }
+
+      setMenuBadges(badges)
+    } catch (err) {
+      console.error(err)
     }
   }
 
@@ -120,6 +175,7 @@ export default function Navbar({ session }) {
               const Icon = item.icon
               const isAdminItem = item.adminOnly
               const isRiderItem = item.riderOnly
+              const badgeCount = menuBadges[item.path] || 0
               return (
                 <Link
                   key={item.path}
@@ -140,6 +196,11 @@ export default function Navbar({ session }) {
                 >
                   <Icon className="h-4 w-4" />
                   <span>{item.label}</span>
+                  {badgeCount > 0 && (
+                    <span className="inline-flex items-center justify-center bg-red-500 text-white text-[10px] font-bold h-4 w-4 rounded-full shadow-sm ml-1">
+                      {badgeCount > 9 ? '9+' : badgeCount}
+                    </span>
+                  )}
                 </Link>
               )
             })}
@@ -194,6 +255,7 @@ export default function Navbar({ session }) {
         <div className="md:hidden bg-navy-950 border-t border-navy-800 flex justify-around py-2">
           {visibleItems.map((item) => {
             const Icon = item.icon
+            const badgeCount = menuBadges[item.path] || 0
             return (
               <Link
                 key={item.path}
@@ -208,7 +270,14 @@ export default function Navbar({ session }) {
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
-                <Icon className="h-5 w-5 mb-0.5" />
+                <div className="relative">
+                  <Icon className="h-5 w-5 mb-0.5 mx-auto" />
+                  {badgeCount > 0 && (
+                    <span className="absolute -top-1 -right-2 inline-flex items-center justify-center bg-red-500 text-white text-[9px] font-bold h-3.5 w-3.5 rounded-full shadow-sm">
+                      {badgeCount > 9 ? '9+' : badgeCount}
+                    </span>
+                  )}
+                </div>
                 <span>{item.label}</span>
               </Link>
             )

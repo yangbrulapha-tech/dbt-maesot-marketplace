@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Bell, Check, Trash2, X } from 'lucide-react'
 import { supabase } from '../supabaseClient'
 import { Link } from 'react-router-dom'
@@ -8,6 +8,16 @@ export default function NotificationBell({ session }) {
   const [isOpen, setIsOpen] = useState(false)
   const [unreadCount, setUnreadCount] = useState(0)
   const [studentId, setStudentId] = useState(null)
+
+  const prevUnreadCountRef = useRef(0)
+  const isInitialLoad = useRef(true)
+  const audioRef = useRef(null)
+
+  useEffect(() => {
+    // โหลดเสียงแจ้งเตือนเตรียมไว้
+    audioRef.current = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3')
+    audioRef.current.volume = 0.5
+  }, [])
 
   useEffect(() => {
     if (session) {
@@ -41,7 +51,18 @@ export default function NotificationBell({ session }) {
       }
 
       setNotifications(data || [])
-      setUnreadCount((data || []).filter(n => !n.is_read).length)
+      const newUnreadCount = (data || []).filter(n => !n.is_read).length
+
+      // ถ้ามีแจ้งเตือนใหม่เพิ่มขึ้น (และไม่ใช่ตอนโหลดหน้าเว็บครั้งแรก) ให้เล่นเสียง
+      if (!isInitialLoad.current && newUnreadCount > prevUnreadCountRef.current) {
+        if (audioRef.current) {
+          audioRef.current.play().catch(e => console.log('Audio play prevented:', e))
+        }
+      }
+
+      isInitialLoad.current = false
+      prevUnreadCountRef.current = newUnreadCount
+      setUnreadCount(newUnreadCount)
     } catch (err) {}
   }
 
