@@ -10,8 +10,8 @@
   }
   
   /* Fallback for bg-transparent inputs */
-  input.bg-transparent, textarea.bg-transparent, select.bg-transparent {
-    @apply dark:bg-transparent;
+  .dark input.bg-transparent, .dark textarea.bg-transparent, .dark select.bg-transparent {
+    background-color: transparent;
   }
 }
 
