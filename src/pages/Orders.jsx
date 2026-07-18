@@ -362,7 +362,7 @@ export default function Orders({ session }) {
                 {/* Contact */}
                 <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700 min-w-[220px]">
                   <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-700 pb-2 mb-2.5">
-                    <h4 className="text-[10px] font-extrabold text-navy-950 uppercase tracking-widest">
+                    <h4 className="text-[10px] font-extrabold text-navy-950 dark:text-slate-200 uppercase tracking-widest">
                       {activeTab === 'buyer' ? 'ติดต่อผู้ขาย' : 'ติดต่อผู้ซื้อ'}
                     </h4>
                     <button onClick={() => openMessageModal(order)}
@@ -421,6 +421,61 @@ export default function Orders({ session }) {
                 </div>
               )}
 
+              {/* Refund Form (Inline) */}
+              {isRefundModalOpen && refundOrderId === order.order_id && (
+                <div className="bg-red-50/50 dark:bg-red-900/10 border-t border-red-100 dark:border-red-900/50 p-6 animate-fade-in">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center space-x-2 text-red-600 dark:text-red-400">
+                      <ShieldAlert className="h-5 w-5" />
+                      <h3 className="font-bold text-lg">ยื่นคำขอคืนเงิน</h3>
+                    </div>
+                    <button onClick={() => setIsRefundModalOpen(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"><X className="h-5 w-5" /></button>
+                  </div>
+                  <form onSubmit={handleRefundSubmit} className="space-y-4">
+                    <div className="text-sm text-slate-600 dark:text-slate-300 mb-2">
+                      คุณกำลังขอคืนเงินสำหรับออเดอร์ <span className="font-bold text-navy-950 dark:text-slate-200">#ORD-{refundOrderId}</span>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">เหตุผลการขอคืนเงิน</label>
+                      <textarea rows="3" required value={refundReason} onChange={(e) => setRefundReason(e.target.value)}
+                        className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-red-500 bg-white dark:bg-slate-800"
+                        placeholder="อธิบายปัญหาที่เกิดขึ้นกับสินค้า..." />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">รูปภาพหลักฐาน (ถ้ามี)</label>
+                      <div className="flex items-center justify-center w-full">
+                        <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-slate-300 dark:border-slate-600 border-dashed rounded-lg cursor-pointer bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                          <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                            <ImagePlus className="w-6 h-6 mb-2 text-slate-400 dark:text-slate-300" />
+                            <p className="mb-1 text-xs text-slate-500 dark:text-slate-300"><span className="font-semibold">คลิกเพื่ออัปโหลด</span></p>
+                            <p className="text-[10px] text-slate-400 dark:text-slate-300">PNG, JPG (แนะนำขนาดไม่เกิน 2MB)</p>
+                          </div>
+                          <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+                        </label>
+                      </div>
+                      {refundEvidence && (
+                        <div className="mt-3 relative w-20 h-20 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700">
+                          <img src={refundEvidence} alt="Evidence Preview" className="w-full h-full object-cover" />
+                          <button type="button" onClick={() => setRefundEvidence('')} className="absolute top-1 right-1 bg-white dark:bg-slate-800 rounded-full p-0.5 shadow">
+                            <X className="h-3 w-3 text-red-500" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="pt-2 flex justify-end space-x-3">
+                      <button type="button" onClick={() => setIsRefundModalOpen(false)} className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800">ยกเลิก</button>
+                      <button type="submit" disabled={refundLoading}
+                        className="flex items-center space-x-1.5 px-5 py-2 bg-red-600 text-white rounded-lg text-sm font-bold hover:bg-red-700 disabled:opacity-50 transition-colors shadow-sm">
+                        {refundLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><CheckCircle2 className="h-4 w-4" /><span>ส่งคำขอคืนเงิน</span></>}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
+
             </div>
           ))}
         </div>
@@ -434,9 +489,9 @@ export default function Orders({ session }) {
               <div className="flex items-center space-x-2"><MessageSquare className="h-5 w-5 text-primary-400" /><h2 className="text-lg font-bold">ส่งข้อความ</h2></div>
               <button onClick={() => setIsMsgModalOpen(false)}><X className="h-5 w-5 text-slate-400 dark:text-slate-300" /></button>
             </div>
-            <form onSubmit={handleSendOrderMessage} className="p-6 space-y-4">
-              <div className="text-xs text-slate-500 dark:text-slate-300 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border">
-                ส่งถึง: <span className="font-bold text-navy-950">{messageTarget.partnerName}</span> เรื่อง "<span className="font-bold">{messageTarget.productTitle}</span>"
+            <form onSubmit={handleSendMessage} className="p-6 space-y-4">
+              <div className="text-xs text-slate-500 dark:text-slate-300 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700">
+                ส่งถึง: <span className="font-bold text-navy-950 dark:text-slate-200">{messageTarget.partnerName}</span> เรื่อง "<span className="font-bold">{messageTarget.productTitle}</span>"
               </div>
               <textarea rows="4" required value={messageText} onChange={(e) => setMessageText(e.target.value)}
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
@@ -452,59 +507,6 @@ export default function Orders({ session }) {
         </div>
       )}
 
-      {/* Refund Modal */}
-      {isRefundModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-lg overflow-hidden animate-scale-up">
-            <div className="bg-red-600 text-white p-4 flex items-center justify-between">
-              <div className="flex items-center space-x-2"><ShieldAlert className="h-5 w-5" /><h2 className="text-lg font-bold">ยื่นคำขอคืนเงิน</h2></div>
-              <button onClick={() => setIsRefundModalOpen(false)}><X className="h-5 w-5 text-red-200 hover:text-white transition-colors" /></button>
-            </div>
-            <form onSubmit={handleRefundSubmit} className="p-6 space-y-4">
-              <div className="text-sm text-slate-600 dark:text-slate-300 mb-2">
-                คุณกำลังขอคืนเงินสำหรับออเดอร์ <span className="font-bold text-navy-950">#ORD-{refundOrderId}</span>
-              </div>
-              
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">เหตุผลการขอคืนเงิน</label>
-                <textarea rows="4" required value={refundReason} onChange={(e) => setRefundReason(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-                  placeholder="อธิบายปัญหาที่เกิดขึ้นกับสินค้า..." />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">รูปภาพหลักฐาน (ถ้ามี)</label>
-                <div className="flex items-center justify-center w-full">
-                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 border-dashed rounded-lg cursor-pointer bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100 dark:hover:bg-slate-800 dark:bg-slate-800 transition-colors">
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <ImagePlus className="w-8 h-8 mb-2 text-slate-400 dark:text-slate-300" />
-                      <p className="mb-2 text-sm text-slate-500 dark:text-slate-300"><span className="font-semibold">คลิกเพื่ออัปโหลด</span></p>
-                      <p className="text-xs text-slate-400 dark:text-slate-300">PNG, JPG (แนะนำขนาดไม่เกิน 2MB)</p>
-                    </div>
-                    <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
-                  </label>
-                </div>
-                {refundEvidence && (
-                  <div className="mt-3 relative w-24 h-24 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700">
-                    <img src={refundEvidence} alt="Evidence Preview" className="w-full h-full object-cover" />
-                    <button type="button" onClick={() => setRefundEvidence('')} className="absolute top-1 right-1 bg-white dark:bg-slate-800 rounded-full p-0.5 shadow">
-                      <X className="h-3 w-3 text-red-500" />
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              <div className="pt-4 flex justify-end space-x-3">
-                <button type="button" onClick={() => setIsRefundModalOpen(false)} className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:bg-slate-900/50">ยกเลิก</button>
-                <button type="submit" disabled={refundLoading}
-                  className="flex items-center space-x-1.5 px-5 py-2 bg-red-600 text-white rounded-lg text-sm font-bold hover:bg-red-700 disabled:opacity-50 transition-colors">
-                  {refundLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <span>ยืนยันขอคืนเงิน</span>}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
