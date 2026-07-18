@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { LogOut, ShoppingBag, User, AlertOctagon, Store, MessageSquare, ShieldCheck, Truck } from 'lucide-react'
+import { LogOut, ShoppingBag, User, AlertOctagon, Store, MessageSquare, ShieldCheck, Truck, Moon, Sun } from 'lucide-react'
 import { supabase, getUserProfile } from '../supabaseClient'
+import NotificationBell from './NotificationBell'
+import useDarkMode from '../hooks/useDarkMode'
 
 export default function Navbar({ session }) {
   const location = useLocation()
@@ -9,6 +11,11 @@ export default function Navbar({ session }) {
   const [userProfile, setUserProfile] = useState(null)
   const [userRole, setUserRole] = useState(null)
   const [isRiderActive, setIsRiderActive] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const [isDark, toggleDarkMode] = useDarkMode()
 
   useEffect(() => {
     if (session) {
@@ -141,9 +148,13 @@ export default function Navbar({ session }) {
 
           {/* Right Actions */}
           <div className="flex items-center space-x-4">
+            <button onClick={toggleDarkMode} className="p-2 text-slate-300 hover:text-white transition-colors" title="สลับโหมดหน้าจอ">
+              {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
             {session ? (
               <div className="flex items-center space-x-3">
-                <div className="hidden lg:flex items-center space-x-2 text-sky-200/90 border-r border-navy-700 pr-3" title={userProfile?.full_name || session.user.email}>
+                <NotificationBell session={session} />
+                <div className="hidden lg:flex items-center space-x-2 text-sky-200/90 border-r border-navy-700 pr-3 pl-1" title={userProfile?.full_name || session.user.email}>
                   {userProfile?.avatar_url ? (
                     <img 
                       src={userProfile.avatar_url.startsWith('http') ? userProfile.avatar_url : `${import.meta.env.BASE_URL}${userProfile.avatar_url.replace(/^\\//, '')}`}

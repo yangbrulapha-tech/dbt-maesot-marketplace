@@ -163,6 +163,14 @@ export default function Chat({ session }) {
 
       if (error) throw error
 
+      // Add Notification
+      await supabase.from('notifications').insert({
+        user_id: selectedConv.partnerId,
+        title: 'ข้อความใหม่',
+        message: `มีข้อความใหม่จากคุณ`,
+        link: '/chat'
+      })
+
       // แทน optimistic ด้วย real msg
       setMessages((prev) => prev.map((m) => m.id === optimisticMsg.id ? sent : m))
       fetchConversations(userProfile.student_id)

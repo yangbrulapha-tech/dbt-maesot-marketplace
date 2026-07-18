@@ -6,14 +6,17 @@
 
 body {
   font-family: 'Sarabun', 'Outfit', sans-serif;
-  @apply bg-[#f8fafc] text-slate-900 min-h-screen antialiased;
-  background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+  @apply bg-[#f8fafc] dark:bg-slate-900 text-slate-900 dark:text-slate-100 min-h-screen antialiased transition-colors duration-200;
+  background-image: radial-gradient(theme('colors.slate.200') 1px, transparent 1px);
   background-size: 24px 24px;
+}
+.dark body {
+  background-image: radial-gradient(theme('colors.slate.800') 1px, transparent 1px);
 }
 
 /* Premium Card Styles */
 .ecommerce-card {
-  @apply bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden flex flex-col justify-between transition-all duration-300;
+  @apply bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-sm overflow-hidden flex flex-col justify-between transition-all duration-300;
 }
 .ecommerce-card:hover {
   transform: translateY(-6px);
@@ -95,7 +98,7 @@ body {
 
 /* Glassmorphism containers */
 .glass-panel {
-  @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-lg;
+  @apply bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border border-white/20 dark:border-slate-700/50 shadow-lg;
 }
 
 /* Toast slide-in animation */

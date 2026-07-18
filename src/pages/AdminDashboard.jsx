@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { supabase, getUserProfile } from '../supabaseClient'
-import { ShieldCheck, Trash2, Loader2, Package, Users, ShoppingBag, AlertCircle, CheckCircle2, X, RefreshCw, Search, Truck } from 'lucide-react'
+import { ShieldCheck, Trash2, Loader2, Package, Users, ShoppingBag, AlertCircle, CheckCircle2, X, RefreshCw, Search, Truck, ShieldAlert } from 'lucide-react'
 import { Navigate } from 'react-router-dom'
 
 // Schema จริง:
@@ -32,6 +32,7 @@ export default function AdminDashboard({ session }) {
   const [users, setUsers] = useState([])
   const [orders, setOrders] = useState([])
   const [riders, setRiders] = useState([])
+  const [refunds, setRefunds] = useState([])
   const [dataLoading, setDataLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [activeTab, setActiveTab] = useState('products')
@@ -74,11 +75,12 @@ export default function AdminDashboard({ session }) {
   const loadAllData = async () => {
     setDataLoading(true)
     try {
-      const [pRes, uRes, oRes, rRes] = await Promise.all([
+      const [pRes, uRes, oRes, rRes, refRes] = await Promise.all([
         supabase.from('products').select('product_id, seller_id, title, price, category, status, created_at').order('created_at', { ascending: false }),
         supabase.from('users').select('student_id, full_name, email, role, created_at').order('created_at', { ascending: false }),
         supabase.from('orders').select(`order_id, buyer_id, status, created_at, product:products(title, price)`).order('created_at', { ascending: false }).limit(50),
-        supabase.from('riders').select('*').order('is_active', { ascending: true })
+        supabase.from('riders').select('*').order('is_active', { ascending: true }),
+        supabase.from('refund_requests').select('*').order('created_at', { ascending: false })
       ])
       
       if (pRes.error) throw pRes.error
@@ -86,6 +88,7 @@ export default function AdminDashboard({ session }) {
       
       const usersData = uRes.data || []
       const rawRiders = rRes.data || []
+      setRefunds(refRes.data || [])
 
       // แมปรายชื่อผู้ใช้งานให้กับข้อมูลไรเดอร์ (เพื่อแสดงชื่อ-นามสกุลจริง)
       const mappedRiders = rawRiders.map(rider => {
@@ -105,6 +108,35 @@ export default function AdminDashboard({ session }) {
       addToast('เกิดข้อผิดพลาด: ' + (err.message || ''), 'error')
     } finally {
       setDataLoading(false)
+    }
+  }
+
+  const handleRefundAction = async (refundId, action) => {
+    const reply = window.prompt(`ระบุหมายเหตุสำหรับการ${action === 'approved' ? 'อนุมัติ' : 'ปฏิเสธ'}:`)
+    if (reply === null) return
+    try {
+      const { error } = await supabase.from('refund_requests')
+        .update({ status: action, admin_reply: reply })
+        .eq('id', refundId)
+      if (error) throw error
+      
+      const refund = refunds.find(r => r.id === refundId)
+      setRefunds(prev => prev.map(r => r.id === refundId ? { ...r, status: action, admin_reply: reply } : r))
+      
+      if (action === 'approved' && refund) {
+        await supabase.from('orders').update({ status: 'cancelled' }).eq('order_id', refund.order_id)
+      }
+      if (refund) {
+        await supabase.from('notifications').insert({
+          user_id: refund.buyer_id,
+          title: `คำขอคืนเงินถูก${action === 'approved' ? 'อนุมัติ' : 'ปฏิเสธ'}`,
+          message: `คำขอคืนเงินสำหรับออเดอร์ #ORD-${refund.order_id} ถูก${action === 'approved' ? 'อนุมัติ' : 'ปฏิเสธ'} หมายเหตุ: ${reply}`,
+          link: '/orders'
+        })
+      }
+      addToast(`ทำรายการคืนเงินเรียบร้อยแล้ว`, 'success')
+    } catch (err) {
+      addToast('ทำรายการไม่สำเร็จ: ' + err.message, 'error')
     }
   }
 
@@ -257,12 +289,13 @@ export default function AdminDashboard({ session }) {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-white p-1 rounded-2xl border border-slate-200 mb-6 shadow-sm">
+      <div className="flex flex-wrap gap-1 bg-white p-1 rounded-2xl border border-slate-200 mb-6 shadow-sm">
         {[
           { key: 'products', label: 'สินค้า', icon: Package },
           { key: 'users', label: 'ผู้ใช้งาน', icon: Users },
           { key: 'riders', label: 'อนุมัติ Rider', icon: Truck },
-          { key: 'orders', label: 'ออเดอร์', icon: ShoppingBag }
+          { key: 'orders', label: 'ออเดอร์', icon: ShoppingBag },
+          { key: 'refunds', label: 'คืนเงิน', icon: ShieldAlert }
         ].map(({ key, label, icon: Icon }) => (
           <button key={key} onClick={() => setActiveTab(key)}
             className={`flex-1 flex items-center justify-center space-x-2 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${activeTab === key ? 'bg-navy-900 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50'}`}>
@@ -434,6 +467,43 @@ export default function AdminDashboard({ session }) {
                   ))}
                 </tbody>
               </table>
+            )}
+
+            {activeTab === 'refunds' && (
+              <div className="p-6 space-y-4">
+                {refunds.length === 0 ? (
+                  <div className="text-center py-12 text-slate-400">ไม่มีคำร้องขอคืนเงิน</div>
+                ) : refunds.map(r => (
+                  <div key={r.id} className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col md:flex-row gap-4 justify-between items-start">
+                    <div className="space-y-2 flex-1">
+                      <div className="flex items-center space-x-2">
+                        <span className="font-mono font-bold text-navy-900 text-sm">#ORD-{r.order_id}</span>
+                        {r.status === 'pending' && <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded-full">รอดำเนินการ</span>}
+                        {r.status === 'approved' && <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded-full">อนุมัติแล้ว</span>}
+                        {r.status === 'rejected' && <span className="px-2 py-0.5 bg-red-100 text-red-800 text-[10px] font-bold rounded-full">ปฏิเสธ</span>}
+                      </div>
+                      <p className="text-xs text-slate-500">ผู้ขอคืนเงิน: <span className="font-bold">{r.buyer_id}</span></p>
+                      <p className="text-sm text-slate-700 bg-white p-2 border border-slate-200 rounded-lg">เหตุผล: {r.reason}</p>
+                      {r.admin_reply && (
+                        <p className="text-sm text-slate-700 bg-indigo-50 border border-indigo-100 p-2 rounded-lg">แอดมินตอบกลับ: {r.admin_reply}</p>
+                      )}
+                    </div>
+                    {r.evidence_url && (
+                      <div className="shrink-0">
+                        <a href={r.evidence_url} target="_blank" rel="noreferrer">
+                          <img src={r.evidence_url} alt="หลักฐาน" className="w-24 h-24 object-cover rounded-lg border border-slate-200 shadow-sm hover:opacity-80" />
+                        </a>
+                      </div>
+                    )}
+                    {r.status === 'pending' && (
+                      <div className="flex flex-col space-y-2 shrink-0">
+                        <button onClick={() => handleRefundAction(r.id, 'approved')} className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg shadow-sm">อนุมัติ</button>
+                        <button onClick={() => handleRefundAction(r.id, 'rejected')} className="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded-lg shadow-sm">ปฏิเสธ</button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         </div>

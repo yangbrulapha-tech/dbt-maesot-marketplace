@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { supabase, getUserProfile } from '../supabaseClient'
-import { ShoppingBag, CheckCircle2, XCircle, Clock, Loader2, MessageSquare, AlertCircle, Send, X } from 'lucide-react'
+import { ShoppingBag, CheckCircle2, XCircle, Clock, Loader2, MessageSquare, AlertCircle, Send, X, ShieldAlert, ImagePlus } from 'lucide-react'
 
 // Schema จริง:
 // orders: order_id(PK), product_id, buyer_id(student_id varchar), rider_id, status, created_at
@@ -20,6 +20,12 @@ export default function Orders({ session }) {
   const [messageTarget, setMessageTarget] = useState(null)
   const [messageText, setMessageText] = useState('')
   const [msgLoading, setMsgLoading] = useState(false)
+
+  const [isRefundModalOpen, setIsRefundModalOpen] = useState(false)
+  const [refundOrderId, setRefundOrderId] = useState(null)
+  const [refundReason, setRefundReason] = useState('')
+  const [refundEvidence, setRefundEvidence] = useState('')
+  const [refundLoading, setRefundLoading] = useState(false)
 
   useEffect(() => {
     if (session) fetchProfileAndOrders()
@@ -144,9 +150,9 @@ export default function Orders({ session }) {
     setIsMsgModalOpen(true)
   }
 
-  const handleSendOrderMessage = async (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault()
-    if (!userProfile || !messageTarget) return
+    if (!messageText.trim() || !messageTarget) return
     setMsgLoading(true)
     try {
       const { error } = await supabase.from('messages').insert({
@@ -157,6 +163,15 @@ export default function Orders({ session }) {
         is_read: false,
       })
       if (error) throw error
+      
+      // Add Notification
+      await supabase.from('notifications').insert({
+        user_id: messageTarget.partnerId,
+        title: 'ข้อความใหม่',
+        message: `มีข้อความใหม่จาก ${userProfile.full_name}`,
+        link: '/chat'
+      })
+
       setSuccessMsg(`ส่งข้อความหา ${messageTarget.partnerName} เรียบร้อย!`)
       setIsMsgModalOpen(false)
       setMessageText('')
@@ -165,6 +180,49 @@ export default function Orders({ session }) {
       setErrorMsg('ไม่สามารถส่งข้อความได้: ' + err.message)
     } finally {
       setMsgLoading(false)
+    }
+  }
+
+  const openRefundModal = (orderId) => {
+    setRefundOrderId(orderId)
+    setRefundReason('')
+    setRefundEvidence('')
+    setIsRefundModalOpen(true)
+  }
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      setRefundEvidence(event.target.result)
+    }
+    reader.readAsDataURL(file)
+  }
+
+  const handleRefundSubmit = async (e) => {
+    e.preventDefault()
+    if (!refundReason) return setErrorMsg('กรุณาระบุเหตุผลการขอคืนเงิน')
+    setRefundLoading(true)
+    try {
+      const { error } = await supabase.from('refund_requests').insert({
+        order_id: refundOrderId,
+        buyer_id: userProfile.student_id,
+        reason: refundReason,
+        evidence_url: refundEvidence,
+        status: 'pending'
+      })
+      if (error) throw error
+
+      setSuccessMsg('ส่งคำขอคืนเงินเรียบร้อยแล้ว แอดมินจะตรวจสอบและแจ้งผลให้ทราบ')
+      setIsRefundModalOpen(false)
+      setRefundReason('')
+      setRefundEvidence('')
+      setRefundOrderId(null)
+    } catch (err) {
+      setErrorMsg('เกิดข้อผิดพลาดในการยื่นขอคืนเงิน: ' + err.message)
+    } finally {
+      setRefundLoading(false)
     }
   }
 
@@ -298,9 +356,17 @@ export default function Orders({ session }) {
                     </h4>
                     <button onClick={() => openMessageModal(order)}
                       className="inline-flex items-center space-x-1 bg-navy-900 hover:bg-navy-800 text-white px-2.5 py-1 rounded-lg text-[9px] font-extrabold shadow-sm">
-                      <MessageSquare className="h-3 w-3 text-primary-400" /><span>แชท</span>
+                      <MessageSquare className="h-3 w-3" />
+                      <span>ส่งข้อความ</span>
                     </button>
                   </div>
+                  {activeTab === 'buyer' && (order.status === 'completed' || order.status === 'pending') && (
+                    <button onClick={() => openRefundModal(order.order_id)}
+                      className="mt-2 w-full flex items-center justify-center space-x-1 border border-red-500 text-red-600 hover:bg-red-50 px-2 py-1.5 rounded-lg text-[10px] font-bold transition-colors">
+                      <ShieldAlert className="h-3.5 w-3.5" />
+                      <span>ขอคืนเงิน (Refund)</span>
+                    </button>
+                  )}
                   {activeTab === 'buyer' ? (
                     <div className="space-y-1">
                       <p className="text-sm font-bold text-slate-800">{order.seller?.full_name || '-'}</p>
@@ -368,6 +434,60 @@ export default function Orders({ session }) {
                 <button type="submit" disabled={msgLoading}
                   className="flex items-center space-x-1.5 px-5 py-2 bg-navy-900 text-white rounded-lg text-sm font-bold hover:bg-navy-800 disabled:opacity-50">
                   {msgLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Send className="h-4 w-4 text-primary-300" /><span>ส่ง</span></>}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Refund Modal */}
+      {isRefundModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-scale-up">
+            <div className="bg-red-600 text-white p-4 flex items-center justify-between">
+              <div className="flex items-center space-x-2"><ShieldAlert className="h-5 w-5" /><h2 className="text-lg font-bold">ยื่นคำขอคืนเงิน</h2></div>
+              <button onClick={() => setIsRefundModalOpen(false)}><X className="h-5 w-5 text-red-200 hover:text-white transition-colors" /></button>
+            </div>
+            <form onSubmit={handleRefundSubmit} className="p-6 space-y-4">
+              <div className="text-sm text-slate-600 mb-2">
+                คุณกำลังขอคืนเงินสำหรับออเดอร์ <span className="font-bold text-navy-950">#ORD-{refundOrderId}</span>
+              </div>
+              
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">เหตุผลการขอคืนเงิน</label>
+                <textarea rows="4" required value={refundReason} onChange={(e) => setRefundReason(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                  placeholder="อธิบายปัญหาที่เกิดขึ้นกับสินค้า..." />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">รูปภาพหลักฐาน (ถ้ามี)</label>
+                <div className="flex items-center justify-center w-full">
+                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 border-dashed rounded-lg cursor-pointer bg-slate-50 hover:bg-slate-100 transition-colors">
+                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                      <ImagePlus className="w-8 h-8 mb-2 text-slate-400" />
+                      <p className="mb-2 text-sm text-slate-500"><span className="font-semibold">คลิกเพื่ออัปโหลด</span></p>
+                      <p className="text-xs text-slate-400">PNG, JPG (แนะนำขนาดไม่เกิน 2MB)</p>
+                    </div>
+                    <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+                  </label>
+                </div>
+                {refundEvidence && (
+                  <div className="mt-3 relative w-24 h-24 rounded-lg overflow-hidden border border-slate-200">
+                    <img src={refundEvidence} alt="Evidence Preview" className="w-full h-full object-cover" />
+                    <button type="button" onClick={() => setRefundEvidence('')} className="absolute top-1 right-1 bg-white rounded-full p-0.5 shadow">
+                      <X className="h-3 w-3 text-red-500" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="pt-4 flex justify-end space-x-3">
+                <button type="button" onClick={() => setIsRefundModalOpen(false)} className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 text-sm font-semibold hover:bg-slate-50">ยกเลิก</button>
+                <button type="submit" disabled={refundLoading}
+                  className="flex items-center space-x-1.5 px-5 py-2 bg-red-600 text-white rounded-lg text-sm font-bold hover:bg-red-700 disabled:opacity-50 transition-colors">
+                  {refundLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <span>ยืนยันขอคืนเงิน</span>}
                 </button>
               </div>
             </form>

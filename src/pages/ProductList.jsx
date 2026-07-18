@@ -248,6 +248,15 @@ export default function ProductList({ session }) {
         needs_delivery: requestRider, // บันทึกคำขอ Rider
       })
       if (error) throw error
+
+      // Add Notification
+      await supabase.from('notifications').insert({
+        user_id: checkoutProduct.seller_id,
+        title: 'คำสั่งซื้อใหม่!',
+        message: `มีคำสั่งซื้อใหม่สำหรับสินค้า "${checkoutProduct.title}" จาก ${userProfile.full_name}`,
+        link: '/orders'
+      })
+
       addToast(`สั่งซื้อ "${checkoutProduct.title}" สำเร็จแล้ว!`, 'success')
       setIsCheckoutModalOpen(false)
     } catch (err) {
