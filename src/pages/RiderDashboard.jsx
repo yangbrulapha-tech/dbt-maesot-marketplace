@@ -405,8 +405,8 @@ export default function RiderDashboard({ session }) {
                     <div>
                       <div className="flex justify-between items-start mb-3 border-b border-slate-100 pb-3">
                         <div>
-                          <span className="text-[10px] text-slate-400 dark:text-slate-300 font-bold uppercase font-mono">#ORD-{order.order_id}</span>
-                          <h3 className="font-extrabold text-navy-950 text-sm sm:text-base line-clamp-1 mt-0.5">{order.product?.title || 'สินค้าทั่วไป'}</h3>
+                          <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase font-mono">#ORD-{order.order_id}</span>
+                          <h3 className="font-extrabold text-navy-950 dark:text-white text-sm sm:text-base line-clamp-1 mt-0.5">{order.product?.title || 'สินค้าทั่วไป'}</h3>
                         </div>
                         <span className="text-lg font-black text-emerald-600 font-outfit">
                           ฿{Number(order.product?.price || 0).toLocaleString()}
@@ -422,9 +422,9 @@ export default function RiderDashboard({ session }) {
                           <User className="h-3.5 w-3.5 text-slate-400 dark:text-slate-300 shrink-0" />
                           <span>ผู้จ่ายเงิน/ผู้ซื้อ: <span className="font-bold text-slate-800 dark:text-slate-200">{order.buyer?.full_name || order.buyer_id}</span></span>
                         </div>
-                        <div className="flex items-start space-x-2 bg-emerald-100/50 p-2 rounded border border-emerald-200 mt-1">
-                          <MapPin className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                          <span className="text-emerald-900 font-medium">จุดส่ง: <span className="font-bold">{order.delivery_location || 'ไม่ได้ระบุ'}</span></span>
+                        <div className="flex items-start space-x-2 bg-emerald-100/50 dark:bg-emerald-900/40 p-2 rounded border border-emerald-200 dark:border-emerald-800/60 mt-1">
+                          <MapPin className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                          <span className="text-emerald-900 dark:text-emerald-100 font-medium">จุดส่ง: <span className="font-bold">{order.delivery_location || 'ไม่ได้ระบุ'}</span></span>
                         </div>
                       </div>
                     </div>
@@ -453,8 +453,8 @@ export default function RiderDashboard({ session }) {
                   <div key={order.order_id} className="bg-white dark:bg-slate-800 rounded-2xl border border-emerald-400/80 shadow-md overflow-hidden animate-scale-up">
                     <div className="bg-emerald-50 px-6 py-4 border-b border-emerald-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                       <div>
-                        <span className="text-[10px] text-emerald-800 font-extrabold uppercase font-mono bg-emerald-100 px-2 py-0.5 rounded-md">ออเดอร์ระหว่างจัดส่ง</span>
-                        <span className="text-xs font-bold text-slate-500 dark:text-slate-300 ml-2">#ORD-{order.order_id}</span>
+                        <span className="text-[10px] text-emerald-800 dark:text-emerald-200 font-extrabold uppercase font-mono bg-emerald-100 dark:bg-emerald-900/50 px-2 py-0.5 rounded-md">ออเดอร์ระหว่างจัดส่ง</span>
+                        <span className="text-xs font-bold text-slate-500 dark:text-slate-400 ml-2">#ORD-{order.order_id}</span>
                       </div>
                       <span className="text-base font-black text-emerald-600 font-outfit">฿{Number(order.product?.price || 0).toLocaleString()}</span>
                     </div>
@@ -477,20 +477,20 @@ export default function RiderDashboard({ session }) {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {/* Seller Contact */}
                         <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
-                          <span className="text-[9px] font-extrabold text-amber-700 uppercase tracking-wider block mb-1">1. นัดรับสินค้าจาก (ผู้ขาย)</span>
+                          <span className="text-[9px] font-extrabold text-amber-700 dark:text-amber-400 uppercase tracking-wider block mb-1">1. นัดรับสินค้าจาก (ผู้ขาย)</span>
                           <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{order.seller?.full_name || '-'}</p>
                           <p className="text-[10px] text-slate-400 dark:text-slate-300 font-mono mt-0.5">รหัส: {order.product?.seller_id}</p>
                         </div>
 
                         {/* Buyer Contact */}
                         <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
-                          <span className="text-[9px] font-extrabold text-primary-700 uppercase tracking-wider block mb-1">2. นัดส่งมอบและรับเงินจาก (ผู้ซื้อ)</span>
+                          <span className="text-[9px] font-extrabold text-primary-700 dark:text-primary-400 uppercase tracking-wider block mb-1">2. นัดส่งมอบและรับเงินจาก (ผู้ซื้อ)</span>
                           <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{order.buyer?.full_name || '-'}</p>
                           <p className="text-[10px] text-slate-400 dark:text-slate-300 font-mono mt-0.5">รหัส: {order.buyer_id}</p>
                           
-                          <div className="mt-2 bg-emerald-100/50 p-2 rounded border border-emerald-200 flex items-start space-x-1.5">
-                            <MapPin className="h-3 w-3 text-emerald-600 mt-0.5 shrink-0" />
-                            <p className="text-[11px] text-emerald-900 font-medium">
+                          <div className="mt-2 bg-emerald-100/50 dark:bg-emerald-900/40 p-2 rounded border border-emerald-200 dark:border-emerald-800/60 flex items-start space-x-1.5">
+                            <MapPin className="h-3 w-3 text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0" />
+                            <p className="text-[11px] text-emerald-900 dark:text-emerald-100 font-medium">
                               จุดส่ง: <span className="font-bold">{order.delivery_location || 'ไม่ได้ระบุ'}</span>
                             </p>
                           </div>
