@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { LogOut, ShoppingBag, User, AlertOctagon, Store, MessageSquare, ShieldCheck, Truck, Moon, Sun } from 'lucide-react'
 import { supabase, getUserProfile } from '../supabaseClient'
@@ -24,6 +24,15 @@ export default function Navbar({ session }) {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const [isDark, toggleDarkMode] = useDarkMode()
+
+  const prevTotalBadges = useRef(0)
+  const isInitialLoad = useRef(true)
+  const audioRef = useRef(null)
+
+  useEffect(() => {
+    audioRef.current = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3')
+    audioRef.current.volume = 0.5
+  }, [])
 
   useEffect(() => {
     if (session) {
@@ -100,6 +109,15 @@ export default function Navbar({ session }) {
       }
 
       setMenuBadges(badges)
+      
+      const totalBadges = badges['/chat'] + badges['/rider'] + badges['/admin'] // ไม่รวม /orders เพราะมันเล่นเสียงที่ NotificationBell ไปแล้ว
+      if (!isInitialLoad.current && totalBadges > prevTotalBadges.current) {
+        if (audioRef.current) {
+          audioRef.current.play().catch(e => console.log('Audio prevented:', e))
+        }
+      }
+      prevTotalBadges.current = totalBadges
+      isInitialLoad.current = false
     } catch (err) {
       console.error(err)
     }
