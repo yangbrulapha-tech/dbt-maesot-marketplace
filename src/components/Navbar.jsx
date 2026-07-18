@@ -170,7 +170,7 @@ export default function Navbar({ session }) {
           </div>
 
           {/* Desktop Nav */}
-          <div className="hidden xl:flex flex-1 mx-2 items-center justify-start space-x-1 overflow-x-auto scrollbar-none">
+          <div className="hidden xl:flex flex-1 mx-1 items-center justify-start space-x-0.5 overflow-x-auto scrollbar-none">
             {visibleItems.map((item) => {
               const Icon = item.icon
               const isAdminItem = item.adminOnly
@@ -180,7 +180,7 @@ export default function Navbar({ session }) {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`flex items-center space-x-1.5 px-2.5 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap ${
+                  className={`flex items-center space-x-1 px-2 py-2 rounded-md text-[13px] font-medium transition-all duration-200 whitespace-nowrap ${
                     isActive(item.path)
                       ? isAdminItem
                         ? 'bg-red-600 text-white shadow-md'
@@ -208,14 +208,14 @@ export default function Navbar({ session }) {
 
 
           {/* Right Actions */}
-          <div className="flex items-center space-x-4 shrink-0">
-            <button onClick={toggleDarkMode} className="p-2 text-slate-300 hover:text-white transition-colors" title="สลับโหมดหน้าจอ">
+          <div className="flex items-center space-x-2 shrink-0">
+            <button onClick={toggleDarkMode} className="p-1.5 text-slate-300 hover:text-white transition-colors" title="สลับโหมดหน้าจอ">
               {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
             {session ? (
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2">
                 <NotificationBell session={session} />
-                <div className="hidden lg:flex items-center space-x-2 text-sky-200/90 border-r border-navy-700 dark:border-slate-800 pr-3 pl-1" title={userProfile?.full_name || session.user.email}>
+                <div className="hidden lg:flex items-center space-x-1.5 text-sky-200/90 border-r border-navy-700 dark:border-slate-800 pr-2 pl-1" title={userProfile?.full_name || session.user.email}>
                   {userProfile?.avatar_url ? (
                     <img 
                       src={userProfile.avatar_url.startsWith('http') ? userProfile.avatar_url : `${import.meta.env.BASE_URL}${userProfile.avatar_url.startsWith('/') ? userProfile.avatar_url.slice(1) : userProfile.avatar_url}`}
@@ -225,7 +225,7 @@ export default function Navbar({ session }) {
                   ) : (
                     <User className="h-5 w-5 text-sky-300 shrink-0" />
                   )}
-                  <span className="text-xs font-semibold truncate max-w-[150px]">
+                  <span className="text-xs font-semibold truncate max-w-[120px]">
                     {userProfile?.full_name || session.user.email}
                   </span>
                 </div>
