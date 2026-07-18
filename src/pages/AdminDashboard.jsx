@@ -285,10 +285,10 @@ export default function AdminDashboard({ session }) {
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-8">
         {[
-          { label: 'สินค้าทั้งหมด', value: products.length, icon: Package, color: 'bg-primary-50 dark:bg-primary-900/20 border-primary-200 text-primary-700', iColor: 'text-primary-500' },
-          { label: 'ผู้ใช้งานทั้งหมด', value: users.length, icon: Users, color: 'bg-indigo-50 border-indigo-200 text-indigo-700', iColor: 'text-indigo-500' },
-          { label: 'ออเดอร์ทั้งหมด', value: orders.length, icon: ShoppingBag, color: 'bg-amber-50 border-amber-200 text-amber-700', iColor: 'text-amber-500' },
-          { label: 'ไรเดอร์สมัครแล้ว', value: riders.length, icon: Truck, color: 'bg-emerald-50 border-emerald-200 text-emerald-700', iColor: 'text-emerald-500' }
+          { label: 'สินค้าทั้งหมด', value: products.length, icon: Package, color: 'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800/60 text-primary-700 dark:text-primary-400' },
+          { label: 'ผู้ใช้งานทั้งหมด', value: users.length, icon: Users, color: 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800/60 text-indigo-700 dark:text-indigo-400' },
+          { label: 'ออเดอร์ทั้งหมด', value: orders.length, icon: ShoppingBag, color: 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800/60 text-amber-700 dark:text-amber-400' },
+          { label: 'ไรเดอร์สมัครแล้ว', value: riders.length, icon: Truck, color: 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-400' }
         ].map((s) => {
           const Icon = s.icon
           return (
