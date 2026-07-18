@@ -45,14 +45,7 @@ export default function Reports({ session }) {
       // 2. ดึงรายงานที่ user คนนี้ส่งไว้ (RLS กรองอัตโนมัติ)
       const { data: reportsData, error: reportsError } = await supabase
         .from('product_reports')
-        .select(`
-          *,
-          product:products (
-            id,
-            name,
-            price
-          )
-        `)
+        .select('*')
         .order('created_at', { ascending: false })
 
       if (reportsError) {
@@ -65,14 +58,24 @@ export default function Reports({ session }) {
           setReports([])
         }
       } else {
-        setReports(reportsData || [])
+        const productIds = [...new Set((reportsData || []).map(r => r.product_id).filter(Boolean))]
+        let productMap = {}
+        if (productIds.length > 0) {
+          const { data: pData } = await supabase.from('products').select('product_id, title, price').in('product_id', productIds)
+          if (pData) pData.forEach(p => { productMap[p.product_id] = p })
+        }
+        const finalReports = (reportsData || []).map(r => ({
+          ...r,
+          product: productMap[r.product_id] || null
+        }))
+        setReports(finalReports)
       }
 
       // 3. ดึงรายการสินค้าสำหรับ dropdown เลือกสินค้าที่มีปัญหา
       const { data: productsData } = await supabase
         .from('products')
-        .select('id, name')
-        .order('name')
+        .select('product_id, title')
+        .order('title')
 
       setProducts(productsData || [])
     } catch (err) {
@@ -225,7 +228,7 @@ export default function Reports({ session }) {
                       #REP-{report.id}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
-                      {report.product?.name || 'สินค้า (ถูกลบออกแล้ว)'}
+                      {report.product?.title || 'สินค้า (ถูกลบออกแล้ว)'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
                       {getIssueLabel(report.issue_type)}
@@ -282,8 +285,8 @@ export default function Reports({ session }) {
                 >
                   <option value="">-- กรุณาเลือกรายการสินค้า --</option>
                   {products.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
+                    <option key={p.product_id} value={p.product_id}>
+                      {p.title}
                     </option>
                   ))}
                 </select>
