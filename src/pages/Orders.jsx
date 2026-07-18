@@ -272,6 +272,7 @@ export default function Orders({ session }) {
   )
 
   return (
+    <>
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
       <div className="mb-8">
         <h1 className="text-3xl font-extrabold text-navy-900 dark:text-white tracking-tight">รายการสั่งซื้อของฉัน</h1>
@@ -515,6 +516,7 @@ export default function Orders({ session }) {
           ))}
         </div>
       )}
+    </div>
 
       {/* Message Modal */}
       {isMsgModalOpen && messageTarget && (
@@ -541,7 +543,6 @@ export default function Orders({ session }) {
           </div>
         </div>
       )}
-
-    </div>
+    </>
   )
 }

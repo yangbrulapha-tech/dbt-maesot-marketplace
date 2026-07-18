@@ -167,6 +167,7 @@ export default function Reports({ session }) {
   }
 
   return (
+    <>
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 pb-4 border-b border-slate-200 dark:border-slate-700">
         <div>
@@ -250,6 +251,7 @@ export default function Reports({ session }) {
           </div>
         </div>
       )}
+    </div>
 
       {/* Add Report Modal */}
       {isModalOpen && (
@@ -349,7 +351,7 @@ export default function Reports({ session }) {
           </div>
         </div>
       )}
-    </div>
+    </>
   )
 }
 

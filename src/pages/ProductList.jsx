@@ -383,8 +383,9 @@ export default function ProductList({ session }) {
   const isAdmin = userProfile?.role === 'admin'
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
-      <Toast toasts={toasts} removeToast={removeToast} />
+    <>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+        <Toast toasts={toasts} removeToast={removeToast} />
 
       {/* Hero Banner */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-navy-950 via-navy-900 to-primary-900 text-white p-8 sm:p-12 mb-8 shadow-xl">
@@ -518,6 +519,8 @@ export default function ProductList({ session }) {
           ))}
         </div>
       )}
+      </div>
+
     {/* MODAL: RIDER */}
     {isRiderModalOpen && (
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
@@ -906,8 +909,8 @@ export default function ProductList({ session }) {
         </div>
       </div>
     )}
-  </div>
-)
+    </>
+  )
 }
 
 
