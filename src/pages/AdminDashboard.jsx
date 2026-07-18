@@ -124,8 +124,22 @@ export default function AdminDashboard({ session }) {
       setRefunds(prev => prev.map(r => r.id === refundId ? { ...r, status: action, admin_reply: reply } : r))
       
       if (action === 'approved' && refund) {
-        await supabase.from('orders').update({ status: 'cancelled' }).eq('order_id', refund.order_id)
+        // อัปเดตสถานะออเดอร์เป็น refund_approved
+        await supabase.from('orders').update({ status: 'refund_approved' }).eq('order_id', refund.order_id)
+        
+        // ดึงข้อมูล seller_id เพื่อส่งแจ้งเตือน
+        const { data: orderData } = await supabase.from('orders').select('product:products(seller_id)').eq('order_id', refund.order_id).single()
+        
+        if (orderData?.product?.seller_id) {
+          await supabase.from('notifications').insert({
+            user_id: orderData.product.seller_id,
+            title: `แอดมินอนุมัติการคืนเงิน (ออเดอร์ #ORD-${refund.order_id})`,
+            message: `แอดมินอนุมัติให้คืนเงินผู้ซื้อแล้ว กรุณาโอนเงินคืนผู้ซื้อ และรอให้ผู้ซื้อกดยืนยันการรับเงินคืนในระบบ หมายเหตุ: ${reply}`,
+            link: '/orders'
+          })
+        }
       }
+
       if (refund) {
         await supabase.from('notifications').insert({
           user_id: refund.buyer_id,

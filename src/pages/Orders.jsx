@@ -214,6 +214,11 @@ export default function Orders({ session }) {
       })
       if (error) throw error
 
+      const { error: orderError } = await supabase.from('orders').update({ status: 'refunding' }).eq('order_id', refundOrderId)
+      if (orderError) throw orderError
+
+      setOrders(prev => prev.map(o => o.order_id === refundOrderId ? { ...o, status: 'refunding' } : o))
+
       setSuccessMsg('ส่งคำขอคืนเงินเรียบร้อยแล้ว แอดมินจะตรวจสอบและแจ้งผลให้ทราบ')
       setIsRefundModalOpen(false)
       setRefundReason('')
@@ -234,7 +239,29 @@ export default function Orders({ session }) {
   const getStatusBadge = (status) => {
     if (status === 'completed') return <span className="flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200"><CheckCircle2 className="h-3.5 w-3.5" /><span>สำเร็จ</span></span>
     if (status === 'cancelled') return <span className="flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold bg-red-50 text-red-700 border border-red-200"><XCircle className="h-3.5 w-3.5" /><span>ยกเลิก</span></span>
+    if (status === 'refunding') return <span className="flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200 animate-pulse"><Clock className="h-3.5 w-3.5" /><span>รอแอดมินดำเนินการขอคืนเงิน</span></span>
+    if (status === 'refund_approved') return <span className="flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 animate-pulse"><CheckCircle2 className="h-3.5 w-3.5" /><span>อนุมัติคืนเงิน (รอโอน)</span></span>
+    if (status === 'refunded') return <span className="flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-300"><ShieldAlert className="h-3.5 w-3.5" /><span>คืนเงินสำเร็จ</span></span>
     return <span className="flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200 animate-pulse"><Clock className="h-3.5 w-3.5" /><span>รอดำเนินการ</span></span>
+  }
+
+  const handleConfirmRefund = async (orderId, productId) => {
+    if (!window.confirm('คุณยืนยันว่าได้รับเงินคืนจากผู้ขายครบถ้วนแล้วใช่หรือไม่?')) return
+    setActionLoading(orderId)
+    try {
+      const { error: orderError } = await supabase.from('orders').update({ status: 'refunded' }).eq('order_id', orderId)
+      if (orderError) throw orderError
+      
+      const { error: productError } = await supabase.from('products').update({ status: 'available' }).eq('product_id', productId)
+      if (productError) throw productError
+
+      setOrders(prev => prev.map(o => o.order_id === orderId ? { ...o, status: 'refunded' } : o))
+      setSuccessMsg(`ยืนยันการรับเงินคืนสำหรับออเดอร์ #ORD-${orderId} สำเร็จ`)
+    } catch (err) {
+      setErrorMsg('เกิดข้อผิดพลาด: ' + err.message)
+    } finally {
+      setActionLoading(null)
+    }
   }
 
   if (loading) return (
@@ -402,6 +429,14 @@ export default function Orders({ session }) {
                     <button onClick={() => handleRequestRiderLater(order.order_id)} disabled={actionLoading === order.order_id}
                       className="flex items-center space-x-1 px-4 py-2 border border-emerald-300 hover:bg-emerald-50 text-emerald-700 bg-white dark:bg-slate-800 rounded-lg text-xs font-bold transition-all disabled:opacity-50">
                       <span>🛵 เรียกใช้บริการ Rider</span>
+                    </button>
+                  )}
+                  
+                  {/* ผู้ซื้อยืนยันรับเงินคืน */}
+                  {activeTab === 'buyer' && order.status === 'refund_approved' && (
+                    <button onClick={() => handleConfirmRefund(order.order_id, order.product_id)} disabled={actionLoading === order.order_id}
+                      className="flex items-center space-x-1 px-4 py-2 border border-blue-300 hover:bg-blue-50 text-blue-700 bg-white dark:bg-slate-800 rounded-lg text-xs font-bold transition-all disabled:opacity-50">
+                      {actionLoading === order.order_id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <><CheckCircle2 className="h-3.5 w-3.5" /><span>ยืนยันได้รับเงินคืนแล้ว</span></>}
                     </button>
                   )}
 
