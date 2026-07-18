@@ -285,7 +285,7 @@ export default function Navbar({ session }) {
                       : item.riderOnly
                         ? 'text-emerald-400'
                         : 'text-primary-400'
-                    : 'text-slate-400 hover:text-white'
+                    : 'text-slate-400 dark:text-slate-300 hover:text-white'
                 }`}
               >
                 <div className="relative">

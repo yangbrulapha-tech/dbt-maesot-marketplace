@@ -191,7 +191,7 @@ export default function Chat({ session }) {
   if (loading) return (
     <div className="flex flex-col justify-center items-center py-24 space-y-4">
       <Loader2 className="h-10 w-10 text-primary-600 animate-spin" />
-      <p className="text-slate-500 dark:text-slate-400 text-sm">กำลังโหลดการสนทนา...</p>
+      <p className="text-slate-500 dark:text-slate-300 text-sm">กำลังโหลดการสนทนา...</p>
     </div>
   )
 
@@ -199,7 +199,7 @@ export default function Chat({ session }) {
     <div className="max-w-6xl mx-auto px-4 py-8 animate-fade-in">
       <div className="mb-6">
         <h1 className="text-3xl font-extrabold text-navy-900 dark:text-white tracking-tight">ข้อความ</h1>
-        <p className="mt-1 text-slate-500 dark:text-slate-400">ติดต่อผู้ซื้อผู้ขายโดยตรง</p>
+        <p className="mt-1 text-slate-500 dark:text-slate-300">ติดต่อผู้ซื้อผู้ขายโดยตรง</p>
       </div>
 
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden transition-colors" style={{ height: '70vh' }}>
@@ -208,14 +208,14 @@ export default function Chat({ session }) {
           <div className={`w-full md:w-80 lg:w-96 border-r border-slate-200 dark:border-slate-800 flex flex-col ${selectedConv ? 'hidden md:flex' : 'flex'}`}>
             <div className="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
               <h2 className="text-sm font-extrabold text-navy-900 dark:text-white">การสนทนาทั้งหมด</h2>
-              <p className="text-xs text-slate-400 dark:text-slate-500 dark:text-slate-400 mt-0.5">{userProfile?.student_id} · {userProfile?.full_name}</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500 dark:text-slate-300 mt-0.5">{userProfile?.student_id} · {userProfile?.full_name}</p>
             </div>
             <div className="flex-1 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
               {conversations.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center p-8">
                   <MessageSquare className="h-12 w-12 text-slate-200 mb-4" />
-                  <p className="text-sm font-bold text-slate-400">ยังไม่มีการสนทนา</p>
-                  <p className="text-xs text-slate-400 mt-1">กดปุ่มข้อความในหน้าสินค้าเพื่อเริ่มแชทกับผู้ขาย</p>
+                  <p className="text-sm font-bold text-slate-400 dark:text-slate-300">ยังไม่มีการสนทนา</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-300 mt-1">กดปุ่มข้อความในหน้าสินค้าเพื่อเริ่มแชทกับผู้ขาย</p>
                 </div>
               ) : conversations.map((conv) => (
                 <button key={conv.key} onClick={() => openConversation(conv)}
@@ -228,9 +228,9 @@ export default function Chat({ session }) {
                       <span className="text-sm font-bold text-navy-900 dark:text-white truncate">{conv.partnerName}</span>
                       {conv.unread > 0 && <span className="ml-1 px-1.5 py-0.5 bg-primary-600 text-white text-[9px] font-bold rounded-full shrink-0">{conv.unread}</span>}
                     </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5 font-mono">{conv.partnerId}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-300 truncate mt-0.5 font-mono">{conv.partnerId}</p>
                     {conv.productId && <p className="text-[10px] text-primary-600 font-bold mt-0.5">📦 Product #{conv.productId}</p>}
-                    <p className="text-[10px] text-slate-400 truncate mt-0.5">{conv.lastMsg}</p>
+                    <p className="text-[10px] text-slate-400 dark:text-slate-300 truncate mt-0.5">{conv.lastMsg}</p>
                   </div>
                 </button>
               ))}
@@ -242,15 +242,15 @@ export default function Chat({ session }) {
             {!selectedConv ? (
               <div className="flex flex-col items-center justify-center h-full text-center p-8">
                 <MessageSquare className="h-16 w-16 text-slate-200 mb-4" />
-                <h3 className="text-xl font-bold text-slate-400">เลือกการสนทนา</h3>
-                <p className="text-sm text-slate-400 mt-1">กดที่ชื่อผู้ใช้ทางซ้ายเพื่อเปิดแชท</p>
+                <h3 className="text-xl font-bold text-slate-400 dark:text-slate-300">เลือกการสนทนา</h3>
+                <p className="text-sm text-slate-400 dark:text-slate-300 mt-1">กดที่ชื่อผู้ใช้ทางซ้ายเพื่อเปิดแชท</p>
               </div>
             ) : (
               <>
                 {/* Chat Header */}
                 <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <button onClick={() => setSelectedConv(null)} className="md:hidden mr-1 text-slate-500 dark:text-slate-400 hover:text-navy-900 dark:text-white dark:hover:text-white">
+                    <button onClick={() => setSelectedConv(null)} className="md:hidden mr-1 text-slate-500 dark:text-slate-300 hover:text-navy-900 dark:text-white dark:hover:text-white">
                       <ArrowLeft className="h-5 w-5" />
                     </button>
                     <div className="h-9 w-9 bg-navy-900 dark:bg-slate-700 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0">
@@ -258,10 +258,10 @@ export default function Chat({ session }) {
                     </div>
                     <div>
                       <p className="text-sm font-bold text-navy-900 dark:text-white">{selectedConv.partnerName}</p>
-                      <p className="text-[10px] text-slate-400 dark:text-slate-500 dark:text-slate-400 font-mono">{selectedConv.partnerId}</p>
+                      <p className="text-[10px] text-slate-400 dark:text-slate-500 dark:text-slate-300 font-mono">{selectedConv.partnerId}</p>
                     </div>
                   </div>
-                  <div className={`flex items-center space-x-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${isLive ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/50' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 dark:text-slate-400'}`}>
+                  <div className={`flex items-center space-x-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${isLive ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/50' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 dark:text-slate-300'}`}>
                     {isLive ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3" />}
                     <span>{isLive ? 'Live' : 'Connecting...'}</span>
                   </div>
@@ -274,7 +274,7 @@ export default function Chat({ session }) {
                   ) : messages.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-center">
                       <MessageSquare className="h-10 w-10 text-slate-200 mb-2" />
-                      <p className="text-xs text-slate-400 font-bold">ยังไม่มีข้อความ เริ่มสนทนาได้เลย!</p>
+                      <p className="text-xs text-slate-400 dark:text-slate-300 font-bold">ยังไม่มีข้อความ เริ่มสนทนาได้เลย!</p>
                     </div>
                   ) : messages.map((msg) => {
                     const isOwn = msg.sender_id === userProfile?.student_id
@@ -287,7 +287,7 @@ export default function Chat({ session }) {
                         )}
                         <div className={`max-w-[70%] px-4 py-2.5 rounded-2xl text-sm shadow-sm ${isOwn ? 'bg-navy-900 text-white rounded-br-md' : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 rounded-bl-md'} ${msg._optimistic ? 'opacity-70' : ''}`}>
                           <p className="leading-relaxed">{msg.content}</p>
-                          <p className={`text-[10px] mt-1.5 ${isOwn ? 'text-slate-400 text-right' : 'text-slate-400'}`}>{formatTime(msg.created_at)}</p>
+                          <p className={`text-[10px] mt-1.5 ${isOwn ? 'text-slate-400 dark:text-slate-300 text-right' : 'text-slate-400 dark:text-slate-300'}`}>{formatTime(msg.created_at)}</p>
                         </div>
                       </div>
                     )

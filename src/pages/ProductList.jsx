@@ -31,14 +31,14 @@ function Toast({ toasts, removeToast }) {
 function SkeletonCard() {
   return (
     <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden animate-pulse">
-      <div className="aspect-[4/3] bg-slate-200" />
+      <div className="aspect-[4/3] bg-slate-200 dark:bg-slate-700" />
       <div className="p-4 space-y-3">
-        <div className="h-4 bg-slate-200 rounded w-3/4" />
-        <div className="h-3 bg-slate-200 rounded w-full" />
-        <div className="h-6 bg-slate-200 rounded w-1/3 mt-2" />
+        <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4" />
+        <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-full" />
+        <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded w-1/3 mt-2" />
         <div className="border-t border-slate-100 pt-3 flex gap-2">
-          <div className="h-8 bg-slate-200 rounded-lg flex-1" />
-          <div className="h-8 bg-slate-200 rounded-lg flex-1" />
+          <div className="h-8 bg-slate-200 dark:bg-slate-700 rounded-lg flex-1" />
+          <div className="h-8 bg-slate-200 dark:bg-slate-700 rounded-lg flex-1" />
         </div>
       </div>
     </div>
@@ -422,16 +422,16 @@ export default function ProductList({ session }) {
       {/* Search & Filter */}
       <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700/80 mb-8 flex flex-col lg:flex-row gap-4 justify-between items-center">
         <div className="relative w-full lg:w-96">
-          <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400"><Search className="h-5 w-5" /></span>
+          <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 dark:text-slate-300"><Search className="h-5 w-5" /></span>
           <input type="text" placeholder="ค้นหาชื่อสินค้า..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-11 w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 sm:text-sm transition-all" />
         </div>
         <div className="flex items-center space-x-2 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0 scrollbar-none">
-          <Filter className="h-4 w-4 text-slate-400 shrink-0 hidden sm:inline" />
+          <Filter className="h-4 w-4 text-slate-400 dark:text-slate-300 shrink-0 hidden sm:inline" />
           <div className="flex space-x-1.5">
             {categories.map((cat) => (
               <button key={cat.value} onClick={() => setSelectedCategory(cat.value)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 ${selectedCategory === cat.value ? 'bg-navy-900 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
+                className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 ${selectedCategory === cat.value ? 'bg-navy-900 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 dark:bg-slate-700'}`}>
                 {cat.label}
               </button>
             ))}
@@ -448,7 +448,7 @@ export default function ProductList({ session }) {
         <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-sm text-center py-20 px-4 max-w-xl mx-auto animate-scale-up">
           <Tag className="mx-auto h-16 w-16 text-primary-300 mb-4" />
           <h3 className="text-xl font-black text-navy-950">ไม่มีสินค้าในขณะนี้</h3>
-          <p className="text-slate-500 dark:text-slate-400 text-sm mt-2">คุณต้องการเป็นผู้ลงประกาศขายสินค้าชิ้นแรกไหม?</p>
+          <p className="text-slate-500 dark:text-slate-300 text-sm mt-2">คุณต้องการเป็นผู้ลงประกาศขายสินค้าชิ้นแรกไหม?</p>
           {session && (
             <button onClick={() => setIsProductModalOpen(true)}
               className="mt-6 inline-flex items-center space-x-2 bg-navy-900 hover:bg-navy-800 text-white font-bold px-6 py-3 rounded-xl shadow-md transition-all">
@@ -476,7 +476,7 @@ export default function ProductList({ session }) {
                 </button>
               )}
 
-              <div className="relative aspect-video sm:aspect-[4/3] bg-slate-100 overflow-hidden">
+              <div className="relative aspect-video sm:aspect-[4/3] bg-slate-100 dark:bg-slate-800 overflow-hidden">
                 <img src={product.image_url} alt={product.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=400' }} />
@@ -488,7 +488,7 @@ export default function ProductList({ session }) {
               <div className="p-4 flex-1 flex flex-col justify-between">
                 <div>
                   <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base line-clamp-1 group-hover:text-primary-600 transition-colors">{product.title}</h3>
-                  <p className="text-slate-500 dark:text-slate-400 text-xs mt-1.5 line-clamp-2 min-h-[2rem] font-light">{product.description || 'ไม่มีรายละเอียดเพิ่มเติม'}</p>
+                  <p className="text-slate-500 dark:text-slate-300 text-xs mt-1.5 line-clamp-2 min-h-[2rem] font-light">{product.description || 'ไม่มีรายละเอียดเพิ่มเติม'}</p>
                   <span className="text-lg font-black text-navy-900 dark:text-white font-outfit mt-2 block">
                     ฿{Number(product.price).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                   </span>
@@ -496,11 +496,11 @@ export default function ProductList({ session }) {
 
                 <div className="mt-4 pt-3 border-t border-slate-100">
                   <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center space-x-1 text-slate-500 dark:text-slate-400">
-                      <User className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+                    <div className="flex items-center space-x-1 text-slate-500 dark:text-slate-300">
+                      <User className="h-3.5 w-3.5 shrink-0 text-slate-400 dark:text-slate-300" />
                       <span className="text-[10px] font-bold truncate max-w-[100px]">{product.seller?.full_name || product.seller_id}</span>
                     </div>
-                    <span className="text-[9px] text-slate-400 font-mono">{product.seller_id}</span>
+                    <span className="text-[9px] text-slate-400 dark:text-slate-300 font-mono">{product.seller_id}</span>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <button onClick={() => openMessage(product)}
@@ -527,7 +527,7 @@ export default function ProductList({ session }) {
             <button onClick={() => setIsRiderModalOpen(false)}><X className="h-5 w-5 text-emerald-100" /></button>
           </div>
           <form onSubmit={handleApplyRider} className="p-6 space-y-4">
-            <p className="text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700">
+            <p className="text-xs text-slate-500 dark:text-slate-300 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700">
               รหัสนักศึกษา: <span className="font-bold text-navy-900 dark:text-white">{userProfile?.student_id}</span> จะถูกบันทึกเป็น Rider อัตโนมัติ
             </p>
             <div>
@@ -563,23 +563,23 @@ export default function ProductList({ session }) {
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-md overflow-hidden animate-scale-up">
           <div className="bg-navy-900 text-white p-4 flex items-center justify-between">
             <div className="flex items-center space-x-2"><ShoppingCart className="h-5 w-5 text-primary-400" /><h2 className="text-lg font-bold">ยืนยันสั่งซื้อ</h2></div>
-            <button onClick={() => setIsCheckoutModalOpen(false)}><X className="h-5 w-5 text-slate-400" /></button>
+            <button onClick={() => setIsCheckoutModalOpen(false)}><X className="h-5 w-5 text-slate-400 dark:text-slate-300" /></button>
           </div>
           <form onSubmit={handleConfirmOrder} className="p-6 space-y-4">
             <div className="flex space-x-3.5 bg-slate-50 dark:bg-slate-900/50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
-              <div className="h-16 w-16 bg-slate-200 rounded-lg overflow-hidden shrink-0">
+              <div className="h-16 w-16 bg-slate-200 dark:bg-slate-700 rounded-lg overflow-hidden shrink-0">
                 <img src={checkoutProduct.image_url} alt={checkoutProduct.title} className="w-full h-full object-cover" />
               </div>
               <div>
                 <h4 className="font-bold text-sm text-slate-900 dark:text-white">{checkoutProduct.title}</h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">ผู้ขาย: {checkoutProduct.seller?.full_name || checkoutProduct.seller_id}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-300 mt-0.5">ผู้ขาย: {checkoutProduct.seller?.full_name || checkoutProduct.seller_id}</p>
                 <p className="text-sm font-black text-navy-900 dark:text-white mt-1">฿{Number(checkoutProduct.price).toLocaleString()}</p>
               </div>
             </div>
 
             {/* ตัวเลือกรูปแบบการจัดส่ง (Radio Cards) */}
             <div className="space-y-2.5">
-              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              <label className="block text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">
                 รูปแบบการรับสินค้า <span className="text-red-500">*</span>
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -599,7 +599,7 @@ export default function ProductList({ session }) {
                         {!requestRider && <div className="h-1.5 w-1.5 rounded-full bg-white dark:bg-slate-800" />}
                       </div>
                     </div>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-normal">
+                    <p className="text-[10px] text-slate-500 dark:text-slate-300 leading-normal">
                       นัดหมายสถานที่และรับสินค้า/ชำระเงินกับผู้ขายโดยตรง
                     </p>
                   </div>
@@ -621,7 +621,7 @@ export default function ProductList({ session }) {
                         {requestRider && <div className="h-1.5 w-1.5 rounded-full bg-white dark:bg-slate-800" />}
                       </div>
                     </div>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-normal">
+                    <p className="text-[10px] text-slate-500 dark:text-slate-300 leading-normal">
                       ส่งออเดอร์ให้กลุ่ม Rider รับงานนำส่งสินค้าภายในสถาบัน
                     </p>
                   </div>
@@ -631,7 +631,7 @@ export default function ProductList({ session }) {
 
             {/* ช่องระบุสถานที่จัดส่ง/นัดรับ */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              <label className="block text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">
                 ระบุสถานที่จัดส่ง / นัดรับของ <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -645,7 +645,7 @@ export default function ProductList({ session }) {
 
             {/* ข้อความแจ้งเตือนด้านล่างตามตัวเลือก */}
             {!requestRider ? (
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 bg-amber-50 p-3 rounded-lg border border-amber-200 leading-relaxed">
+              <p className="text-[11px] text-slate-500 dark:text-slate-300 bg-amber-50 p-3 rounded-lg border border-amber-200 leading-relaxed">
                 📍 **แนะนำ:** หลังกดสั่งซื้อเรียบร้อย กรุณาใช้ระบบกล่องข้อความทักไปคุยกับผู้ขายเพื่อนัดรับสินค้า
               </p>
             ) : (
@@ -673,10 +673,10 @@ export default function ProductList({ session }) {
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-lg overflow-hidden animate-scale-up">
           <div className="bg-navy-900 text-white p-4 flex items-center justify-between">
             <div className="flex items-center space-x-2"><MessageSquare className="h-5 w-5 text-primary-400" /><h2 className="text-lg font-bold">ส่งข้อความหาผู้ขาย</h2></div>
-            <button onClick={() => setIsMessageModalOpen(false)}><X className="h-5 w-5 text-slate-400" /></button>
+            <button onClick={() => setIsMessageModalOpen(false)}><X className="h-5 w-5 text-slate-400 dark:text-slate-300" /></button>
           </div>
           <form onSubmit={handleSendMessage} className="p-6 space-y-4">
-            <div className="text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border">
+            <div className="text-xs text-slate-500 dark:text-slate-300 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border">
               ส่งถึง: <span className="font-bold text-navy-900 dark:text-white">{messageProduct.seller?.full_name || messageProduct.seller_id}</span> สำหรับสินค้า "<span className="font-bold">{messageProduct.title}</span>"
             </div>
             <textarea rows="4" required value={messageText} onChange={(e) => setMessageText(e.target.value)}
@@ -699,7 +699,7 @@ export default function ProductList({ session }) {
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-lg overflow-hidden animate-scale-up max-h-[90vh] overflow-y-auto">
           <div className="bg-navy-900 text-white p-4 flex items-center justify-between sticky top-0 z-10">
             <h2 className="text-lg font-bold">ลงประกาศขายสินค้า</h2>
-            <button onClick={() => { setIsProductModalOpen(false); setImagePreview(null); setProductFile(null) }}><X className="h-5 w-5 text-slate-400" /></button>
+            <button onClick={() => { setIsProductModalOpen(false); setImagePreview(null); setProductFile(null) }}><X className="h-5 w-5 text-slate-400 dark:text-slate-300" /></button>
           </div>
           <form onSubmit={handleCreateProduct} className="p-6 space-y-4">
             <div>
@@ -747,7 +747,7 @@ export default function ProductList({ session }) {
                 {imagePreview ? (
                   <img src={imagePreview} alt="preview" className="w-full h-full object-contain rounded-xl p-1" />
                 ) : (
-                  <><ImageIcon className="h-10 w-10 text-slate-300 mb-2" /><span className="text-xs font-bold text-slate-500 dark:text-slate-400">คลิกเพื่อเลือกรูป</span><span className="text-[10px] text-slate-400">JPG, PNG, WebP (สูงสุด 5MB)</span></>
+                  <><ImageIcon className="h-10 w-10 text-slate-300 mb-2" /><span className="text-xs font-bold text-slate-500 dark:text-slate-300">คลิกเพื่อเลือกรูป</span><span className="text-[10px] text-slate-400 dark:text-slate-300">JPG, PNG, WebP (สูงสุด 5MB)</span></>
                 )}
                 <input id="img-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
               </label>
@@ -771,7 +771,7 @@ export default function ProductList({ session }) {
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-lg overflow-hidden animate-scale-up max-h-[90vh] overflow-y-auto">
           <div className="bg-navy-900 text-white p-4 flex items-center justify-between sticky top-0 z-10">
             <h2 className="text-lg font-bold">แก้ไขรายละเอียดสินค้า</h2>
-            <button onClick={() => { setIsEditModalOpen(false); setEditImagePreview(null); setEditFile(null) }}><X className="h-5 w-5 text-slate-400" /></button>
+            <button onClick={() => { setIsEditModalOpen(false); setEditImagePreview(null); setEditFile(null) }}><X className="h-5 w-5 text-slate-400 dark:text-slate-300" /></button>
           </div>
           <form onSubmit={handleUpdateProduct} className="p-6 space-y-4">
             <div>
@@ -819,7 +819,7 @@ export default function ProductList({ session }) {
                 {editImagePreview ? (
                   <img src={editImagePreview} alt="preview" className="w-full h-full object-contain rounded-xl p-1" />
                 ) : (
-                  <><ImageIcon className="h-10 w-10 text-slate-300 mb-2" /><span className="text-xs font-bold text-slate-500 dark:text-slate-400">คลิกเพื่อเปลี่ยนรูป</span><span className="text-[10px] text-slate-400">JPG, PNG, WebP (สูงสุด 5MB)</span></>
+                  <><ImageIcon className="h-10 w-10 text-slate-300 mb-2" /><span className="text-xs font-bold text-slate-500 dark:text-slate-300">คลิกเพื่อเปลี่ยนรูป</span><span className="text-[10px] text-slate-400 dark:text-slate-300">JPG, PNG, WebP (สูงสุด 5MB)</span></>
                 )}
                 <input id="edit-img-upload" type="file" accept="image/*" className="hidden" onChange={(e) => {
                   const file = e.target.files[0]
@@ -865,12 +865,12 @@ export default function ProductList({ session }) {
 
             {/* Product Preview */}
             <div className="flex space-x-3.5 bg-slate-50 dark:bg-slate-900/50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
-              <div className="h-16 w-16 bg-slate-200 rounded-lg overflow-hidden shrink-0">
+              <div className="h-16 w-16 bg-slate-200 dark:bg-slate-700 rounded-lg overflow-hidden shrink-0">
                 <img src={productToDelete.image_url} alt={productToDelete.title} className="w-full h-full object-cover" />
               </div>
               <div className="overflow-hidden">
                 <h4 className="font-bold text-sm text-slate-900 dark:text-white truncate">{productToDelete.title}</h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">หมวดหมู่: {getCatLabel(productToDelete.category)}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-300 mt-0.5 truncate">หมวดหมู่: {getCatLabel(productToDelete.category)}</p>
                 <p className="text-sm font-black text-red-700 mt-1">฿{Number(productToDelete.price).toLocaleString()}</p>
               </div>
             </div>

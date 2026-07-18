@@ -116,7 +116,7 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-slate-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-slate-100 dark:bg-slate-800 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700">
 
         {/* Header */}
@@ -127,7 +127,7 @@ export default function Login() {
           <h2 className="mt-6 text-center text-3xl font-extrabold text-navy-900 dark:text-white font-outfit">
             {isSignUp ? 'สร้างบัญชีผู้ใช้งาน' : 'เข้าสู่ระบบ'}
           </h2>
-          <p className="mt-2 text-center text-sm text-slate-500 dark:text-slate-400">
+          <p className="mt-2 text-center text-sm text-slate-500 dark:text-slate-300">
             ระบบซื้อขายสินค้า Shop 2 MTC
           </p>
           <div className="mt-3 flex items-center justify-center space-x-1.5 text-xs text-amber-700 bg-amber-50 p-2.5 rounded-xl border border-amber-200">
@@ -156,7 +156,7 @@ export default function Login() {
             <div>
               <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">ชื่อ-นามสกุล</label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 dark:text-slate-300">
                   <User className="h-5 w-5" />
                 </span>
                 <input
@@ -177,7 +177,7 @@ export default function Login() {
               รหัสนักศึกษา
             </label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 dark:text-slate-300">
                 <CreditCard className="h-5 w-5" />
               </span>
               <input
@@ -197,7 +197,7 @@ export default function Login() {
             <div>
               <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">แผนกวิชา</label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 dark:text-slate-300">
                   <BookOpen className="h-5 w-5" />
                 </span>
                 <select
@@ -222,7 +222,7 @@ export default function Login() {
           <div>
             <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">รหัสผ่าน</label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 dark:text-slate-300">
                 <Lock className="h-5 w-5" />
               </span>
               <input
@@ -237,7 +237,7 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 dark:text-slate-300 transition-colors"
               >
                 {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>

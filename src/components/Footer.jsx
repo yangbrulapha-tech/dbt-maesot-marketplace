@@ -60,7 +60,7 @@ export default function Footer() {
   ]
 
   return (
-    <footer className="bg-navy-950 text-slate-400 py-12 border-t border-navy-900 mt-auto">
+    <footer className="bg-navy-950 text-slate-400 dark:text-slate-300 py-12 border-t border-navy-900 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           {/* Brand Info */}
@@ -71,10 +71,10 @@ export default function Footer() {
                 <span className="text-sky-400">MAE SOT</span>
               </span>
             </div>
-            <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400 max-w-sm">
+            <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-300 max-w-sm">
               แพลตฟอร์มตลาดออนไลน์มือสองสำหรับนักเรียน นักศึกษา และบุคลากร วิทยาลัยเทคนิคแม่สอด เพื่ออำนวยความสะดวกในการซื้อขายแลกเปลี่ยนสินค้าภายในสถาบันอย่างปลอดภัย
             </p>
-            <div className="text-[10px] text-slate-600 font-mono mt-4 pt-4 border-t border-navy-900/60">
+            <div className="text-[10px] text-slate-600 dark:text-slate-300 font-mono mt-4 pt-4 border-t border-navy-900/60">
               © {new Date().getFullYear()} DBT MAE SOT. All rights reserved.
             </div>
           </div>
@@ -113,11 +113,11 @@ export default function Footer() {
                         <h5 className="font-bold text-xs text-slate-200 group-hover:text-sky-400 transition-colors truncate">
                           {item.name}
                         </h5>
-                        <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                        <p className="text-[10px] text-slate-500 dark:text-slate-300 truncate mt-0.5">
                           {item.sub}
                         </p>
                       </div>
-                      <Facebook className="h-3.5 w-3.5 text-slate-600 group-hover:text-sky-400 shrink-0 transition-colors" />
+                      <Facebook className="h-3.5 w-3.5 text-slate-600 dark:text-slate-300 group-hover:text-sky-400 shrink-0 transition-colors" />
                     </a>
                   ))}
                 </div>
@@ -150,11 +150,11 @@ export default function Footer() {
                         <h5 className="font-bold text-xs text-slate-200 group-hover:text-pink-400 transition-colors truncate">
                           {item.name}
                         </h5>
-                        <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                        <p className="text-[10px] text-slate-500 dark:text-slate-300 truncate mt-0.5">
                           {item.sub}
                         </p>
                       </div>
-                      <Instagram className="h-3.5 w-3.5 text-slate-600 group-hover:text-pink-500 shrink-0 transition-colors" />
+                      <Instagram className="h-3.5 w-3.5 text-slate-600 dark:text-slate-300 group-hover:text-pink-500 shrink-0 transition-colors" />
                     </a>
                   ))}
                 </div>
@@ -164,9 +164,9 @@ export default function Footer() {
         </div>
 
         {/* Footer Bottom Bar */}
-        <div className="mt-12 pt-6 border-t border-navy-900 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-600 gap-4">
+        <div className="mt-12 pt-6 border-t border-navy-900 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-600 dark:text-slate-300 gap-4">
           <div className="flex items-center space-x-1.5">
-            <Shield className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
+            <Shield className="h-3.5 w-3.5 text-slate-500 dark:text-slate-300" />
             <span>ดูแลและสนับสนุนระบบโดย สาขาวิชาเทคโนโลยีธุรกิจดิจิทัล</span>
           </div>
           <div className="flex items-center space-x-1">

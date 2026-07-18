@@ -305,7 +305,7 @@ export default function RiderDashboard({ session }) {
   if (authLoading) return (
     <div className="flex flex-col justify-center items-center py-24 space-y-4">
       <Loader2 className="h-10 w-10 text-emerald-600 animate-spin" />
-      <p className="text-slate-500 dark:text-slate-400 text-sm">กำลังตรวจสอบข้อมูลสมาชิกไรเดอร์...</p>
+      <p className="text-slate-500 dark:text-slate-300 text-sm">กำลังตรวจสอบข้อมูลสมาชิกไรเดอร์...</p>
     </div>
   )
 
@@ -314,7 +314,7 @@ export default function RiderDashboard({ session }) {
     <div className="max-w-xl mx-auto px-4 py-20 text-center animate-scale-up">
       <Truck className="mx-auto h-16 w-16 text-slate-300 mb-4" />
       <h1 className="text-2xl font-extrabold text-navy-900 dark:text-white mb-2">ยังไม่ได้ลงทะเบียนเป็น Rider</h1>
-      <p className="text-slate-500 dark:text-slate-400 mb-6">ลงสมัครทำงานพิเศษรับส่งสินค้าภายในสถาบัน ปลอดภัย ได้รับรายได้</p>
+      <p className="text-slate-500 dark:text-slate-300 mb-6">ลงสมัครทำงานพิเศษรับส่งสินค้าภายในสถาบัน ปลอดภัย ได้รับรายได้</p>
       <a href="/" className="inline-flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl shadow-md transition-all">
         <span>ไปสมัครที่หน้าหลัก</span>
       </a>
@@ -327,10 +327,10 @@ export default function RiderDashboard({ session }) {
         <AlertTriangle className="h-8 w-8" />
       </div>
       <h1 className="text-2xl font-extrabold text-navy-900 dark:text-white mb-2">รอผู้ดูแลอนุมัติใบสมัคร</h1>
-      <p className="text-slate-500 dark:text-slate-400 max-w-sm mx-auto mb-6">
+      <p className="text-slate-500 dark:text-slate-300 max-w-sm mx-auto mb-6">
         ใบสมัครของคุณอยู่ในขั้นตอนการตรวจสอบโดยคณะอาจารย์หรือแอดมิน เพื่อความปลอดภัยของผู้ใช้งานภายในระบบ
       </p>
-      <div className="text-xs text-slate-400 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-100 font-mono">
+      <div className="text-xs text-slate-400 dark:text-slate-300 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-100 font-mono">
         <p>ชื่อ: {userProfile?.full_name}</p>
         <p>รหัส: {riderInfo.student_id}</p>
         <p>พาหนะ: {getVehicleLabel(riderInfo.vehicle_type)}</p>
@@ -349,9 +349,9 @@ export default function RiderDashboard({ session }) {
             </span>
           </div>
           <h1 className="text-3xl font-extrabold text-navy-900 dark:text-white tracking-tight">ระบบบริการรับส่งสินค้า (Rider)</h1>
-          <p className="mt-1 text-slate-500 dark:text-slate-400">รับออเดอร์ จัดส่งของ และควบคุมการให้บริการภายในวิทยาลัย</p>
+          <p className="mt-1 text-slate-500 dark:text-slate-300">รับออเดอร์ จัดส่งของ และควบคุมการให้บริการภายในวิทยาลัย</p>
         </div>
-        <div className="text-xs text-slate-400 bg-slate-100 px-4 py-2 rounded-xl text-right">
+        <div className="text-xs text-slate-400 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-xl text-right">
           <p>ผู้ให้บริการ: <span className="font-bold text-navy-950">{userProfile?.full_name}</span></p>
           <p>พาหนะ: <span className="font-bold text-emerald-700">{getVehicleLabel(riderInfo?.vehicle_type)}</span></p>
         </div>
@@ -373,15 +373,15 @@ export default function RiderDashboard({ session }) {
       {/* Tabs */}
       <div className="flex border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-1 rounded-2xl mb-8 shadow-sm">
         <button onClick={() => setActiveTab('available')}
-          className={`flex-1 py-3 text-sm font-extrabold rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 ${activeTab === 'available' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-900/50'}`}>
+          className={`flex-1 py-3 text-sm font-extrabold rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 ${activeTab === 'available' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-500 dark:text-slate-300 hover:bg-slate-50 dark:bg-slate-900/50'}`}>
           <ClipboardList className="h-4 w-4" /><span>งานรับจัดส่งทั่วไป ({availableOrders.length})</span>
         </button>
         <button onClick={() => setActiveTab('my_jobs')}
-          className={`flex-1 py-3 text-sm font-extrabold rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 ${activeTab === 'my_jobs' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-900/50'}`}>
+          className={`flex-1 py-3 text-sm font-extrabold rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 ${activeTab === 'my_jobs' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-500 dark:text-slate-300 hover:bg-slate-50 dark:bg-slate-900/50'}`}>
           <Navigation className="h-4 w-4" /><span>งานจัดส่งปัจจุบัน ({myJobs.length})</span>
         </button>
         <button onClick={() => setActiveTab('history')}
-          className={`flex-1 py-3 text-sm font-extrabold rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 ${activeTab === 'history' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-900/50'}`}>
+          className={`flex-1 py-3 text-sm font-extrabold rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 ${activeTab === 'history' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-500 dark:text-slate-300 hover:bg-slate-50 dark:bg-slate-900/50'}`}>
           <CheckCircle2 className="h-4 w-4" /><span>ส่งของสำเร็จแล้ว ({historyJobs.length})</span>
         </button>
       </div>
@@ -396,7 +396,7 @@ export default function RiderDashboard({ session }) {
               <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-center py-16 px-4">
                 <ClipboardList className="mx-auto h-12 w-12 text-slate-300 mb-3" />
                 <h3 className="text-lg font-bold text-navy-900 dark:text-white">ไม่มีงานจัดส่งในขณะนี้</h3>
-                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">ออเดอร์ใหม่จากผู้ใช้งานที่ต้องการไรเดอร์ส่งของจะแสดงขึ้นตรงนี้</p>
+                <p className="text-slate-500 dark:text-slate-300 text-sm mt-1">ออเดอร์ใหม่จากผู้ใช้งานที่ต้องการไรเดอร์ส่งของจะแสดงขึ้นตรงนี้</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -405,7 +405,7 @@ export default function RiderDashboard({ session }) {
                     <div>
                       <div className="flex justify-between items-start mb-3 border-b border-slate-100 pb-3">
                         <div>
-                          <span className="text-[10px] text-slate-400 font-bold uppercase font-mono">#ORD-{order.order_id}</span>
+                          <span className="text-[10px] text-slate-400 dark:text-slate-300 font-bold uppercase font-mono">#ORD-{order.order_id}</span>
                           <h3 className="font-extrabold text-navy-950 text-sm sm:text-base line-clamp-1 mt-0.5">{order.product?.title || 'สินค้าทั่วไป'}</h3>
                         </div>
                         <span className="text-lg font-black text-emerald-600 font-outfit">
@@ -413,13 +413,13 @@ export default function RiderDashboard({ session }) {
                         </span>
                       </div>
 
-                      <div className="space-y-2 text-xs text-slate-600 mb-4 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700/50">
+                      <div className="space-y-2 text-xs text-slate-600 dark:text-slate-300 mb-4 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700/50">
                         <div className="flex items-center space-x-2">
-                          <User className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                          <User className="h-3.5 w-3.5 text-slate-400 dark:text-slate-300 shrink-0" />
                           <span>ผู้รับเงิน/ผู้ขาย: <span className="font-bold text-slate-800 dark:text-slate-200">{order.seller?.full_name || order.product?.seller_id}</span></span>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <User className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                          <User className="h-3.5 w-3.5 text-slate-400 dark:text-slate-300 shrink-0" />
                           <span>ผู้จ่ายเงิน/ผู้ซื้อ: <span className="font-bold text-slate-800 dark:text-slate-200">{order.buyer?.full_name || order.buyer_id}</span></span>
                         </div>
                         <div className="flex items-start space-x-2 bg-emerald-100/50 p-2 rounded border border-emerald-200 mt-1">
@@ -445,7 +445,7 @@ export default function RiderDashboard({ session }) {
               <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-center py-16 px-4">
                 <Navigation className="mx-auto h-12 w-12 text-slate-300 mb-3" />
                 <h3 className="text-lg font-bold text-navy-900 dark:text-white">ไม่มีงานกำลังจัดส่ง</h3>
-                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">คุณสามารถไปที่แท็บ "งานจัดส่งทั่วไป" เพื่อกดเลือกรับงานได้เลย</p>
+                <p className="text-slate-500 dark:text-slate-300 text-sm mt-1">คุณสามารถไปที่แท็บ "งานจัดส่งทั่วไป" เพื่อกดเลือกรับงานได้เลย</p>
               </div>
             ) : (
               <div className="space-y-6">
@@ -454,7 +454,7 @@ export default function RiderDashboard({ session }) {
                     <div className="bg-emerald-50 px-6 py-4 border-b border-emerald-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                       <div>
                         <span className="text-[10px] text-emerald-800 font-extrabold uppercase font-mono bg-emerald-100 px-2 py-0.5 rounded-md">ออเดอร์ระหว่างจัดส่ง</span>
-                        <span className="text-xs font-bold text-slate-500 dark:text-slate-400 ml-2">#ORD-{order.order_id}</span>
+                        <span className="text-xs font-bold text-slate-500 dark:text-slate-300 ml-2">#ORD-{order.order_id}</span>
                       </div>
                       <span className="text-base font-black text-emerald-600 font-outfit">฿{Number(order.product?.price || 0).toLocaleString()}</span>
                     </div>
@@ -462,12 +462,12 @@ export default function RiderDashboard({ session }) {
                     <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
                       {/* Product Detail */}
                       <div className="flex items-start space-x-4">
-                        <div className="h-20 w-20 bg-slate-100 rounded-xl overflow-hidden shrink-0 border border-slate-200 dark:border-slate-700">
+                        <div className="h-20 w-20 bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden shrink-0 border border-slate-200 dark:border-slate-700">
                           <img src={order.product?.image_url} alt={order.product?.title} className="w-full h-full object-cover" />
                         </div>
                         <div>
                           <h4 className="font-extrabold text-navy-900 dark:text-white text-sm sm:text-base">{order.product?.title || 'สินค้าทั่วไป'}</h4>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                          <p className="text-xs text-slate-500 dark:text-slate-300 mt-1">
                             รับของจากฝั่งผู้ขายแล้วนำไปเก็บเงิน+ส่งมอบให้ฝั่งผู้ซื้อ นัดหมายส่งของภายในวิทยาลัย
                           </p>
                         </div>
@@ -479,14 +479,14 @@ export default function RiderDashboard({ session }) {
                         <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
                           <span className="text-[9px] font-extrabold text-amber-700 uppercase tracking-wider block mb-1">1. นัดรับสินค้าจาก (ผู้ขาย)</span>
                           <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{order.seller?.full_name || '-'}</p>
-                          <p className="text-[10px] text-slate-400 font-mono mt-0.5">รหัส: {order.product?.seller_id}</p>
+                          <p className="text-[10px] text-slate-400 dark:text-slate-300 font-mono mt-0.5">รหัส: {order.product?.seller_id}</p>
                         </div>
 
                         {/* Buyer Contact */}
                         <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
                           <span className="text-[9px] font-extrabold text-primary-700 uppercase tracking-wider block mb-1">2. นัดส่งมอบและรับเงินจาก (ผู้ซื้อ)</span>
                           <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{order.buyer?.full_name || '-'}</p>
-                          <p className="text-[10px] text-slate-400 font-mono mt-0.5">รหัส: {order.buyer_id}</p>
+                          <p className="text-[10px] text-slate-400 dark:text-slate-300 font-mono mt-0.5">รหัส: {order.buyer_id}</p>
                           
                           <div className="mt-2 bg-emerald-100/50 p-2 rounded border border-emerald-200 flex items-start space-x-1.5">
                             <MapPin className="h-3 w-3 text-emerald-600 mt-0.5 shrink-0" />
@@ -520,7 +520,7 @@ export default function RiderDashboard({ session }) {
                             <img src={proofPreviews[order.order_id]} alt="proof-preview" className="w-full h-full object-cover rounded-md" />
                           </div>
                         ) : (
-                          <span className="text-xs text-slate-400">กรุณาอัปโหลดรูปภาพขณะส่งมอบสินค้าเพื่อบันทึกงานจัดส่งสำเร็จ</span>
+                          <span className="text-xs text-slate-400 dark:text-slate-300">กรุณาอัปโหลดรูปภาพขณะส่งมอบสินค้าเพื่อบันทึกงานจัดส่งสำเร็จ</span>
                         )}
                       </div>
                     </div>
@@ -528,7 +528,7 @@ export default function RiderDashboard({ session }) {
                     {/* Actions */}
                     <div className="bg-slate-50 dark:bg-slate-900/50 px-6 py-4 border-t border-slate-100 flex justify-end space-x-3">
                       <button onClick={() => handleCancelJob(order.order_id)} disabled={actionLoadingId === order.order_id}
-                        className="px-4 py-2 border border-slate-300 rounded-lg text-xs font-semibold text-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:bg-slate-900/50 disabled:opacity-50">
+                        className="px-4 py-2 border border-slate-300 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:bg-slate-900/50 disabled:opacity-50">
                         คืนงานจัดส่ง
                       </button>
                       <button onClick={() => handleCompleteJob(order.order_id)} disabled={actionLoadingId === order.order_id}
@@ -548,7 +548,7 @@ export default function RiderDashboard({ session }) {
               <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-center py-16 px-4">
                 <CheckCircle2 className="mx-auto h-12 w-12 text-slate-300 mb-3" />
                 <h3 className="text-lg font-bold text-navy-900 dark:text-white">ไม่มีประวัติการส่งสำเร็จ</h3>
-                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">ประวัติงานที่คุณส่งสำเร็จจะแสดงขึ้นตรงนี้หลังกดรับงานและส่งมอบแล้ว</p>
+                <p className="text-slate-500 dark:text-slate-300 text-sm mt-1">ประวัติงานที่คุณส่งสำเร็จจะแสดงขึ้นตรงนี้หลังกดรับงานและส่งมอบแล้ว</p>
               </div>
             ) : (
               <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
@@ -557,7 +557,7 @@ export default function RiderDashboard({ session }) {
                     <thead className="bg-slate-50 dark:bg-slate-900/50">
                       <tr>
                         {['หมายเลขออเดอร์', 'ชื่อสินค้า', 'ราคาสินค้า', 'รูปหลักฐาน', 'วันที่จัดส่งสำเร็จ'].map((h) => (
-                          <th key={h} className="px-6 py-3.5 font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{h}</th>
+                          <th key={h} className="px-6 py-3.5 font-extrabold text-slate-500 dark:text-slate-300 uppercase tracking-wider">{h}</th>
                         ))}
                       </tr>
                     </thead>
@@ -573,10 +573,10 @@ export default function RiderDashboard({ session }) {
                                 <img src={order.delivery_image_url} alt="delivery-proof" className="w-full h-full object-cover" />
                               </a>
                             ) : (
-                              <span className="text-xs text-slate-400">-</span>
+                              <span className="text-xs text-slate-400 dark:text-slate-300">-</span>
                             )}
                           </td>
-                          <td className="px-6 py-4 text-slate-400 font-mono">
+                          <td className="px-6 py-4 text-slate-400 dark:text-slate-300 font-mono">
                             {new Date(order.created_at).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                           </td>
                         </tr>

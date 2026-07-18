@@ -106,7 +106,7 @@ export default function Profile({ session }) {
   if (loading) return (
     <div className="flex flex-col justify-center items-center py-24 space-y-4">
       <Loader2 className="h-10 w-10 text-primary-600 animate-spin" />
-      <p className="text-slate-500 dark:text-slate-400 text-sm">กำลังโหลดโปรไฟล์...</p>
+      <p className="text-slate-500 dark:text-slate-300 text-sm">กำลังโหลดโปรไฟล์...</p>
     </div>
   )
 
@@ -114,7 +114,7 @@ export default function Profile({ session }) {
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
       <div className="mb-8">
         <h1 className="text-3xl font-extrabold text-navy-900 dark:text-white tracking-tight">โปรไฟล์ของฉัน</h1>
-        <p className="mt-1 text-slate-500 dark:text-slate-400">จัดการข้อมูลส่วนตัวสำหรับการซื้อขายในระบบ</p>
+        <p className="mt-1 text-slate-500 dark:text-slate-300">จัดการข้อมูลส่วนตัวสำหรับการซื้อขายในระบบ</p>
       </div>
 
       {successMsg && (
@@ -165,14 +165,14 @@ export default function Profile({ session }) {
             </span>
 
             {profile?.student_id && (
-              <div className="mt-4 flex items-center justify-center space-x-1.5 text-xs text-slate-500 dark:text-slate-400">
+              <div className="mt-4 flex items-center justify-center space-x-1.5 text-xs text-slate-500 dark:text-slate-300">
                 <Hash className="h-3.5 w-3.5" />
                 <span className="font-mono font-bold">{profile.student_id}</span>
               </div>
             )}
 
             <div className="mt-6 pt-6 border-t border-slate-100">
-              <span className="text-xs text-slate-400 font-bold block mb-1">สมาชิกตั้งแต่</span>
+              <span className="text-xs text-slate-400 dark:text-slate-300 font-bold block mb-1">สมาชิกตั้งแต่</span>
               <span className="text-sm font-bold text-navy-900 dark:text-white">
                 {profile?.created_at
                   ? new Date(profile.created_at).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })
@@ -190,19 +190,19 @@ export default function Profile({ session }) {
             <form onSubmit={handleUpdateProfile} className="space-y-5">
               {/* Email (Read-only) */}
               <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">อีเมลสถาบัน (ไม่สามารถเปลี่ยนได้)</label>
+                <label className="block text-xs font-bold text-slate-400 dark:text-slate-300 uppercase tracking-wider mb-1">อีเมลสถาบัน (ไม่สามารถเปลี่ยนได้)</label>
                 <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400"><Mail className="h-4 w-4" /></span>
-                  <input type="text" disabled value={session?.user?.email || ''} className="pl-9 w-full px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-500 dark:text-slate-400 text-sm focus:outline-none" />
+                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 dark:text-slate-300"><Mail className="h-4 w-4" /></span>
+                  <input type="text" disabled value={session?.user?.email || ''} className="pl-9 w-full px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-500 dark:text-slate-300 text-sm focus:outline-none" />
                 </div>
               </div>
 
               {/* Role (Read-only) */}
               <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">บทบาท (ไม่สามารถเปลี่ยนได้)</label>
+                <label className="block text-xs font-bold text-slate-400 dark:text-slate-300 uppercase tracking-wider mb-1">บทบาท (ไม่สามารถเปลี่ยนได้)</label>
                 <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400"><Shield className="h-4 w-4" /></span>
-                  <input type="text" disabled value={getRoleLabel(profile?.role)} className="pl-9 w-full px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-500 dark:text-slate-400 text-sm focus:outline-none" />
+                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 dark:text-slate-300"><Shield className="h-4 w-4" /></span>
+                  <input type="text" disabled value={getRoleLabel(profile?.role)} className="pl-9 w-full px-3 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-500 dark:text-slate-300 text-sm focus:outline-none" />
                 </div>
               </div>
 
@@ -210,7 +210,7 @@ export default function Profile({ session }) {
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">ชื่อ-นามสกุลจริง</label>
                 <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400"><User className="h-4 w-4" /></span>
+                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 dark:text-slate-300"><User className="h-4 w-4" /></span>
                   <input
                     type="text" required value={fullName} onChange={(e) => setFullName(e.target.value)}
                     className="pl-9 w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"

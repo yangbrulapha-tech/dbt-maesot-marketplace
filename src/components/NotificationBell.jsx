@@ -124,7 +124,7 @@ export default function NotificationBell({ session }) {
             
             <div className="max-h-[60vh] overflow-y-auto">
               {notifications.length === 0 ? (
-                <div className="p-8 text-center text-slate-500 dark:text-slate-400">
+                <div className="p-8 text-center text-slate-500 dark:text-slate-300">
                   <Bell className="h-8 w-8 mx-auto mb-2 opacity-20" />
                   <p className="text-sm">ไม่มีการแจ้งเตือนใหม่</p>
                 </div>
@@ -142,10 +142,10 @@ export default function NotificationBell({ session }) {
                           <p className={`text-sm ${!n.is_read ? 'font-bold text-slate-900 dark:text-white' : 'font-medium text-slate-700 dark:text-slate-300'}`}>
                             {n.title}
                           </p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2">
+                          <p className="text-xs text-slate-500 dark:text-slate-300 mt-0.5 line-clamp-2">
                             {n.message}
                           </p>
-                          <p className="text-[10px] text-slate-400 dark:text-slate-500 dark:text-slate-400 mt-1.5 font-medium">
+                          <p className="text-[10px] text-slate-400 dark:text-slate-500 dark:text-slate-300 mt-1.5 font-medium">
                             {new Date(n.created_at).toLocaleString('th-TH', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' })}
                           </p>
                         </div>

@@ -137,7 +137,7 @@ export default function Reports({ session }) {
         )
       case 'dismissed':
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200 dark:border-slate-700">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
             ยกเลิก/ไม่พบปัญหา
           </span>
         )
@@ -161,7 +161,7 @@ export default function Reports({ session }) {
     return (
       <div className="flex flex-col justify-center items-center py-24 space-y-4">
         <Loader2 className="h-10 w-10 text-primary-600 animate-spin" />
-        <p className="text-slate-500 dark:text-slate-400 text-sm">กำลังโหลดประวัติการรายงานปัญหา...</p>
+        <p className="text-slate-500 dark:text-slate-300 text-sm">กำลังโหลดประวัติการรายงานปัญหา...</p>
       </div>
     )
   }
@@ -171,7 +171,7 @@ export default function Reports({ session }) {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 pb-4 border-b border-slate-200 dark:border-slate-700">
         <div>
           <h1 className="text-3xl font-extrabold text-navy-900 dark:text-white tracking-tight">รายงานปัญหาความปลอดภัย</h1>
-          <p className="mt-1 text-slate-500 dark:text-slate-400">แจ้งเรื่องร้องเรียน สินค้าไม่ตรงปก หรือพฤติกรรมที่ไม่น่าไว้วางใจเพื่อสังคมที่ปลอดภัย</p>
+          <p className="mt-1 text-slate-500 dark:text-slate-300">แจ้งเรื่องร้องเรียน สินค้าไม่ตรงปก หรือพฤติกรรมที่ไม่น่าไว้วางใจเพื่อสังคมที่ปลอดภัย</p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
@@ -198,7 +198,7 @@ export default function Reports({ session }) {
 
       {/* Reports History */}
       <h2 className="text-lg font-bold text-navy-900 dark:text-white mb-4 flex items-center space-x-2">
-        <ClipboardList className="h-5 w-5 text-slate-400" />
+        <ClipboardList className="h-5 w-5 text-slate-400 dark:text-slate-300" />
         <span>ประวัติการรายงานปัญหาของคุณ</span>
       </h2>
 
@@ -206,7 +206,7 @@ export default function Reports({ session }) {
         <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-center py-20 px-4">
           <CheckCircle2 className="mx-auto h-12 w-12 text-emerald-400 mb-4" />
           <h3 className="text-lg font-bold text-navy-900 dark:text-white">ไม่มีรายงานปัญหาความประพฤติ</h3>
-          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">ยินดีด้วย! คุณไม่พบปัญหาการหลอกลวงหรือสินค้าผิดกฎระเบียบในการใช้งาน</p>
+          <p className="text-slate-500 dark:text-slate-300 text-sm mt-1">ยินดีด้วย! คุณไม่พบปัญหาการหลอกลวงหรือสินค้าผิดกฎระเบียบในการใช้งาน</p>
         </div>
       ) : (
         <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
@@ -214,11 +214,11 @@ export default function Reports({ session }) {
             <table className="min-w-full divide-y divide-slate-200 text-left">
               <thead className="bg-slate-50 dark:bg-slate-900/50">
                 <tr>
-                  <th className="px-6 py-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">หมายเลขรายงาน</th>
-                  <th className="px-6 py-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">ชื่อสินค้าที่รายงาน</th>
-                  <th className="px-6 py-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">หมวดหมู่ปัญหา</th>
-                  <th className="px-6 py-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">วันที่ส่งรายงาน</th>
-                  <th className="px-6 py-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">สถานะ</th>
+                  <th className="px-6 py-3 text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">หมายเลขรายงาน</th>
+                  <th className="px-6 py-3 text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">ชื่อสินค้าที่รายงาน</th>
+                  <th className="px-6 py-3 text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">หมวดหมู่ปัญหา</th>
+                  <th className="px-6 py-3 text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">วันที่ส่งรายงาน</th>
+                  <th className="px-6 py-3 text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">สถานะ</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 bg-white dark:bg-slate-800">
@@ -230,10 +230,10 @@ export default function Reports({ session }) {
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 dark:text-white">
                       {report.product?.title || 'สินค้า (ถูกลบออกแล้ว)'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">
                       {getIssueLabel(report.issue_type)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">
+                    <td className="px-6 py-4 whitespace-nowrap text-xs text-slate-500 dark:text-slate-300">
                       {new Date(report.created_at).toLocaleDateString('th-TH', {
                         year: 'numeric',
                         month: 'short',
