@@ -40,9 +40,9 @@ export default function App() {
   const ProtectedRoute = ({ children }) => {
     if (loading) {
       return (
-        <div className="flex flex-col justify-center items-center h-screen bg-slate-50 space-y-4">
+        <div className="flex flex-col justify-center items-center h-screen bg-transparent space-y-4">
           <Loader2 className="h-10 w-10 text-primary-600 animate-spin" />
-          <p className="text-slate-500 text-sm">กำลังตรวจสอบสิทธิ์...</p>
+          <p className="text-slate-500 dark:text-slate-400 text-sm">กำลังตรวจสอบสิทธิ์...</p>
         </div>
       )
     }
@@ -54,16 +54,16 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="flex flex-col justify-center items-center h-screen bg-slate-50 space-y-4">
+      <div className="flex flex-col justify-center items-center h-screen bg-transparent space-y-4">
         <Loader2 className="h-10 w-10 text-primary-600 animate-spin" />
-        <p className="text-slate-500 text-sm">กำลังโหลดข้อมูลแอปพลิเคชัน...</p>
+        <p className="text-slate-500 dark:text-slate-400 text-sm">กำลังโหลดข้อมูลแอปพลิเคชัน...</p>
       </div>
     )
   }
 
   return (
     <Router>
-      <div className="min-h-screen bg-slate-100 font-sarabun flex flex-col justify-between">
+      <div className="min-h-screen bg-transparent font-sarabun flex flex-col justify-between">
         <div>
           <Navbar session={session} />
           <main className="pb-16 md:pb-8">
