@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { supabase, getUserProfile } from '../supabaseClient'
 import { Truck, CheckCircle2, AlertCircle, Loader2, MapPin, Phone, User, ClipboardList, Navigation, AlertTriangle, ArrowRight, Shield } from 'lucide-react'
 import { Navigate } from 'react-router-dom'
@@ -26,6 +26,76 @@ export default function RiderDashboard({ session }) {
   useEffect(() => {
     if (session) checkRiderStatus()
   }, [session])
+
+  const lastSoundTimeRef = useRef(0)
+
+  const playNotificationSound = () => {
+    try {
+      const now = Date.now()
+      if (now - lastSoundTimeRef.current < 5000) return // Throttle 5 seconds
+      lastSoundTimeRef.current = now
+
+      const AudioContext = window.AudioContext || window.webkitAudioContext
+      if (!AudioContext) return
+      const ctx = new AudioContext()
+      const osc = ctx.createOscillator()
+      const gainNode = ctx.createGain()
+      
+      osc.type = 'sine'
+      osc.frequency.setValueAtTime(880, ctx.currentTime) // A5
+      osc.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.1) // slide up
+      
+      gainNode.gain.setValueAtTime(0, ctx.currentTime)
+      gainNode.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.05)
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5)
+      
+      osc.connect(gainNode)
+      gainNode.connect(ctx.destination)
+      
+      osc.start()
+      osc.stop(ctx.currentTime + 0.5)
+    } catch(e) {
+      console.log("Audio not supported or blocked", e)
+    }
+  }
+
+  useEffect(() => {
+    if (!isRider || !userProfile) return
+
+    const channel = supabase
+      .channel('public:orders:rider')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'orders', filter: 'status=eq.pending' },
+        (payload) => {
+          if (payload.new.needs_delivery && payload.new.rider_id === null) {
+            playNotificationSound()
+            setSuccessMsg('มีงานจัดส่งใหม่เข้ามา!')
+            setTimeout(() => setSuccessMsg(''), 5000)
+            loadRiderJobs(userProfile.student_id)
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'orders', filter: 'status=eq.pending' },
+        (payload) => {
+          if (payload.new.needs_delivery && payload.new.rider_id === null) {
+            playNotificationSound()
+            setSuccessMsg('มีงานจัดส่งอัปเดต หรือถูกยกเลิกกลับมาที่ส่วนกลาง!')
+            setTimeout(() => setSuccessMsg(''), 5000)
+            loadRiderJobs(userProfile.student_id)
+          } else {
+            loadRiderJobs(userProfile.student_id)
+          }
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [isRider, userProfile])
 
   const checkRiderStatus = async () => {
     setAuthLoading(true)
