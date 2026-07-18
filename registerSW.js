@@ -1,1 +1,0 @@
-if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/dbt-maesot-marketplace/sw.js', { scope: '/dbt-maesot-marketplace/' })})}
