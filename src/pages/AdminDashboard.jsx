@@ -463,17 +463,17 @@ export default function AdminDashboard({ session }) {
                         <div className="flex items-center justify-end space-x-2">
                           {r.is_active ? (
                             <button onClick={() => handleSuspendRider(r.student_id, r.full_name)} disabled={riderActionLoading === r.student_id}
-                              className="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-lg text-xs font-bold disabled:opacity-50">
+                              className="h-8 px-3 flex items-center justify-center bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-lg text-xs font-bold disabled:opacity-50">
                               ระงับสิทธิ์
                             </button>
                           ) : (
                             <button onClick={() => handleApproveRider(r.student_id, r.full_name)} disabled={riderActionLoading === r.student_id}
-                              className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-extrabold disabled:opacity-50">
+                              className="h-8 px-3 flex items-center justify-center bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-extrabold disabled:opacity-50">
                               อนุมัติสิทธิ์
                             </button>
                           )}
                           <button onClick={() => handleDeleteRider(r.student_id, r.full_name)} disabled={riderActionLoading === r.student_id}
-                            className="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 rounded-lg disabled:opacity-50" title="ลบข้อมูล">
+                            className="h-8 w-8 flex items-center justify-center bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 rounded-lg disabled:opacity-50" title="ลบข้อมูล">
                             <Trash2 className="h-4 w-4" />
                           </button>
                         </div>
