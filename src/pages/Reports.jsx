@@ -224,27 +224,45 @@ export default function Reports({ session }) {
               </thead>
               <tbody className="divide-y divide-slate-200 bg-white dark:bg-slate-800">
                 {reports.map((report) => (
-                  <tr key={report.id} className="hover:bg-slate-50 dark:bg-slate-900/50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-navy-900 dark:text-white font-outfit">
-                      #REP-{report.id}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 dark:text-white">
-                      {report.product?.title || 'สินค้า (ถูกลบออกแล้ว)'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">
-                      {getIssueLabel(report.issue_type)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-xs text-slate-500 dark:text-slate-300">
-                      {new Date(report.created_at).toLocaleDateString('th-TH', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      })}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      {getStatusBadge(report.status)}
-                    </td>
-                  </tr>
+                  <React.Fragment key={report.id}>
+                    <tr className="hover:bg-slate-50 dark:bg-slate-900/50 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-navy-900 dark:text-white font-outfit">
+                        #REP-{report.id}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 dark:text-white">
+                        {report.product?.title || 'สินค้า (ถูกลบออกแล้ว)'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">
+                        {getIssueLabel(report.issue_type)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-xs text-slate-500 dark:text-slate-300">
+                        {new Date(report.created_at).toLocaleDateString('th-TH', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        })}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        {getStatusBadge(report.status)}
+                      </td>
+                    </tr>
+                    {(report.description || report.admin_notes) && (
+                      <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
+                        <td colSpan="5" className="px-6 py-3 text-sm">
+                          {report.description && (
+                            <div className="mb-1 text-slate-600 dark:text-slate-400">
+                              <span className="font-bold text-slate-700 dark:text-slate-300">รายละเอียด:</span> {report.description}
+                            </div>
+                          )}
+                          {report.admin_notes && (
+                            <div className="text-emerald-700 dark:text-emerald-400 font-medium">
+                              <span className="font-bold">หมายเหตุจากผู้ดูแล:</span> {report.admin_notes}
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 ))}
               </tbody>
             </table>

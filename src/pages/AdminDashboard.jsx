@@ -33,6 +33,7 @@ export default function AdminDashboard({ session }) {
   const [orders, setOrders] = useState([])
   const [riders, setRiders] = useState([])
   const [refunds, setRefunds] = useState([])
+  const [reportsData, setReportsData] = useState([])
   const [dataLoading, setDataLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [activeTab, setActiveTab] = useState('products')
@@ -75,12 +76,13 @@ export default function AdminDashboard({ session }) {
   const loadAllData = async () => {
     setDataLoading(true)
     try {
-      const [pRes, uRes, oRes, rRes, refRes] = await Promise.all([
+      const [pRes, uRes, oRes, rRes, refRes, repRes] = await Promise.all([
         supabase.from('products').select('product_id, seller_id, title, price, category, status, created_at').order('created_at', { ascending: false }),
         supabase.from('users').select('student_id, full_name, email, role, created_at').order('created_at', { ascending: false }),
         supabase.from('orders').select(`order_id, buyer_id, status, created_at, product:products(title, price)`).order('created_at', { ascending: false }).limit(50),
         supabase.from('riders').select('*').order('is_active', { ascending: true }),
-        supabase.from('refund_requests').select('*').order('created_at', { ascending: false })
+        supabase.from('refund_requests').select('*').order('created_at', { ascending: false }),
+        supabase.from('product_reports').select('*, product:products(title)').order('created_at', { ascending: false })
       ])
       
       if (pRes.error) throw pRes.error
@@ -89,6 +91,7 @@ export default function AdminDashboard({ session }) {
       const usersData = uRes.data || []
       const rawRiders = rRes.data || []
       setRefunds(refRes.data || [])
+      setReportsData(repRes.data || [])
 
       // แมปรายชื่อผู้ใช้งานให้กับข้อมูลไรเดอร์ (เพื่อแสดงชื่อ-นามสกุลจริง)
       const mappedRiders = rawRiders.map(rider => {
@@ -151,6 +154,32 @@ export default function AdminDashboard({ session }) {
       addToast(`ทำรายการคืนเงินเรียบร้อยแล้ว`, 'success')
     } catch (err) {
       addToast('ทำรายการไม่สำเร็จ: ' + err.message, 'error')
+    }
+  }
+
+  const handleReportReply = async (reportId, action) => {
+    const reply = window.prompt(`ระบุหมายเหตุสำหรับการ${action === 'resolved' ? 'ดำเนินการแก้ไข' : 'ยกเลิก/ปฏิเสธ'}รายงานนี้:`)
+    if (reply === null) return
+    try {
+      const { error } = await supabase.from('product_reports')
+        .update({ status: action, admin_notes: reply })
+        .eq('id', reportId)
+      if (error) throw error
+      
+      const report = reportsData.find(r => r.id === reportId)
+      setReportsData(prev => prev.map(r => r.id === reportId ? { ...r, status: action, admin_notes: reply } : r))
+      
+      if (report && report.reporter_id) {
+        await supabase.from('notifications').insert({
+          user_id: report.reporter_id,
+          title: `รายงานของคุณได้รับการตอบกลับ`,
+          message: `รายงานสำหรับสินค้า "${report.product?.title || 'สินค้า'}" ได้ถูกอัปเดตสถานะ หมายเหตุจากผู้ดูแล: ${reply}`,
+          link: '/reports'
+        })
+      }
+      addToast(`ตอบกลับรายงานสำเร็จ`, 'success')
+    } catch (err) {
+      addToast('เกิดข้อผิดพลาดในการตอบกลับ: ' + err.message, 'error')
     }
   }
 
@@ -309,7 +338,8 @@ export default function AdminDashboard({ session }) {
           { key: 'users', label: 'ผู้ใช้งาน', icon: Users },
           { key: 'riders', label: 'อนุมัติ Rider', icon: Truck },
           { key: 'orders', label: 'ออเดอร์', icon: ShoppingBag },
-          { key: 'refunds', label: 'คืนเงิน', icon: ShieldAlert }
+          { key: 'refunds', label: 'คืนเงิน', icon: ShieldAlert },
+          { key: 'reports', label: 'รายงานปัญหา', icon: AlertCircle }
         ].map(({ key, label, icon: Icon }) => (
           <button key={key} onClick={() => setActiveTab(key)}
             className={`flex-1 flex items-center justify-center space-x-2 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${activeTab === key ? 'bg-navy-900 text-white shadow-md' : 'text-slate-500 dark:text-slate-300 hover:bg-slate-50 dark:bg-slate-900/50'}`}>
@@ -513,6 +543,57 @@ export default function AdminDashboard({ session }) {
                       <div className="flex flex-col space-y-2 shrink-0">
                         <button onClick={() => handleRefundAction(r.id, 'approved')} className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg shadow-sm">อนุมัติ</button>
                         <button onClick={() => handleRefundAction(r.id, 'rejected')} className="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded-lg shadow-sm">ปฏิเสธ</button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Tab: Reports */}
+      {activeTab === 'reports' && (
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 animate-fade-in">
+          <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+            <h2 className="text-lg font-bold text-navy-900 dark:text-white flex items-center space-x-2">
+              <AlertCircle className="h-5 w-5 text-amber-500" />
+              <span>รายงานปัญหาทั้งหมด ({reportsData.length})</span>
+            </h2>
+          </div>
+          <div className="p-6">
+            {reportsData.length === 0 ? (
+              <div className="text-center py-10">
+                <CheckCircle2 className="mx-auto h-12 w-12 text-slate-300 mb-3" />
+                <p className="text-slate-500 dark:text-slate-300 font-medium">ไม่มีรายงานปัญหา</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {reportsData.map((report) => (
+                  <div key={report.id} className="flex flex-col sm:flex-row items-start justify-between p-4 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl space-y-4 sm:space-y-0 sm:space-x-4 transition-all">
+                    <div className="flex-1 space-y-2 w-full">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <span className="font-mono font-bold text-navy-950 dark:text-slate-200">#REP-{report.id}</span>
+                        {report.status === 'pending' && <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded-full">รอตรวจสอบ</span>}
+                        {report.status === 'resolved' && <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded-full">แก้ไขแล้ว</span>}
+                        {report.status === 'dismissed' && <span className="px-2 py-0.5 bg-slate-200 text-slate-800 text-[10px] font-bold rounded-full">ยกเลิก/ไม่พบปัญหา</span>}
+                      </div>
+                      <p className="text-sm font-bold text-slate-800 dark:text-slate-200">สินค้า: {report.product?.title || 'ไม่มีข้อมูล'}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">ผู้รายงาน: <span className="font-bold">{report.reporter_id}</span></p>
+                      <p className="text-sm text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 p-3 border border-slate-200 dark:border-slate-700 rounded-lg">
+                        รายละเอียด: {report.description || '-'}
+                      </p>
+                      {report.admin_notes && (
+                        <p className="text-sm text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/40 p-3 border border-emerald-200 dark:border-emerald-800/50 rounded-lg mt-2">
+                          แอดมินตอบกลับ: {report.admin_notes}
+                        </p>
+                      )}
+                    </div>
+                    {report.status === 'pending' && (
+                      <div className="flex flex-col space-y-2 shrink-0">
+                        <button onClick={() => handleReportReply(report.id, 'resolved')} className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg shadow-sm">ดำเนินการแก้ไข</button>
+                        <button onClick={() => handleReportReply(report.id, 'dismissed')} className="px-3 py-1.5 bg-slate-600 hover:bg-slate-500 text-white text-xs font-bold rounded-lg shadow-sm">ยกเลิก/ปฏิเสธ</button>
                       </div>
                     )}
                   </div>
