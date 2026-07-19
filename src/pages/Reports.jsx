@@ -18,6 +18,7 @@ export default function Reports({ session }) {
   const [productId, setProductId] = useState('')
   const [issueType, setIssueType] = useState('mismatch')
   const [description, setDescription] = useState('')
+  const [imageFile, setImageFile] = useState(null)
 
   const issueCategories = [
     { value: 'mismatch', label: 'สินค้าไม่ตรงกับที่ระบุ (ไม่ตรงปก)' },
@@ -94,13 +95,32 @@ export default function Reports({ session }) {
     setSuccessMsg('')
 
     try {
+      let finalDescription = description
+
+      if (imageFile) {
+        const fileExt = imageFile.name.split('.').pop().toLowerCase()
+        const fileName = `report_evidence/${userProfile.id}_${Date.now()}.${fileExt}`
+        
+        const { error: uploadError } = await supabase.storage
+          .from('product-images')
+          .upload(fileName, imageFile, { upsert: true })
+          
+        if (uploadError) throw uploadError
+        
+        const { data: { publicUrl } } = supabase.storage
+          .from('product-images')
+          .getPublicUrl(fileName)
+          
+        finalDescription += `|||IMG_URL:${publicUrl}`
+      }
+
       const { error } = await supabase
         .from('product_reports')
         .insert({
           product_id: productId,
           reporter_id: userProfile.id,
           issue_type: issueType,
-          description: description,
+          description: finalDescription,
           status: 'pending',
         })
 
@@ -110,6 +130,7 @@ export default function Reports({ session }) {
       setIsModalOpen(false)
       setDescription('')
       setProductId('')
+      setImageFile(null)
       fetchProfileReportsAndProducts()
     } catch (err) {
       if (err.message.includes('42P01') || err.code === '42P01') {
@@ -251,7 +272,14 @@ export default function Reports({ session }) {
                         <td colSpan="5" className="px-6 py-3 text-sm">
                           {report.description && (
                             <div className="mb-1 text-slate-600 dark:text-slate-400">
-                              <span className="font-bold text-slate-700 dark:text-slate-300">รายละเอียด:</span> {report.description}
+                              <span className="font-bold text-slate-700 dark:text-slate-300">รายละเอียด:</span> {report.description.split('|||IMG_URL:')[0]}
+                              {report.description.includes('|||IMG_URL:') && (
+                                <div className="mt-3">
+                                  <a href={report.description.split('|||IMG_URL:')[1]} target="_blank" rel="noreferrer">
+                                    <img src={report.description.split('|||IMG_URL:')[1]} alt="หลักฐาน" className="max-w-[150px] max-h-[150px] object-cover rounded-lg border border-slate-200 dark:border-slate-600 shadow-sm hover:opacity-80 transition-opacity" />
+                                  </a>
+                                </div>
+                              )}
                             </div>
                           )}
                           {report.admin_notes && (
@@ -337,6 +365,16 @@ export default function Reports({ session }) {
                   placeholder="กรุณาบรรยายข้อเท็จจริง เช่น สภาพของสินค้าไม่ตรงตามตกลงในจุดใดบ้าง หรือพฤติกรรมที่ไม่สุภาพ..."
                   className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                 ></textarea>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">แนบรูปภาพหลักฐาน (ไม่บังคับ)</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setImageFile(e.target.files[0])}
+                  className="w-full text-sm text-slate-500 dark:text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-slate-200 dark:file:bg-slate-700 file:text-slate-700 dark:file:text-slate-300 hover:file:bg-slate-300 dark:hover:file:bg-slate-600 transition-colors"
+                />
               </div>
 
               <div className="pt-2 flex justify-end space-x-3">

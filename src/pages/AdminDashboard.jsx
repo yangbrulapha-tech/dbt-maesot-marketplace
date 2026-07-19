@@ -581,9 +581,16 @@ export default function AdminDashboard({ session }) {
                       </div>
                       <p className="text-sm font-bold text-slate-800 dark:text-slate-200">สินค้า: {report.product?.title || 'ไม่มีข้อมูล'}</p>
                       <p className="text-xs text-slate-500 dark:text-slate-400">ผู้รายงาน: <span className="font-bold">{report.reporter_id}</span></p>
-                      <p className="text-sm text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 p-3 border border-slate-200 dark:border-slate-700 rounded-lg">
-                        รายละเอียด: {report.description || '-'}
-                      </p>
+                      <div className="text-sm text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 p-3 border border-slate-200 dark:border-slate-700 rounded-lg">
+                        รายละเอียด: {report.description ? report.description.split('|||IMG_URL:')[0] : '-'}
+                        {report.description?.includes('|||IMG_URL:') && (
+                          <div className="mt-3">
+                            <a href={report.description.split('|||IMG_URL:')[1]} target="_blank" rel="noreferrer">
+                              <img src={report.description.split('|||IMG_URL:')[1]} alt="หลักฐาน" className="max-w-[150px] max-h-[150px] object-cover rounded-lg border border-slate-200 dark:border-slate-600 shadow-sm hover:opacity-80 transition-opacity" />
+                            </a>
+                          </div>
+                        )}
+                      </div>
                       {report.admin_notes && (
                         <p className="text-sm text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/40 p-3 border border-emerald-200 dark:border-emerald-800/50 rounded-lg mt-2">
                           แอดมินตอบกลับ: {report.admin_notes}
