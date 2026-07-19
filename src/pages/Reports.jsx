@@ -99,7 +99,7 @@ export default function Reports({ session }) {
 
       if (imageFile) {
         const fileExt = imageFile.name.split('.').pop().toLowerCase()
-        const fileName = `report_evidence/${userProfile.id}_${Date.now()}.${fileExt}`
+        const fileName = `report_evidence/${userProfile.student_id}_${Date.now()}.${fileExt}`
         
         const { error: uploadError } = await supabase.storage
           .from('product-images')
@@ -118,7 +118,7 @@ export default function Reports({ session }) {
         .from('product_reports')
         .insert({
           product_id: productId,
-          reporter_id: userProfile.id,
+          reporter_id: userProfile.student_id,
           issue_type: issueType,
           description: finalDescription,
           status: 'pending',
