@@ -268,7 +268,7 @@ export default function Chat({ session }) {
                 </div>
 
                 {/* Messages */}
-                <div ref={scrollContainerRef} className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 dark:bg-slate-900/50">
+                <div ref={scrollContainerRef} className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 dark:bg-slate-900/80">
                   {msgLoading ? (
                     <div className="flex items-center justify-center h-full"><Loader2 className="h-6 w-6 text-primary-500 animate-spin" /></div>
                   ) : messages.length === 0 ? (
@@ -281,13 +281,13 @@ export default function Chat({ session }) {
                     return (
                       <div key={msg.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
                         {!isOwn && (
-                          <div className="h-7 w-7 bg-navy-900 dark:bg-slate-700 rounded-full flex items-center justify-center text-white text-xs font-bold mr-2 shrink-0 self-end">
+                          <div className="h-7 w-7 bg-navy-900 dark:bg-slate-600 rounded-full flex items-center justify-center text-white text-xs font-bold mr-2 shrink-0 self-end">
                             {(selectedConv.partnerName || 'U').charAt(0).toUpperCase()}
                           </div>
                         )}
-                        <div className={`max-w-[70%] px-4 py-2.5 rounded-2xl text-sm shadow-sm ${isOwn ? 'bg-navy-900 text-white rounded-br-md' : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 rounded-bl-md'} ${msg._optimistic ? 'opacity-70' : ''}`}>
-                          <p className="leading-relaxed">{msg.content}</p>
-                          <p className={`text-[10px] mt-1.5 ${isOwn ? 'text-slate-400 dark:text-slate-300 text-right' : 'text-slate-400 dark:text-slate-300'}`}>{formatTime(msg.created_at)}</p>
+                        <div className={`max-w-[70%] px-4 py-2.5 rounded-2xl text-sm shadow-md ${isOwn ? 'bg-navy-900 dark:bg-indigo-600 text-white rounded-br-md border border-navy-800 dark:border-indigo-500' : 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-600 rounded-bl-md'} ${msg._optimistic ? 'opacity-70' : ''}`}>
+                          <p className="leading-relaxed whitespace-pre-wrap break-words">{msg.content}</p>
+                          <p className={`text-[10px] mt-1.5 ${isOwn ? 'text-slate-300 dark:text-indigo-200 text-right' : 'text-slate-400 dark:text-slate-300'}`}>{formatTime(msg.created_at)}</p>
                         </div>
                       </div>
                     )
