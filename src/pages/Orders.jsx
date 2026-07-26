@@ -445,7 +445,7 @@ export default function Orders({ session }) {
                   {activeTab === 'seller' && order.status === 'pending' && (
                     <>
                       <button onClick={() => handleUpdateStatus(order.order_id, 'cancelled')} disabled={actionLoading === order.order_id}
-                        className="px-4 py-2 border border-red-300 rounded-lg text-xs font-semibold text-red-700 bg-white dark:bg-slate-800 hover:bg-red-50 disabled:opacity-50">
+                        className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-xs font-bold disabled:opacity-50 shadow-sm transition-colors">
                         ปฏิเสธ
                       </button>
                       <button onClick={() => handleUpdateStatus(order.order_id, 'completed')} disabled={actionLoading === order.order_id}

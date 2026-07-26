@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database ER Diagram</title>
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        h1 {
+            text-align: center;
+            color: #000000;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Database Schema</h1>
+        <div class="mermaid">
+            %%{init: {'theme': 'base', 'themeVariables': { 'background': '#ffffff', 'primaryColor': '#ffffff', 'primaryTextColor': '#000000', 'lineColor': '#000000', 'secondaryColor': '#f8fafc', 'tertiaryColor': '#ffffff'}}}%%
+            erDiagram
+                users {
+                    varchar student_id PK
+                    varchar full_name
+                    varchar email
+                    varchar role
+                    varchar avatar_url
+                    timestamp created_at
+                }
+
+                products {
+                    bigint product_id PK
+                    varchar seller_id FK
+                    varchar title
+                    text description
+                    numeric price
+                    varchar category
+                    varchar image_url
+                    varchar status
+                    timestamp created_at
+                }
+
+                orders {
+                    bigint order_id PK
+                    bigint product_id FK
+                    varchar buyer_id FK
+                    varchar rider_id FK
+                    boolean needs_delivery
+                    varchar delivery_location
+                    varchar delivery_image_url
+                    varchar status
+                    timestamp created_at
+                }
+
+                messages {
+                    bigint id PK
+                    varchar sender_id FK
+                    varchar receiver_id FK
+                    bigint product_id FK
+                    text content
+                    boolean is_read
+                    timestamp created_at
+                }
+
+                refunds {
+                    bigint id PK
+                    bigint order_id FK
+                    text reason
+                    varchar evidence_url
+                    varchar status
+                    timestamp created_at
+                }
+
+                product_reports {
+                    uuid id PK
+                    bigint product_id FK
+                    varchar reporter_id FK
+                    varchar issue_type
+                    text description
+                    text admin_notes
+                    varchar status
+                    timestamp created_at
+                }
+
+                %% Relationships
+                users ||--o{ products : "lists"
+                users ||--o{ orders : "places"
+                users ||--o{ orders : "delivers"
+                users ||--o{ messages : "communicates"
+                users ||--o{ product_reports : "reports"
+                
+                products ||--o{ orders : "has"
+                products ||--o{ product_reports : "has"
+                products ||--o{ messages : "discussed_in"
+                
+                orders ||--o| refunds : "can_have"
+        </div>
+    </div>
+    
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</body>
+</html>
