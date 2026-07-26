@@ -48,7 +48,7 @@ export default function Footer() {
       name: 'ผู้จัดทำเว็บ (เรน)',
       sub: 'Ramita Rxn (Facebook)',
       avatar: `${import.meta.env.BASE_URL}rmita.jpg`,
-      link: 'https://www.facebook.com/profile.php?id=615799852929408'
+      link: 'https://www.facebook.com/profile.php?id=61579985292940'
     },
     {
       name: 'ผู้จัดทำเว็บ (Instagram)',
