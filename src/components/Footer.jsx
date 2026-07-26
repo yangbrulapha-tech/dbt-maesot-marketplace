@@ -45,10 +45,23 @@ export default function Footer() {
       link: 'https://www.facebook.com/search/top?q=Marshal%20Mars'
     },
     {
+      name: 'ผู้จัดทำเว็บ (เรน)',
+      sub: 'Ramita Rxn (Facebook)',
+      avatar: `https://graph.facebook.com/615799852929408/picture?type=large`,
+      link: 'https://www.facebook.com/profile.php?id=615799852929408'
+    },
+    {
       name: 'ผู้จัดทำเว็บ (Instagram)',
       sub: 'kkhxphidph (Instagram)',
       avatar: `${import.meta.env.BASE_URL}marshal_avatar.png`,
       link: 'https://www.instagram.com/kkhxphidph/',
+      isInstagram: true
+    },
+    {
+      name: 'ผู้จัดทำเว็บ (เรน)',
+      sub: 'r__axnbxw (Instagram)',
+      avatar: `https://graph.facebook.com/615799852929408/picture?type=large`,
+      link: 'https://www.instagram.com/r__axnbxw/',
       isInstagram: true
     },
     {
