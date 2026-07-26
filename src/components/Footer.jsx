@@ -60,7 +60,7 @@ export default function Footer() {
     {
       name: 'ผู้จัดทำเว็บ (เรน)',
       sub: 'r__axnbxw (Instagram)',
-      avatar: `${import.meta.env.BASE_URL}rmitaig.jpg`,
+      avatar: `${import.meta.env.BASE_URL}rmita.jpg`,
       link: 'https://www.instagram.com/r__axnbxw/',
       isInstagram: true
     },
