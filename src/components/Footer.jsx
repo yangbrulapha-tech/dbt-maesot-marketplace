@@ -47,7 +47,7 @@ export default function Footer() {
     {
       name: 'ผู้จัดทำเว็บ (เรน)',
       sub: 'Ramita Rxn (Facebook)',
-      avatar: `https://graph.facebook.com/615799852929408/picture?type=large`,
+      avatar: `${import.meta.env.BASE_URL}rmita.jpg`,
       link: 'https://www.facebook.com/profile.php?id=615799852929408'
     },
     {
@@ -60,7 +60,7 @@ export default function Footer() {
     {
       name: 'ผู้จัดทำเว็บ (เรน)',
       sub: 'r__axnbxw (Instagram)',
-      avatar: `https://graph.facebook.com/615799852929408/picture?type=large`,
+      avatar: `${import.meta.env.BASE_URL}rmitaig.jpg`,
       link: 'https://www.instagram.com/r__axnbxw/',
       isInstagram: true
     },
