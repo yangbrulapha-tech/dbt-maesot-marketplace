@@ -69,7 +69,7 @@ export default function Orders({ session }) {
           let riderData = null
           if (order.rider_id) {
             const { data: r } = await supabase
-              .from('users')
+              .from('profiles')
               .select('student_id, full_name')
               .eq('student_id', order.rider_id)
               .maybeSingle()
@@ -78,10 +78,10 @@ export default function Orders({ session }) {
 
           if (order.product?.seller_id) {
             const { data: sellerData } = await supabase
-              .from('users')
-              .select('student_id, full_name, email')
-              .eq('student_id', order.product.seller_id)
-              .single()
+              .from('profiles')
+              .select('student_id, full_name')
+              .eq('id', order.product.seller_id)
+              .maybeSingle()
             return { ...order, seller: sellerData, rider: riderData }
           }
           return { ...order, seller: null, rider: riderData }

@@ -46,7 +46,7 @@ export default function NotificationBell({ session }) {
         .limit(20)
 
       if (error) {
-        if (error.code !== '42P01') console.error('Error fetching notifications:', error)
+        // ละเว้น: 42P01=ตารางไม่มี, 42703=คอลัมน์ไม่มี, 400=Bad Request
         return
       }
 

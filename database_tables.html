@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:w="urn:schemas-microsoft-com:office:word"
+      xmlns="http://www.w3.org/TR/REC-html40"
+      lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>คุณสมบัติตารางฐานข้อมูล — Shop 2 MTC</title>
+  <!--[if gte mso 9]>
+  <xml>
+    <w:WordDocument>
+      <w:View>Print</w:View>
+      <w:Zoom>100</w:Zoom>
+      <w:DoNotOptimizeForBrowser/>
+    </w:WordDocument>
+  </xml>
+  <![endif]-->
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 2.54cm 3cm 2.54cm 3cm;
+      mso-page-orientation: portrait;
+    }
+    body {
+      font-family: "TH Sarabun New", "Cordia New", "AngsanaUPC", serif;
+      font-size: 16pt;
+      line-height: 1.3;
+      color: #000000;
+      margin: 0;
+      padding: 0;
+    }
+    p.table-title {
+      font-size: 16pt;
+      font-weight: bold;
+      margin: 16pt 0 4pt 0;
+      page-break-after: avoid;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 18pt;
+      font-size: 16pt;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+      page-break-inside: avoid;
+    }
+    th, td {
+      border: 1px solid #000000;
+      padding: 3pt 6pt;
+      vertical-align: middle;
+      mso-border-alt: solid windowtext .5pt;
+    }
+    th {
+      background-color: #FFFFFF;
+      text-align: center;
+      font-weight: bold;
+      font-size: 16pt;
+    }
+    td {
+      font-size: 16pt;
+    }
+    td.col-attr {
+      text-align: center;
+      width: 22%;
+    }
+    td.col-desc {
+      text-align: left;
+      width: 42%;
+    }
+    td.col-type {
+      text-align: center;
+      width: 15%;
+    }
+    td.col-key {
+      text-align: center;
+      width: 10%;
+    }
+    th.col-attr { width: 22%; }
+    th.col-desc { width: 42%; }
+    th.col-type { width: 15%; }
+    th.col-key  { width: 10%; }
+
+    .pk {
+      font-weight: normal;
+    }
+    .fk {
+      font-weight: normal;
+    }
+    .check {
+      font-size: 16pt;
+      font-weight: bold;
+    }
+    .ref-note {
+      font-size: 16pt;
+      display: block;
+      color: #000;
+    }
+    @media print {
+      table { page-break-inside: avoid; }
+      p.table-title { page-break-after: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+
+<!-- =========================================== -->
+<!-- ตารางที่ 3.2 users                          -->
+<!-- =========================================== -->
+<p class="table-title">ตารางที่ 3.2 คุณสมบัติของตาราง users (ข้อมูลผู้ใช้งาน ผู้ดูแลระบบ และพนักงานจัดส่ง)</p>
+<table>
+  <thead>
+    <tr>
+      <th class="col-attr" rowspan="2">ชื่อแอทริบิวท์</th>
+      <th class="col-desc" rowspan="2">คำอธิบาย</th>
+      <th class="col-type" rowspan="2">ชนิดข้อมูล</th>
+      <th colspan="2">ประเภทคีย์</th>
+    </tr>
+    <tr>
+      <th class="col-key">คีย์<br>หลัก</th>
+      <th class="col-key">คีย์<br>นอก</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="col-attr"><span class="pk">student_id</span></td>
+      <td class="col-desc">รหัสนักศึกษา (ใช้เป็นรหัสอ้างอิงหลัก)</td>
+      <td class="col-type">VARCHAR</td>
+      <td class="col-key"><span class="check">✓</span></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">full_name</td>
+      <td class="col-desc">ชื่อ-นามสกุล ของผู้ใช้งาน</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">email</td>
+      <td class="col-desc">อีเมลของผู้ใช้งาน</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">role</td>
+      <td class="col-desc">บทบาท (เช่น student, admin, staff)</td>
+      <td class="col-type">VARCHAR</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">avatar_url</td>
+      <td class="col-desc">รูปภาพโปรไฟล์ผู้ใช้งาน</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">created_at</td>
+      <td class="col-desc">วันเวลาที่สมัครสมาชิก</td>
+      <td class="col-type">TIMESTAMP</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- =========================================== -->
+<!-- ตารางที่ 3.3 products                       -->
+<!-- =========================================== -->
+<p class="table-title">ตารางที่ 3.3 คุณสมบัติของตาราง products (ข้อมูลสินค้ามือสอง)</p>
+<table>
+  <thead>
+    <tr>
+      <th class="col-attr" rowspan="2">ชื่อแอทริบิวท์</th>
+      <th class="col-desc" rowspan="2">คำอธิบาย</th>
+      <th class="col-type" rowspan="2">ชนิดข้อมูล</th>
+      <th colspan="2">ประเภทคีย์</th>
+    </tr>
+    <tr>
+      <th class="col-key">คีย์<br>หลัก</th>
+      <th class="col-key">คีย์<br>นอก</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="col-attr"><span class="pk">product_id</span></td>
+      <td class="col-desc">รหัสสินค้า (ใช้เป็นรหัสอ้างอิงหลัก)</td>
+      <td class="col-type">BIGINT</td>
+      <td class="col-key"><span class="check">✓</span></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr"><span class="fk">seller_id</span></td>
+      <td class="col-desc">รหัสนักศึกษาของผู้ลงประกาศขาย</td>
+      <td class="col-type">VARCHAR</td>
+      <td class="col-key"></td>
+      <td class="col-key"><span class="check">✓</span><span class="ref-note">(อ้างอิง users)</span></td>
+    </tr>
+    <tr>
+      <td class="col-attr">title</td>
+      <td class="col-desc">ชื่อสินค้า / หัวข้อประกาศ</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">description</td>
+      <td class="col-desc">รายละเอียด / สภาพสินค้า</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">price</td>
+      <td class="col-desc">ราคาสินค้า</td>
+      <td class="col-type">DECIMAL</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">category</td>
+      <td class="col-desc">หมวดหมู่ของสินค้า</td>
+      <td class="col-type">VARCHAR</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">image_url</td>
+      <td class="col-desc">รูปภาพประกอบสินค้า</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">status</td>
+      <td class="col-desc">สถานะสินค้าในระบบ</td>
+      <td class="col-type">VARCHAR</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">stock</td>
+      <td class="col-desc">จำนวนสินค้าคงเหลือในคลัง</td>
+      <td class="col-type">INTEGER</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">created_at</td>
+      <td class="col-desc">วันเวลาที่ลงประกาศสินค้า</td>
+      <td class="col-type">TIMESTAMP</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- =========================================== -->
+<!-- ตารางที่ 3.4 orders                         -->
+<!-- =========================================== -->
+<p class="table-title">ตารางที่ 3.4 คุณสมบัติของตาราง orders (ข้อมูลคำสั่งซื้อสินค้า)</p>
+<table>
+  <thead>
+    <tr>
+      <th class="col-attr" rowspan="2">ชื่อแอทริบิวท์</th>
+      <th class="col-desc" rowspan="2">คำอธิบาย</th>
+      <th class="col-type" rowspan="2">ชนิดข้อมูล</th>
+      <th colspan="2">ประเภทคีย์</th>
+    </tr>
+    <tr>
+      <th class="col-key">คีย์<br>หลัก</th>
+      <th class="col-key">คีย์<br>นอก</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="col-attr"><span class="pk">order_id</span></td>
+      <td class="col-desc">รหัสคำสั่งซื้อ (ใช้เป็นรหัสอ้างอิงหลัก)</td>
+      <td class="col-type">BIGINT</td>
+      <td class="col-key"><span class="check">✓</span></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr"><span class="fk">product_id</span></td>
+      <td class="col-desc">รหัสสินค้าที่สั่งซื้อ</td>
+      <td class="col-type">BIGINT</td>
+      <td class="col-key"></td>
+      <td class="col-key"><span class="check">✓</span><span class="ref-note">(อ้างอิง products)</span></td>
+    </tr>
+    <tr>
+      <td class="col-attr"><span class="fk">buyer_id</span></td>
+      <td class="col-desc">รหัสนักศึกษาของผู้ซื้อ</td>
+      <td class="col-type">VARCHAR</td>
+      <td class="col-key"></td>
+      <td class="col-key"><span class="check">✓</span><span class="ref-note">(อ้างอิง users)</span></td>
+    </tr>
+    <tr>
+      <td class="col-attr"><span class="fk">rider_id</span></td>
+      <td class="col-desc">รหัสนักศึกษาของ Rider ที่รับงานจัดส่ง</td>
+      <td class="col-type">VARCHAR</td>
+      <td class="col-key"></td>
+      <td class="col-key"><span class="check">✓</span><span class="ref-note">(อ้างอิง riders)</span></td>
+    </tr>
+    <tr>
+      <td class="col-attr">status</td>
+      <td class="col-desc">สถานะคำสั่งซื้อในระบบ</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">needs_delivery</td>
+      <td class="col-desc">ระบุว่าต้องการบริการ Rider จัดส่งหรือไม่</td>
+      <td class="col-type">BOOLEAN</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">seller_accepted</td>
+      <td class="col-desc">ระบุว่าผู้ขายได้ยืนยันออเดอร์แล้วหรือไม่</td>
+      <td class="col-type">BOOLEAN</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">delivery_image_url</td>
+      <td class="col-desc">รูปภาพหลักฐานการจัดส่งของ Rider</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">seller_proof_image</td>
+      <td class="col-desc">รูปภาพหลักฐานการส่งมอบสินค้าของผู้ขาย</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">delivery_address</td>
+      <td class="col-desc">ที่อยู่สำหรับจัดส่งสินค้า</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">delivery_location</td>
+      <td class="col-desc">สถานที่นัดรับ / พิกัดส่งสินค้า</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">delivery_fee</td>
+      <td class="col-desc">ค่าธรรมเนียมการจัดส่งสินค้า</td>
+      <td class="col-type">DECIMAL</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">created_at</td>
+      <td class="col-desc">วันเวลาที่สร้างคำสั่งซื้อ</td>
+      <td class="col-type">TIMESTAMP</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- =========================================== -->
+<!-- ตารางที่ 3.5 riders                         -->
+<!-- =========================================== -->
+<p class="table-title">ตารางที่ 3.5 คุณสมบัติของตาราง riders (ข้อมูลพนักงานจัดส่งสินค้า)</p>
+<table>
+  <thead>
+    <tr>
+      <th class="col-attr" rowspan="2">ชื่อแอทริบิวท์</th>
+      <th class="col-desc" rowspan="2">คำอธิบาย</th>
+      <th class="col-type" rowspan="2">ชนิดข้อมูล</th>
+      <th colspan="2">ประเภทคีย์</th>
+    </tr>
+    <tr>
+      <th class="col-key">คีย์<br>หลัก</th>
+      <th class="col-key">คีย์<br>นอก</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="col-attr"><span class="pk">student_id</span></td>
+      <td class="col-desc">รหัสนักศึกษาของ Rider (ใช้เป็นรหัสอ้างอิงหลัก)</td>
+      <td class="col-type">VARCHAR</td>
+      <td class="col-key"><span class="check">✓</span></td>
+      <td class="col-key"><span class="check">✓</span><span class="ref-note">(อ้างอิง users)</span></td>
+    </tr>
+    <tr>
+      <td class="col-attr">vehicle_type</td>
+      <td class="col-desc">ประเภทยานพาหนะ (เช่น motorbike, bicycle)</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">license_plate</td>
+      <td class="col-desc">หมายเลขป้ายทะเบียนยานพาหนะ</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">is_active</td>
+      <td class="col-desc">สถานะว่า Rider กำลังเปิดรับงานอยู่หรือไม่</td>
+      <td class="col-type">BOOLEAN</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">rating</td>
+      <td class="col-desc">คะแนนความพึงพอใจในการให้บริการของ Rider</td>
+      <td class="col-type">DECIMAL</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- =========================================== -->
+<!-- ตารางที่ 3.6 messages                       -->
+<!-- =========================================== -->
+<p class="table-title">ตารางที่ 3.6 คุณสมบัติของตาราง messages (ข้อมูลการสนทนาระหว่างผู้ใช้งาน)</p>
+<table>
+  <thead>
+    <tr>
+      <th class="col-attr" rowspan="2">ชื่อแอทริบิวท์</th>
+      <th class="col-desc" rowspan="2">คำอธิบาย</th>
+      <th class="col-type" rowspan="2">ชนิดข้อมูล</th>
+      <th colspan="2">ประเภทคีย์</th>
+    </tr>
+    <tr>
+      <th class="col-key">คีย์<br>หลัก</th>
+      <th class="col-key">คีย์<br>นอก</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="col-attr"><span class="pk">id</span></td>
+      <td class="col-desc">รหัสข้อความ (ใช้เป็นรหัสอ้างอิงหลัก)</td>
+      <td class="col-type">BIGINT</td>
+      <td class="col-key"><span class="check">✓</span></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr"><span class="fk">sender_id</span></td>
+      <td class="col-desc">รหัสนักศึกษาของผู้ส่งข้อความ</td>
+      <td class="col-type">VARCHAR</td>
+      <td class="col-key"></td>
+      <td class="col-key"><span class="check">✓</span><span class="ref-note">(อ้างอิง users)</span></td>
+    </tr>
+    <tr>
+      <td class="col-attr"><span class="fk">receiver_id</span></td>
+      <td class="col-desc">รหัสนักศึกษาของผู้รับข้อความ</td>
+      <td class="col-type">VARCHAR</td>
+      <td class="col-key"></td>
+      <td class="col-key"><span class="check">✓</span><span class="ref-note">(อ้างอิง users)</span></td>
+    </tr>
+    <tr>
+      <td class="col-attr"><span class="fk">product_id</span></td>
+      <td class="col-desc">รหัสสินค้าที่เกี่ยวข้องกับการสนทนา</td>
+      <td class="col-type">BIGINT</td>
+      <td class="col-key"></td>
+      <td class="col-key"><span class="check">✓</span><span class="ref-note">(อ้างอิง products)</span></td>
+    </tr>
+    <tr>
+      <td class="col-attr">content</td>
+      <td class="col-desc">เนื้อหาของข้อความ</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">is_read</td>
+      <td class="col-desc">สถานะการอ่านข้อความ (อ่านแล้ว/ยังไม่อ่าน)</td>
+      <td class="col-type">BOOLEAN</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">created_at</td>
+      <td class="col-desc">วันเวลาที่ส่งข้อความ</td>
+      <td class="col-type">TIMESTAMP</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- =========================================== -->
+<!-- ตารางที่ 3.7 product_reports                -->
+<!-- =========================================== -->
+<p class="table-title">ตารางที่ 3.7 คุณสมบัติของตาราง product_reports (ข้อมูลการแจ้งปัญหาสินค้า)</p>
+<table>
+  <thead>
+    <tr>
+      <th class="col-attr" rowspan="2">ชื่อแอทริบิวท์</th>
+      <th class="col-desc" rowspan="2">คำอธิบาย</th>
+      <th class="col-type" rowspan="2">ชนิดข้อมูล</th>
+      <th colspan="2">ประเภทคีย์</th>
+    </tr>
+    <tr>
+      <th class="col-key">คีย์<br>หลัก</th>
+      <th class="col-key">คีย์<br>นอก</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="col-attr"><span class="pk">id</span></td>
+      <td class="col-desc">รหัสรายงานปัญหา (ใช้เป็นรหัสอ้างอิงหลัก)</td>
+      <td class="col-type">BIGINT</td>
+      <td class="col-key"><span class="check">✓</span></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr"><span class="fk">reporter_id</span></td>
+      <td class="col-desc">รหัสนักศึกษาของผู้แจ้งปัญหา</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"><span class="check">✓</span><span class="ref-note">(อ้างอิง users)</span></td>
+    </tr>
+    <tr>
+      <td class="col-attr"><span class="fk">product_id</span></td>
+      <td class="col-desc">รหัสสินค้าที่มีปัญหา</td>
+      <td class="col-type">BIGINT</td>
+      <td class="col-key"></td>
+      <td class="col-key"><span class="check">✓</span><span class="ref-note">(อ้างอิง products)</span></td>
+    </tr>
+    <tr>
+      <td class="col-attr">issue_type</td>
+      <td class="col-desc">ประเภทของปัญหาที่แจ้ง</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">description</td>
+      <td class="col-desc">รายละเอียดของปัญหาที่แจ้ง</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">image_url</td>
+      <td class="col-desc">รูปภาพหลักฐานประกอบการแจ้งปัญหา</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">status</td>
+      <td class="col-desc">สถานะรายงานปัญหาในระบบ</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">admin_reply</td>
+      <td class="col-desc">คำตอบจากผู้ดูแลระบบถึงผู้แจ้งปัญหา</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">admin_notes</td>
+      <td class="col-desc">บันทึกภายในสำหรับผู้ดูแลระบบ</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">created_at</td>
+      <td class="col-desc">วันเวลาที่แจ้งปัญหา</td>
+      <td class="col-type">TIMESTAMP</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- =========================================== -->
+<!-- ตารางที่ 3.8 refund_requests                -->
+<!-- =========================================== -->
+<p class="table-title">ตารางที่ 3.8 คุณสมบัติของตาราง refund_requests (ข้อมูลการขอคืนเงิน)</p>
+<table>
+  <thead>
+    <tr>
+      <th class="col-attr" rowspan="2">ชื่อแอทริบิวท์</th>
+      <th class="col-desc" rowspan="2">คำอธิบาย</th>
+      <th class="col-type" rowspan="2">ชนิดข้อมูล</th>
+      <th colspan="2">ประเภทคีย์</th>
+    </tr>
+    <tr>
+      <th class="col-key">คีย์<br>หลัก</th>
+      <th class="col-key">คีย์<br>นอก</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="col-attr"><span class="pk">refund_id</span></td>
+      <td class="col-desc">รหัสคำขอคืนเงิน (ใช้เป็นรหัสอ้างอิงหลัก)</td>
+      <td class="col-type">UUID</td>
+      <td class="col-key"><span class="check">✓</span></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr"><span class="fk">order_id</span></td>
+      <td class="col-desc">รหัสคำสั่งซื้อที่ขอคืนเงิน</td>
+      <td class="col-type">BIGINT</td>
+      <td class="col-key"></td>
+      <td class="col-key"><span class="check">✓</span><span class="ref-note">(อ้างอิง orders)</span></td>
+    </tr>
+    <tr>
+      <td class="col-attr"><span class="fk">buyer_id</span></td>
+      <td class="col-desc">รหัสนักศึกษาของผู้ขอคืนเงิน</td>
+      <td class="col-type">VARCHAR</td>
+      <td class="col-key"></td>
+      <td class="col-key"><span class="check">✓</span><span class="ref-note">(อ้างอิง users)</span></td>
+    </tr>
+    <tr>
+      <td class="col-attr">reason</td>
+      <td class="col-desc">เหตุผลในการขอคืนเงิน</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">evidence_url</td>
+      <td class="col-desc">รูปภาพหลักฐานประกอบการขอคืนเงิน</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">status</td>
+      <td class="col-desc">สถานะการขอคืนเงินในระบบ</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">admin_note</td>
+      <td class="col-desc">บันทึกจากผู้ดูแลระบบ</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">created_at</td>
+      <td class="col-desc">วันเวลาที่ยื่นคำขอคืนเงิน</td>
+      <td class="col-type">TIMESTAMP</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- =========================================== -->
+<!-- ตารางที่ 3.9 notifications                  -->
+<!-- =========================================== -->
+<p class="table-title">ตารางที่ 3.9 คุณสมบัติของตาราง notifications (ข้อมูลการแจ้งเตือนในระบบ)</p>
+<table>
+  <thead>
+    <tr>
+      <th class="col-attr" rowspan="2">ชื่อแอทริบิวท์</th>
+      <th class="col-desc" rowspan="2">คำอธิบาย</th>
+      <th class="col-type" rowspan="2">ชนิดข้อมูล</th>
+      <th colspan="2">ประเภทคีย์</th>
+    </tr>
+    <tr>
+      <th class="col-key">คีย์<br>หลัก</th>
+      <th class="col-key">คีย์<br>นอก</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="col-attr"><span class="pk">id</span></td>
+      <td class="col-desc">รหัสการแจ้งเตือน (ใช้เป็นรหัสอ้างอิงหลัก)</td>
+      <td class="col-type">BIGINT</td>
+      <td class="col-key"><span class="check">✓</span></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr"><span class="fk">user_id</span></td>
+      <td class="col-desc">รหัสนักศึกษาของผู้รับการแจ้งเตือน</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"><span class="check">✓</span><span class="ref-note">(อ้างอิง users)</span></td>
+    </tr>
+    <tr>
+      <td class="col-attr">title</td>
+      <td class="col-desc">หัวข้อของการแจ้งเตือน</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">message</td>
+      <td class="col-desc">เนื้อหาของการแจ้งเตือน</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">is_read</td>
+      <td class="col-desc">สถานะการอ่านการแจ้งเตือน (อ่านแล้ว/ยังไม่อ่าน)</td>
+      <td class="col-type">BOOLEAN</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">link</td>
+      <td class="col-desc">ลิงก์หน้าที่เกี่ยวข้องกับการแจ้งเตือน</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">created_at</td>
+      <td class="col-desc">วันเวลาที่สร้างการแจ้งเตือน</td>
+      <td class="col-type">TIMESTAMP</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- =========================================== -->
+<!-- ตารางที่ 3.10 profiles                      -->
+<!-- =========================================== -->
+<p class="table-title">ตารางที่ 3.10 คุณสมบัติของตาราง profiles (ข้อมูลโปรไฟล์ผู้ใช้งาน)</p>
+<table>
+  <thead>
+    <tr>
+      <th class="col-attr" rowspan="2">ชื่อแอทริบิวท์</th>
+      <th class="col-desc" rowspan="2">คำอธิบาย</th>
+      <th class="col-type" rowspan="2">ชนิดข้อมูล</th>
+      <th colspan="2">ประเภทคีย์</th>
+    </tr>
+    <tr>
+      <th class="col-key">คีย์<br>หลัก</th>
+      <th class="col-key">คีย์<br>นอก</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="col-attr"><span class="pk">id</span></td>
+      <td class="col-desc">รหัสโปรไฟล์ (ใช้เป็นรหัสอ้างอิงหลัก)</td>
+      <td class="col-type">BIGINT</td>
+      <td class="col-key"><span class="check">✓</span></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">student_id</td>
+      <td class="col-desc">รหัสนักศึกษา</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">full_name</td>
+      <td class="col-desc">ชื่อ-นามสกุล ของผู้ใช้งาน</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">department</td>
+      <td class="col-desc">แผนก / ภาควิชาของผู้ใช้งาน</td>
+      <td class="col-type">TEXT</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+    <tr>
+      <td class="col-attr">created_at</td>
+      <td class="col-desc">วันเวลาที่สร้างโปรไฟล์</td>
+      <td class="col-type">TIMESTAMP</td>
+      <td class="col-key"></td>
+      <td class="col-key"></td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

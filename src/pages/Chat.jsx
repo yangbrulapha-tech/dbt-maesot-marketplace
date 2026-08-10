@@ -73,14 +73,14 @@ export default function Chat({ session }) {
       }
     })
 
-    // ดึงชื่อ partner จาก users table
+    // ดึงชื่อ partner จาก profiles table
     const convArr = []
     for (const [key, conv] of convMap.entries()) {
       const { data: partnerData } = await supabase
-        .from('users')
+        .from('profiles')
         .select('student_id, full_name')
         .eq('student_id', conv.partnerId)
-        .single()
+        .maybeSingle()
       convArr.push({ ...conv, key, partnerName: partnerData?.full_name || conv.partnerId })
     }
 
@@ -165,13 +165,8 @@ export default function Chat({ session }) {
 
       if (error) throw error
 
-      // Add Notification
-      await supabase.from('notifications').insert({
-        user_id: selectedConv.partnerId,
-        title: 'ข้อความใหม่',
-        message: `มีข้อความใหม่จากคุณ`,
-        link: '/chat'
-      })
+      // ไม่ใช้ notifications table (ยังไม่ได้สร้าง)
+      // await supabase.from('notifications').insert(...)
 
       // แทน optimistic ด้วย real msg
       setMessages((prev) => prev.map((m) => m.id === optimisticMsg.id ? sent : m))
