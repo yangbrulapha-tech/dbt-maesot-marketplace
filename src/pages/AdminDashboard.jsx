@@ -169,9 +169,9 @@ export default function AdminDashboard({ session }) {
       const report = reportsData.find(r => r.id === reportId)
       setReportsData(prev => prev.map(r => r.id === reportId ? { ...r, status: action, admin_notes: reply } : r))
       
-      if (report && report.reporter_id) {
+      if (report && report.student_id) {
         await supabase.from('notifications').insert({
-          student_id: report.reporter_id,
+          student_id: report.student_id,
           title: `รายงานของคุณได้รับการตอบกลับ`,
           message: `รายงานสำหรับสินค้า "${report.product?.title || 'สินค้า'}" ได้ถูกอัปเดตสถานะ หมายเหตุจากผู้ดูแล: ${reply}`,
           link: '/reports'
@@ -580,7 +580,7 @@ export default function AdminDashboard({ session }) {
                         {report.status === 'dismissed' && <span className="px-2 py-0.5 bg-slate-200 text-slate-800 text-[10px] font-bold rounded-full">ยกเลิก/ไม่พบปัญหา</span>}
                       </div>
                       <p className="text-sm font-bold text-slate-800 dark:text-slate-200">สินค้า: {report.product?.title || 'ไม่มีข้อมูล'}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">ผู้รายงาน: <span className="font-bold">{report.reporter_id}</span></p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">ผู้รายงาน: <span className="font-bold">{report.student_id}</span></p>
                       <div className="text-sm text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 p-3 border border-slate-200 dark:border-slate-700 rounded-lg">
                         รายละเอียด: {report.description ? report.description.split('|||IMG_URL:')[0] : '-'}
                         {report.description?.includes('|||IMG_URL:') && (

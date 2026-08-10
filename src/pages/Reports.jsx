@@ -118,7 +118,7 @@ export default function Reports({ session }) {
         .from('product_reports')
         .insert({
           product_id: productId,
-          reporter_id: userProfile.student_id,
+          student_id: userProfile.student_id,
           issue_type: issueType,
           description: finalDescription,
           status: 'pending',

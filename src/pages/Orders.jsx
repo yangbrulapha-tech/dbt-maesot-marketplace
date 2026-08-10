@@ -207,7 +207,7 @@ export default function Orders({ session }) {
     try {
       const { error } = await supabase.from('refund_requests').insert({
         order_id: refundOrderId,
-        buyer_id: userProfile.student_id,
+        student_id: userProfile.student_id,
         reason: refundReason,
         evidence_url: refundEvidence,
         status: 'pending'
