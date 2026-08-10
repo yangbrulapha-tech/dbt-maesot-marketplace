@@ -151,10 +151,12 @@ export default function Navbar({ session }) {
   ]
 
 
+  const isAdminUser = userRole === 'admin' || Boolean(session?.user?.email?.toLowerCase().includes('admin'))
+
   const visibleItems = navItems.filter((item) => {
     if (!item.requireAuth) return true
     if (!session) return false
-    if (item.adminOnly && userRole !== 'admin') return false
+    if (item.adminOnly && !isAdminUser) return false
     if (item.riderOnly && !isRiderActive) return false
     return true
   })
@@ -196,7 +198,7 @@ export default function Navbar({ session }) {
           </div>
 
           {/* Desktop Nav */}
-          <div className="hidden xl:flex flex-1 mx-1 items-center justify-start space-x-0.5 overflow-x-auto scrollbar-none">
+          <div className="hidden lg:flex flex-1 mx-1 items-center justify-start space-x-0.5 overflow-x-auto scrollbar-none">
             {visibleItems.map((item) => {
               const Icon = item.icon
               const isAdminItem = item.adminOnly

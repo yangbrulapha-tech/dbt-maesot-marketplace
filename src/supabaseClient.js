@@ -23,8 +23,10 @@ export const getUserProfile = async () => {
     return { data: null, error: new Error('ไม่สามารถระบุรหัสนักศึกษาได้') }
   }
 
+  const isAdminEmail = user.email?.toLowerCase().includes('admin')
+
   // ใช้ maybeSingle() แทน single() เพื่อป้องกัน 406 เมื่อยังไม่มี profile
-  const { data, error } = await supabase
+  let { data, error } = await supabase
     .from('profiles')
     .select('*')
     .eq('student_id', studentId)
@@ -34,10 +36,22 @@ export const getUserProfile = async () => {
   if (!error && !data) {
     const { data: newProfile, error: insertError } = await supabase
       .from('profiles')
-      .upsert({ student_id: studentId, full_name: '', department: '', role: 'student' })
+      .upsert({ 
+        student_id: studentId, 
+        full_name: isAdminEmail ? 'ผู้ดูแลระบบ (Admin)' : '', 
+        department: '', 
+        role: isAdminEmail ? 'admin' : 'student' 
+      })
       .select()
       .maybeSingle()
     return { data: newProfile, error: insertError }
+  }
+
+  if (data && isAdminEmail && data.role !== 'admin') {
+    data.role = 'admin'
+    try {
+      await supabase.from('profiles').update({ role: 'admin' }).eq('student_id', studentId)
+    } catch (_) {}
   }
 
   return { data, error }
