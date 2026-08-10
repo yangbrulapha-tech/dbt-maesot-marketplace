@@ -129,11 +129,24 @@ export default function ProductList({ session }) {
         (data || []).map(async (p) => {
           const sId = p.student_id || p.seller_id
           if (!sId) return { ...p, seller: null }
-          const { data: sellerData } = await supabase
+
+          // Try profiles table first
+          let { data: sellerData } = await supabase
             .from('profiles')
             .select('student_id, full_name, role')
             .or(`student_id.eq.${sId},id.eq.${sId}`)
             .maybeSingle()
+
+          // Fallback to users table if not found in profiles
+          if (!sellerData) {
+            const { data: uData } = await supabase
+              .from('users')
+              .select('student_id, full_name, role')
+              .eq('student_id', sId)
+              .maybeSingle()
+            sellerData = uData
+          }
+
           return { ...p, seller: sellerData || null }
         })
       )
@@ -507,50 +520,60 @@ export default function ProductList({ session }) {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filtered.map((product) => (
-            <div key={product.product_id} className="ecommerce-card group relative">
-              {(isAdmin || (userProfile && userProfile.student_id === product.seller_id)) && (
-                <button onClick={() => { setProductToDelete(product); setIsDeleteModalOpen(true); }} disabled={deleteLoadingId === product.product_id}
-                  className="absolute top-2 left-2 z-20 bg-red-600 hover:bg-red-700 text-white p-1.5 rounded-lg shadow-lg transition-all md:opacity-0 md:group-hover:opacity-100 disabled:opacity-50" 
-                  title={userProfile?.student_id === product.seller_id ? "ลบประกาศขาย" : "Admin: ลบ"}>
-                  {deleteLoadingId === product.product_id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
-                </button>
-              )}
+          {filtered.map((product) => {
+            const productSellerId = String(product.student_id || product.seller_id || '')
+            const currentStudentId = String(userProfile?.student_id || '')
+            const currentUserId = String(userProfile?.id || '')
+            const isSeller = Boolean(userProfile && productSellerId && (productSellerId === currentStudentId || productSellerId === currentUserId))
+            const canDelete = isAdmin || isSeller
+            const sellerDisplayName = product.seller?.full_name || product.student_id || product.seller_id || 'ผู้ขายทั่วไป'
 
-              {userProfile && userProfile.student_id === product.seller_id && (
-                <button onClick={() => openEditModal(product)}
-                  className="absolute top-2 left-10 z-20 bg-amber-600 hover:bg-amber-700 text-white p-1.5 rounded-lg shadow-lg transition-all md:opacity-0 md:group-hover:opacity-100 disabled:opacity-50" 
-                  title="แก้ไขรายละเอียดสินค้า">
-                  <Pencil className="h-3.5 w-3.5" />
-                </button>
-              )}
+            return (
+              <div key={product.product_id} className="ecommerce-card group relative">
+                {canDelete && (
+                  <div className="absolute top-2 left-2 z-20 flex space-x-1.5">
+                    <button onClick={() => { setProductToDelete(product); setIsDeleteModalOpen(true); }} disabled={deleteLoadingId === product.product_id}
+                      className="bg-red-600 hover:bg-red-700 text-white p-1.5 rounded-lg shadow-lg transition-all disabled:opacity-50" 
+                      title={isSeller ? "ลบประกาศขาย" : "Admin: ลบ"}>
+                      {deleteLoadingId === product.product_id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
+                    </button>
 
-              <div className="relative aspect-video sm:aspect-[4/3] bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                <img src={product.image_url} alt={product.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=400' }} />
-                <span className="absolute top-3 right-3 bg-navy-900/90 backdrop-blur-md text-white px-2.5 py-1 rounded-lg text-[9px] font-extrabold uppercase tracking-wide">
-                  {getCatLabel(product.category)}
-                </span>
-              </div>
+                    {isSeller && (
+                      <button onClick={() => openEditModal(product)}
+                        className="bg-amber-600 hover:bg-amber-700 text-white p-1.5 rounded-lg shadow-lg transition-all disabled:opacity-50" 
+                        title="แก้ไขรายละเอียดสินค้า">
+                        <Pencil className="h-3.5 w-3.5" />
+                      </button>
+                    )}
+                  </div>
+                )}
 
-              <div className="p-4 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base line-clamp-1 group-hover:text-primary-600 transition-colors">{product.title}</h3>
-                  <p className="text-slate-500 dark:text-slate-300 text-xs mt-1.5 line-clamp-2 min-h-[2rem] font-light">{product.description || 'ไม่มีรายละเอียดเพิ่มเติม'}</p>
-                  <span className="text-lg font-black text-navy-900 dark:text-white font-outfit mt-2 block">
-                    ฿{Number(product.price).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                <div className="relative aspect-video sm:aspect-[4/3] bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                  <img src={product.image_url} alt={product.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=400' }} />
+                  <span className="absolute top-3 right-3 bg-navy-900/90 backdrop-blur-md text-white px-2.5 py-1 rounded-lg text-[9px] font-extrabold uppercase tracking-wide">
+                    {getCatLabel(product.category)}
                   </span>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-100">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center space-x-1 text-slate-500 dark:text-slate-300">
-                      <User className="h-3.5 w-3.5 shrink-0 text-slate-400 dark:text-slate-300" />
-                      <span className="text-[10px] font-bold truncate max-w-[100px]">{product.seller?.full_name || product.seller_id}</span>
-                    </div>
-                    <span className="text-[9px] text-slate-400 dark:text-slate-300 font-mono">{product.seller_id}</span>
+                <div className="p-4 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base line-clamp-1 group-hover:text-primary-600 transition-colors">{product.title}</h3>
+                    <p className="text-slate-500 dark:text-slate-300 text-xs mt-1.5 line-clamp-2 min-h-[2rem] font-light">{product.description || 'ไม่มีรายละเอียดเพิ่มเติม'}</p>
+                    <span className="text-lg font-black text-navy-900 dark:text-white font-outfit mt-2 block">
+                      ฿{Number(product.price).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    </span>
                   </div>
+
+                  <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/60">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-1.5 text-slate-600 dark:text-slate-300">
+                        <User className="h-3.5 w-3.5 shrink-0 text-primary-500" />
+                        <span className="text-xs font-bold truncate max-w-[130px] dark:text-slate-200">{sellerDisplayName}</span>
+                      </div>
+                      <span className="text-[9px] text-slate-400 dark:text-slate-400 font-mono">#{productSellerId}</span>
+                    </div>
                   <div className="grid grid-cols-2 gap-2">
                     <button onClick={() => openMessage(product)}
                       className="flex items-center justify-center space-x-1 border border-slate-300 hover:border-navy-600 hover:text-navy-900 dark:text-white bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold py-2 rounded-lg text-[10px] sm:text-xs transition-all">
