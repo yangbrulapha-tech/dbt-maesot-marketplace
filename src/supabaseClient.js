@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 
 // Hardcode credentials สำหรับ GitHub Pages (ไม่มี env variables)
 const supabaseUrl = 'https://alhwuoozlzmrgttupctt.supabase.co'
-const supabaseAnonKey = 'sb_publishable_dQYHQlnm9-zmTE-DCxVe5Q_kNyYo0fu'
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFsaHd1b296bHptcmd0dHVwY3R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzODE1NTAsImV4cCI6MjA5Nzk1NzU1MH0.yREDfkgbFgnVtqAYu0LAWCeRmFCSRoU2HtpjHtKqH4M'
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
