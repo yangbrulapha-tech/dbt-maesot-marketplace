@@ -525,6 +525,7 @@ export default function ProductList({ session }) {
             const currentStudentId = String(userProfile?.student_id || '')
             const currentUserId = String(userProfile?.id || '')
             const isSeller = Boolean(userProfile && productSellerId && (productSellerId === currentStudentId || productSellerId === currentUserId))
+            const canDelete = isAdmin || isSeller
             const sellerFullName = product.seller?.full_name?.trim()
             let sellerDisplayName = sellerFullName
             if (!sellerDisplayName || sellerDisplayName === productSellerId) {
