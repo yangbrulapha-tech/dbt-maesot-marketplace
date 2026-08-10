@@ -276,14 +276,25 @@ export default function ProductList({ session }) {
     if (!userProfile || !checkoutProduct) return
     setOrderLoading(true)
     try {
-      const { error } = await supabase.from('orders').insert({
+      const targetSellerId = checkoutProduct.student_id || checkoutProduct.seller_id
+      const baseOrder = {
         product_id: checkoutProduct.product_id,
         buyer_id: userProfile.student_id,
         status: 'pending',
         needs_delivery: requestRider,
-        delivery_location: requestRider ? deliveryLocation : null,
+        delivery_location: requestRider ? deliveryLocation.trim() || null : null,
+      }
+
+      // Try inserting with seller_id included
+      let { error } = await supabase.from('orders').insert({
+        ...baseOrder,
+        seller_id: targetSellerId || null,
       })
-      if (error) throw error
+
+      if (error) {
+        const res = await supabase.from('orders').insert(baseOrder)
+        if (res.error) throw res.error
+      }
 
       if (checkoutProduct.seller_id) {
         await supabase.from('notifications').insert({

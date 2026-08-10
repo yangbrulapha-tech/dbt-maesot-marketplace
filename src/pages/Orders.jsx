@@ -284,9 +284,12 @@ export default function Orders({ session }) {
     }
   }
 
-  // แยกออเดอร์ตาม buyer_id และ seller_id (seller อยู่ใน product.student_id หรือ product.seller_id)
+  const isAdmin = userProfile?.role === 'admin' || Boolean(session?.user?.email?.toLowerCase().includes('admin'))
+
+  // แยกออเดอร์ตาม buyer_id และ seller_id (seller อยู่ใน product.student_id หรือ product.seller_id หรือ order.seller_id)
   const buyerOrders = orders.filter((o) => {
     if (!userProfile) return false
+    if (isAdmin) return true
     const bId = String(o.buyer_id || '').trim()
     const mySId = String(userProfile.student_id || '').trim()
     const myId = String(userProfile.id || '').trim()
@@ -295,7 +298,8 @@ export default function Orders({ session }) {
 
   const sellerOrders = orders.filter((o) => {
     if (!userProfile) return false
-    const pSellerId = String(o.product?.student_id || o.product?.seller_id || '').trim()
+    if (isAdmin) return true
+    const pSellerId = String(o.product?.student_id || o.product?.seller_id || o.seller_id || '').trim()
     const mySId = String(userProfile.student_id || '').trim()
     const myId = String(userProfile.id || '').trim()
     return (mySId && pSellerId === mySId) || (myId && pSellerId === myId)
