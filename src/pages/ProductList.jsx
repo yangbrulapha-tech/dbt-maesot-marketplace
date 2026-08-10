@@ -110,20 +110,35 @@ export default function ProductList({ session }) {
     } catch (_) {}
   }
 
-  // products: product_id(PK), seller_id(student_id), title, price, image_url, category, status
+  // products: product_id(PK), student_id/seller_id, title, price, image_url, category, status
   const fetchProducts = async () => {
     setLoading(true)
     try {
       let query = supabase
         .from('products')
-        .select('*, seller:users(student_id, full_name, role)')
+        .select('*')
         .eq('status', 'available')
 
       if (selectedCategory) query = query.eq('category', selectedCategory)
 
       const { data, error } = await query.order('created_at', { ascending: false })
       if (error) throw error
-      setProducts(data || [])
+
+      // Enrich with seller profile safely
+      const enrichedProducts = await Promise.all(
+        (data || []).map(async (p) => {
+          const sId = p.student_id || p.seller_id
+          if (!sId) return { ...p, seller: null }
+          const { data: sellerData } = await supabase
+            .from('profiles')
+            .select('student_id, full_name, role')
+            .or(`student_id.eq.${sId},id.eq.${sId}`)
+            .maybeSingle()
+          return { ...p, seller: sellerData || null }
+        })
+      )
+
+      setProducts(enrichedProducts)
     } catch (err) {
       addToast('ไม่สามารถโหลดสินค้าได้: ' + (err.message || ''), 'error')
     } finally {

@@ -136,40 +136,36 @@ export default function RiderDashboard({ session }) {
       // 1. งานที่สามารถกดรับได้: status = 'pending' และ rider_id เป็น NULL
       const { data: avail, error: aErr } = await supabase
         .from('orders')
-        .select(`
-          *,
-          product:products (
-            product_id,
-            title,
-            price,
-            image_url,
-            seller_id
-          ),
-          buyer:users!orders_buyer_id_fkey (
-            student_id,
-            full_name
-          )
-        `)
+        .select('*, product:products(*)')
         .eq('status', 'pending')
-        .eq('needs_delivery', true) // โชว์เฉพาะงานที่ขอใช้บริการไรเดอร์เข้ามา
+        .eq('needs_delivery', true)
         .is('rider_id', null)
         .order('created_at', { ascending: false })
 
       if (aErr) throw aErr
 
-
-      // ดึงข้อมูลผู้ขายสำหรับแต่ละงานว่าง (เพราะ seller_id อยู่ใน products)
       const availWithSeller = await Promise.all(
         (avail || []).map(async (order) => {
-          if (order.product?.seller_id) {
-            const { data: sellerData } = await supabase
+          let buyerData = null
+          if (order.buyer_id) {
+            const { data: b } = await supabase
               .from('profiles')
               .select('student_id, full_name')
-              .eq('student_id', order.product.seller_id)
-              .single()
-            return { ...order, seller: sellerData }
+              .eq('student_id', order.buyer_id)
+              .maybeSingle()
+            buyerData = b
           }
-          return { ...order, seller: null }
+          let sellerData = null
+          const sId = order.product?.student_id || order.product?.seller_id
+          if (sId) {
+            const { data: s } = await supabase
+              .from('profiles')
+              .select('student_id, full_name')
+              .or(`student_id.eq.${sId},id.eq.${sId}`)
+              .maybeSingle()
+            sellerData = s
+          }
+          return { ...order, buyer: buyerData, seller: sellerData }
         })
       )
 
@@ -178,37 +174,35 @@ export default function RiderDashboard({ session }) {
       // 2. งานที่ตัวไรเดอร์คนนี้รับจัดส่งอยู่: rider_id = ของเรา และ status != 'completed' / 'cancelled'
       const { data: active, error: acErr } = await supabase
         .from('orders')
-        .select(`
-          *,
-          product:products (
-            product_id,
-            title,
-            price,
-            image_url,
-            seller_id
-          ),
-          buyer:profiles!orders_buyer_id_fkey (
-            student_id,
-            full_name
-          )
-        `)
+        .select('*, product:products(*)')
         .eq('rider_id', riderStudentId)
-        .in('status', ['shipping', 'pending']) // รวม pending เผื่อเปลี่ยนสิทธิ์แล้ว
+        .in('status', ['shipping', 'pending'])
         .order('created_at', { ascending: false })
 
       if (acErr) throw acErr
 
       const activeWithSeller = await Promise.all(
         (active || []).map(async (order) => {
-          if (order.product?.seller_id) {
-            const { data: sellerData } = await supabase
+          let buyerData = null
+          if (order.buyer_id) {
+            const { data: b } = await supabase
               .from('profiles')
               .select('student_id, full_name')
-              .eq('student_id', order.product.seller_id)
-              .single()
-            return { ...order, seller: sellerData }
+              .eq('student_id', order.buyer_id)
+              .maybeSingle()
+            buyerData = b
           }
-          return { ...order, seller: null }
+          let sellerData = null
+          const sId = order.product?.student_id || order.product?.seller_id
+          if (sId) {
+            const { data: s } = await supabase
+              .from('profiles')
+              .select('student_id, full_name')
+              .or(`student_id.eq.${sId},id.eq.${sId}`)
+              .maybeSingle()
+            sellerData = s
+          }
+          return { ...order, buyer: buyerData, seller: sellerData }
         })
       )
 
@@ -217,13 +211,7 @@ export default function RiderDashboard({ session }) {
       // 3. ประวัติงานที่จัดส่งสำเร็จแล้ว: status = 'completed' และ rider_id = ของเรา
       const { data: completed, error: cErr } = await supabase
         .from('orders')
-        .select(`
-          *,
-          product:products (
-            title,
-            price
-          )
-        `)
+        .select('*, product:products(*)')
         .eq('rider_id', riderStudentId)
         .eq('status', 'completed')
         .order('created_at', { ascending: false })

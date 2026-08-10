@@ -43,29 +43,24 @@ export default function Orders({ session }) {
       // แล้ว join seller user และ buyer user จาก student_id
       const { data, error } = await supabase
         .from('orders')
-        .select(`
-          *,
-          product:products (
-            product_id,
-            title,
-            price,
-            image_url,
-            seller_id
-          ),
-          buyer:users!orders_buyer_id_fkey (
-            student_id,
-            full_name,
-            email
-          )
-        `)
+        .select('*, product:products(*)')
         .order('created_at', { ascending: false })
 
       if (error) throw error
 
-      // ดึงข้อมูล seller แยก (เพราะ seller_id อยู่ใน products ไม่ใช่ orders)
-      const ordersWithSeller = await Promise.all(
+      // Enrich orders with buyer, seller, and rider profiles
+      const ordersWithDetails = await Promise.all(
         (data || []).map(async (order) => {
-          // หากมี rider_id ให้ดึงข้อมูล rider เพิ่มด้วย
+          let buyerData = null
+          if (order.buyer_id) {
+            const { data: b } = await supabase
+              .from('profiles')
+              .select('student_id, full_name')
+              .eq('student_id', order.buyer_id)
+              .maybeSingle()
+            buyerData = b
+          }
+
           let riderData = null
           if (order.rider_id) {
             const { data: r } = await supabase
@@ -76,19 +71,22 @@ export default function Orders({ session }) {
             riderData = r
           }
 
-          if (order.product?.seller_id) {
-            const { data: sellerData } = await supabase
+          let sellerData = null
+          const sId = order.product?.student_id || order.product?.seller_id
+          if (sId) {
+            const { data: s } = await supabase
               .from('profiles')
               .select('student_id, full_name')
-              .eq('id', order.product.seller_id)
+              .or(`student_id.eq.${sId},id.eq.${sId}`)
               .maybeSingle()
-            return { ...order, seller: sellerData, rider: riderData }
+            sellerData = s
           }
-          return { ...order, seller: null, rider: riderData }
+
+          return { ...order, buyer: buyerData, seller: sellerData, rider: riderData }
         })
       )
 
-      setOrders(ordersWithSeller)
+      setOrders(ordersWithDetails)
     } catch (err) {
       setErrorMsg('เกิดข้อผิดพลาด: ' + (err.message || JSON.stringify(err)))
     } finally {
