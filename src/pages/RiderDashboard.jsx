@@ -156,13 +156,22 @@ export default function RiderDashboard({ session }) {
             buyerData = b
           }
           let sellerData = null
-          const sId = order.product?.student_id || order.product?.seller_id
+          const sId = String(order.product?.student_id || order.product?.seller_id || '')
           if (sId) {
-            const { data: s } = await supabase
+            let { data: s } = await supabase
               .from('profiles')
               .select('student_id, full_name')
-              .or(`student_id.eq.${sId},id.eq.${sId}`)
+              .eq('student_id', sId)
               .maybeSingle()
+
+            if (!s) {
+              const { data: u } = await supabase
+                .from('users')
+                .select('student_id, full_name')
+                .eq('student_id', sId)
+                .maybeSingle()
+              s = u
+            }
             sellerData = s
           }
           return { ...order, buyer: buyerData, seller: sellerData }
@@ -193,13 +202,22 @@ export default function RiderDashboard({ session }) {
             buyerData = b
           }
           let sellerData = null
-          const sId = order.product?.student_id || order.product?.seller_id
+          const sId = String(order.product?.student_id || order.product?.seller_id || '')
           if (sId) {
-            const { data: s } = await supabase
+            let { data: s } = await supabase
               .from('profiles')
               .select('student_id, full_name')
-              .or(`student_id.eq.${sId},id.eq.${sId}`)
+              .eq('student_id', sId)
               .maybeSingle()
+
+            if (!s) {
+              const { data: u } = await supabase
+                .from('users')
+                .select('student_id, full_name')
+                .eq('student_id', sId)
+                .maybeSingle()
+              s = u
+            }
             sellerData = s
           }
           return { ...order, buyer: buyerData, seller: sellerData }

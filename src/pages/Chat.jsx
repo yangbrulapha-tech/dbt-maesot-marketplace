@@ -98,15 +98,22 @@ export default function Chat({ session }) {
     setIsLive(false)
 
     // ดึงข้อความในการสนทนานี้
-    const query = supabase.from('messages')
+    const { data } = await supabase
+      .from('messages')
       .select('*')
-      .or(`and(sender_id.eq.${userProfile.student_id},receiver_id.eq.${conv.partnerId}),and(sender_id.eq.${conv.partnerId},receiver_id.eq.${userProfile.student_id})`)
+      .or(`sender_id.eq.${userProfile.student_id},receiver_id.eq.${userProfile.student_id}`)
       .order('created_at', { ascending: true })
 
-    if (conv.productId) query.eq('product_id', conv.productId)
+    const filtered = (data || []).filter(m => 
+      (m.sender_id === userProfile.student_id && m.receiver_id === conv.partnerId) ||
+      (m.sender_id === conv.partnerId && m.receiver_id === userProfile.student_id)
+    )
 
-    const { data } = await query
-    setMessages(data || [])
+    if (conv.productId) {
+      setMessages(filtered.filter(m => String(m.product_id) === String(conv.productId)))
+    } else {
+      setMessages(filtered)
+    }
     setMsgLoading(false)
 
     // Mark as read
