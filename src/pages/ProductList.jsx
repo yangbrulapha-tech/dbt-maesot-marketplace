@@ -259,7 +259,11 @@ export default function ProductList({ session }) {
 
   const openCheckout = (product) => {
     if (!session || !userProfile) { addToast('กรุณาเข้าสู่ระบบก่อน', 'error'); return }
-    if (userProfile.student_id === product.seller_id) { addToast('ไม่สามารถสั่งซื้อสินค้าตัวเองได้', 'error'); return }
+    const sId = String(product.student_id || product.seller_id || '')
+    if (sId === String(userProfile.student_id) || sId === String(userProfile.id)) {
+      addToast('ไม่สามารถสั่งซื้อสินค้าตัวเองได้', 'error')
+      return
+    }
     setCheckoutProduct(product)
     setRequestRider(false) // reset ทุกครั้งที่เปิด
     setDeliveryLocation('')
@@ -275,18 +279,19 @@ export default function ProductList({ session }) {
         product_id: checkoutProduct.product_id,
         buyer_id: userProfile.student_id,
         status: 'pending',
-        needs_delivery: requestRider, // บันทึกคำขอ Rider
-        delivery_location: deliveryLocation.trim() || null,
+        needs_delivery: requestRider,
+        delivery_location: requestRider ? deliveryLocation : null,
       })
       if (error) throw error
 
-      // Add Notification
-      await supabase.from('notifications').insert({
-        student_id: checkoutProduct.seller_id,
-        title: 'คำสั่งซื้อใหม่!',
-        message: `มีคำสั่งซื้อใหม่สำหรับสินค้า "${checkoutProduct.title}" จาก ${userProfile.full_name}`,
-        link: '/orders'
-      })
+      if (checkoutProduct.seller_id) {
+        await supabase.from('notifications').insert({
+          student_id: checkoutProduct.seller_id,
+          title: `คำสั่งซื้อใหม่!`,
+          message: `มีผู้ซื้อสั่งซื้อสินค้า "${checkoutProduct.title}" ของคุณ`,
+          link: '/orders'
+        })
+      }
 
       addToast(`สั่งซื้อ "${checkoutProduct.title}" สำเร็จแล้ว!`, 'success')
       setIsCheckoutModalOpen(false)
@@ -582,16 +587,22 @@ export default function ProductList({ session }) {
                       </div>
                       <span className="text-[9px] text-slate-400 dark:text-slate-400 font-mono">#{productSellerId}</span>
                     </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button onClick={() => openMessage(product)}
-                      className="flex items-center justify-center space-x-1 border border-slate-300 hover:border-navy-600 hover:text-navy-900 dark:text-white bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold py-2 rounded-lg text-[10px] sm:text-xs transition-all">
-                      <MessageSquare className="h-3.5 w-3.5" /><span>ส่งข้อความ</span>
-                    </button>
-                    <button onClick={() => openCheckout(product)}
-                      className="flex items-center justify-center space-x-1 bg-primary-600 hover:bg-primary-500 text-white font-bold py-2 rounded-lg text-[10px] sm:text-xs shadow-sm transition-all">
-                      <ShoppingCart className="h-3.5 w-3.5" /><span>สั่งซื้อ</span>
-                    </button>
-                  </div>
+                  {isSeller ? (
+                    <div className="bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 rounded-xl p-2.5 text-center text-xs font-bold text-slate-500 dark:text-slate-300">
+                      สินค้าของคุณ
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-2">
+                      <button onClick={() => openMessage(product)}
+                        className="flex items-center justify-center space-x-1 border border-slate-300 hover:border-navy-600 hover:text-navy-900 dark:text-white bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold py-2 rounded-lg text-[10px] sm:text-xs transition-all">
+                        <MessageSquare className="h-3.5 w-3.5" /><span>ส่งข้อความ</span>
+                      </button>
+                      <button onClick={() => openCheckout(product)}
+                        className="flex items-center justify-center space-x-1 bg-primary-600 hover:bg-primary-500 text-white font-bold py-2 rounded-lg text-[10px] sm:text-xs shadow-sm transition-all">
+                        <ShoppingCart className="h-3.5 w-3.5" /><span>สั่งซื้อ</span>
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
