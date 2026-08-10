@@ -35,9 +35,7 @@ export default function Profile({ session }) {
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault()
-    setSaveLoading(true)
-    setErrorMsg('')
-    setSuccessMsg('')
+    try {
       // อัปเดตตาราง profiles และ users
       const { error } = await supabase
         .from('profiles')
