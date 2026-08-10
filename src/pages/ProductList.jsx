@@ -317,9 +317,22 @@ export default function ProductList({ session }) {
     if (!userProfile || !messageProduct) return
     setMsgLoading(true)
     try {
-      const targetReceiverId = String(messageProduct.student_id || messageProduct.seller_id || messageProduct.seller?.student_id || '')
-      if (!targetReceiverId) {
-        throw new Error('ไม่สามารถระบุตัวผู้รับข้อความได้')
+      let targetReceiverId = String(messageProduct.student_id || messageProduct.seller_id || messageProduct.seller?.student_id || '').trim()
+
+      if (!targetReceiverId || targetReceiverId === 'undefined' || targetReceiverId === 'null') {
+        const { data: pDb } = await supabase
+          .from('products')
+          .select('*')
+          .eq('product_id', messageProduct.product_id)
+          .maybeSingle()
+
+        if (pDb) {
+          targetReceiverId = String(pDb.student_id || pDb.seller_id || '').trim()
+        }
+      }
+
+      if (!targetReceiverId || targetReceiverId === 'undefined' || targetReceiverId === 'null') {
+        throw new Error('ไม่พบข้อมูลรหัสนักศึกษาของผู้ขาย (กรุณาลบประกาศเดิมแล้วลงขายใหม่)')
       }
 
       const { error } = await supabase.from('messages').insert({
@@ -407,12 +420,22 @@ export default function ProductList({ session }) {
 
       const stockValue = parseInt(newProduct.stock || 1, 10)
 
-      // Try 1: student_id + stock
+      // Try 0: insert with both student_id and seller_id populated
       let res = await supabase.from('products').insert({
         ...basePayload,
         stock: stockValue,
         student_id: userProfile.student_id,
+        seller_id: userProfile.student_id,
       })
+
+      // Try 1: student_id + stock
+      if (res.error) {
+        res = await supabase.from('products').insert({
+          ...basePayload,
+          stock: stockValue,
+          student_id: userProfile.student_id,
+        })
+      }
 
       // Try 2: seller_id + stock
       if (res.error) {
