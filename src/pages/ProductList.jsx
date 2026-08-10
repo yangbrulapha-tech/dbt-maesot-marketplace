@@ -586,8 +586,9 @@ export default function ProductList({ session }) {
                   </div>
                 </div>
               </div>
-            )
-          })}
+            </div>
+          )
+        })}
         </div>
       )}
     </div>
