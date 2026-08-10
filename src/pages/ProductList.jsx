@@ -317,19 +317,34 @@ export default function ProductList({ session }) {
     if (!userProfile || !messageProduct) return
     setMsgLoading(true)
     try {
+      const targetReceiverId = String(messageProduct.student_id || messageProduct.seller_id || messageProduct.seller?.student_id || '')
+      if (!targetReceiverId) {
+        throw new Error('ไม่สามารถระบุตัวผู้รับข้อความได้')
+      }
+
       const { error } = await supabase.from('messages').insert({
         sender_id: userProfile.student_id,
-        receiver_id: messageProduct.seller_id,
-        product_id: messageProduct.product_id,
-        content: messageText,
+        receiver_id: targetReceiverId,
+        product_id: messageProduct.product_id || null,
+        content: messageText.trim(),
         is_read: false,
       })
       if (error) throw error
+
+      try {
+        await supabase.from('notifications').insert({
+          student_id: targetReceiverId,
+          title: `ข้อความใหม่!`,
+          message: `${userProfile.full_name || userProfile.student_id} ส่งข้อความเกี่ยวกับ "${messageProduct.title}"`,
+          link: '/chat'
+        })
+      } catch (_) {}
+
       addToast(`ส่งข้อความหาผู้ขายเรียบร้อยแล้ว`, 'success')
       setIsMessageModalOpen(false)
       setMessageText('')
     } catch (err) {
-      addToast('ไม่สามารถส่งข้อความได้: ' + err.message, 'error')
+      addToast('ไม่สามารถส่งข้อความได้: ' + (err.message || JSON.stringify(err)), 'error')
     } finally {
       setMsgLoading(false)
     }
