@@ -163,7 +163,7 @@ export default function RiderDashboard({ session }) {
         (avail || []).map(async (order) => {
           if (order.product?.seller_id) {
             const { data: sellerData } = await supabase
-              .from('users')
+              .from('profiles')
               .select('student_id, full_name')
               .eq('student_id', order.product.seller_id)
               .single()
@@ -187,7 +187,7 @@ export default function RiderDashboard({ session }) {
             image_url,
             seller_id
           ),
-          buyer:users!orders_buyer_id_fkey (
+          buyer:profiles!orders_buyer_id_fkey (
             student_id,
             full_name
           )
@@ -202,7 +202,7 @@ export default function RiderDashboard({ session }) {
         (active || []).map(async (order) => {
           if (order.product?.seller_id) {
             const { data: sellerData } = await supabase
-              .from('users')
+              .from('profiles')
               .select('student_id, full_name')
               .eq('student_id', order.product.seller_id)
               .single()

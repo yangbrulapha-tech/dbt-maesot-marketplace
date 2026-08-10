@@ -39,9 +39,9 @@ export default function Profile({ session }) {
     setErrorMsg('')
     setSuccessMsg('')
     try {
-      // อัปเดตตาราง users — PK คือ student_id
+      // อัปเดตตาราง profiles — unique key คือ student_id
       const { error } = await supabase
-        .from('users')
+        .from('profiles')
         .update({ full_name: fullName.trim() })
         .eq('student_id', profile.student_id)
       if (error) throw error
@@ -83,9 +83,9 @@ export default function Profile({ session }) {
         .from('product-images')
         .getPublicUrl(fileName)
 
-      // 3. อัปเดตตาราง users ช่อง avatar_url
+      // 3. อัปเดตตาราง profiles ช่อง avatar_url
       const { error: updateError } = await supabase
-        .from('users')
+        .from('profiles')
         .update({ avatar_url: publicUrl })
         .eq('student_id', profile.student_id)
 

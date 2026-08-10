@@ -26,7 +26,7 @@ export const getUserProfile = async () => {
   }
 
   const { data, error } = await supabase
-    .from('users')
+    .from('profiles')
     .select('*')
     .eq('student_id', studentId)
     .single()

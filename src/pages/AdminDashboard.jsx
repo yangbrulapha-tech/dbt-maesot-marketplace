@@ -78,7 +78,7 @@ export default function AdminDashboard({ session }) {
     try {
       const [pRes, uRes, oRes, rRes, refRes, repRes] = await Promise.all([
         supabase.from('products').select('product_id, seller_id, title, price, category, status, created_at').order('created_at', { ascending: false }),
-        supabase.from('users').select('student_id, full_name, email, role, created_at').order('created_at', { ascending: false }),
+        supabase.from('profiles').select('id, student_id, full_name, department, role, created_at').order('created_at', { ascending: false }),
         supabase.from('orders').select(`order_id, buyer_id, status, created_at, product:products(title, price)`).order('created_at', { ascending: false }).limit(50),
         supabase.from('riders').select('*').order('is_active', { ascending: true }),
         supabase.from('refund_requests').select('*').order('created_at', { ascending: false }),

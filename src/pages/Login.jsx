@@ -46,21 +46,20 @@ export default function Login() {
         })
         if (error) throw error
 
-        // บันทึกข้อมูลลงตาราง users (student_id เป็น PK ไม่มี id column)
+        // บันทึกข้อมูลลงตาราง profiles (student_id เป็น unique key)
         if (data.user) {
           const { error: userError } = await supabase
-            .from('users')
+            .from('profiles')
             .upsert(
               {
                 student_id: studentId.trim(),
                 full_name: fullName.trim(),
-                email: internalEmail,
                 role: 'student',
               },
               { onConflict: 'student_id' }
             )
           if (userError) {
-            console.warn('Users upsert warning:', userError.message || JSON.stringify(userError))
+            console.warn('Profiles upsert warning:', userError.message || JSON.stringify(userError))
           }
         }
 
