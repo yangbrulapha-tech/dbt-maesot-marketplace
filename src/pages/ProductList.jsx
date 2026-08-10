@@ -770,7 +770,7 @@ export default function ProductList({ session }) {
                 >
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="font-extrabold text-xs text-emerald-800">🛵 ใช้บริการ Rider</span>
+                      <span className="font-extrabold text-xs text-emerald-600 dark:text-emerald-400">🛵 ใช้บริการ Rider</span>
                       <div className={`h-4 w-4 rounded-full border flex items-center justify-center ${requestRider ? 'border-emerald-600 bg-emerald-600 text-white' : 'border-slate-300'}`}>
                         {requestRider && <div className="h-1.5 w-1.5 rounded-full bg-white dark:bg-slate-800" />}
                       </div>

@@ -72,13 +72,23 @@ export default function Orders({ session }) {
           }
 
           let sellerData = null
-          const sId = order.product?.student_id || order.product?.seller_id
+          const sId = String(order.product?.student_id || order.product?.seller_id || '')
           if (sId) {
-            const { data: s } = await supabase
+            let { data: s } = await supabase
               .from('profiles')
-              .select('student_id, full_name')
-              .or(`student_id.eq.${sId},id.eq.${sId}`)
+              .select('student_id, full_name, department')
+              .eq('student_id', sId)
               .maybeSingle()
+
+            if (!s) {
+              const { data: u } = await supabase
+                .from('users')
+                .select('student_id, full_name, email')
+                .eq('student_id', sId)
+                .maybeSingle()
+              s = u
+            }
+
             sellerData = s
           }
 
@@ -392,29 +402,37 @@ export default function Orders({ session }) {
                       {activeTab === 'buyer' ? 'ติดต่อผู้ขาย' : 'ติดต่อผู้ซื้อ'}
                     </h4>
                     <button onClick={() => openMessageModal(order)}
-                      className="inline-flex items-center space-x-1 bg-navy-900 hover:bg-navy-800 text-white px-2.5 py-1 rounded-lg text-[9px] font-extrabold shadow-sm">
-                      <MessageSquare className="h-3 w-3" />
+                      className="inline-flex items-center space-x-1.5 bg-primary-600 hover:bg-primary-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-md transition-all">
+                      <MessageSquare className="h-3.5 w-3.5" />
                       <span>ส่งข้อความ</span>
                     </button>
                   </div>
                   {activeTab === 'buyer' && (order.status === 'completed' || order.status === 'pending') && (
                     <button onClick={() => openRefundModal(order.order_id)}
-                      className="mt-2 w-full flex items-center justify-center space-x-1 border border-red-500 text-red-600 hover:bg-red-50 px-2 py-1.5 rounded-lg text-[10px] font-bold transition-colors">
+                      className="mt-2 mb-2 w-full flex items-center justify-center space-x-1 border border-red-500 text-red-500 hover:bg-red-500/10 px-2 py-1.5 rounded-lg text-[10px] font-bold transition-colors">
                       <ShieldAlert className="h-3.5 w-3.5" />
                       <span>ขอคืนเงิน (Refund)</span>
                     </button>
                   )}
                   {activeTab === 'buyer' ? (
-                    <div className="space-y-1">
-                      <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{order.seller?.full_name || '-'}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-300 font-mono">{order.product?.seller_id}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-300">{order.seller?.email || '-'}</p>
+                    <div className="space-y-1 mt-2">
+                      <p className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                        {order.seller?.full_name || 'ผู้ขาย'}
+                      </p>
+                      <p className="text-xs text-slate-500 dark:text-slate-300 font-mono">
+                        ID: #{order.seller?.student_id || order.product?.student_id || order.product?.seller_id || '-'}
+                      </p>
+                      {order.seller?.email && (
+                        <p className="text-xs text-slate-500 dark:text-slate-300">{order.seller.email}</p>
+                      )}
                     </div>
                   ) : (
-                    <div className="space-y-1">
-                      <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{order.buyer?.full_name || '-'}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-300 font-mono">{order.buyer_id}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-300">{order.buyer?.email || '-'}</p>
+                    <div className="space-y-1 mt-2">
+                      <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{order.buyer?.full_name || 'ผู้ซื้อ'}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-300 font-mono">ID: #{order.buyer?.student_id || order.buyer_id || '-'}</p>
+                      {order.buyer?.email && (
+                        <p className="text-xs text-slate-500 dark:text-slate-300">{order.buyer.email}</p>
+                      )}
                     </div>
                   )}
                 </div>
