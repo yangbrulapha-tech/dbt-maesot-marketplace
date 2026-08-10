@@ -41,7 +41,7 @@ export default function NotificationBell({ session }) {
       const { data, error } = await supabase
         .from('notifications')
         .select('*')
-        .eq('user_id', studentId)
+        .eq('student_id', studentId)
         .order('created_at', { ascending: false })
         .limit(20)
 
@@ -76,7 +76,7 @@ export default function NotificationBell({ session }) {
 
   const markAllAsRead = async () => {
     try {
-      await supabase.from('notifications').update({ is_read: true }).eq('user_id', studentId).eq('is_read', false)
+      await supabase.from('notifications').update({ is_read: true }).eq('student_id', studentId).eq('is_read', false)
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
       setUnreadCount(0)
     } catch (err) {}

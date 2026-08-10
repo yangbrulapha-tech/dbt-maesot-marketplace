@@ -254,7 +254,7 @@ export default function ProductList({ session }) {
 
       // Add Notification
       await supabase.from('notifications').insert({
-        user_id: checkoutProduct.seller_id,
+        student_id: checkoutProduct.seller_id,
         title: 'คำสั่งซื้อใหม่!',
         message: `มีคำสั่งซื้อใหม่สำหรับสินค้า "${checkoutProduct.title}" จาก ${userProfile.full_name}`,
         link: '/orders'

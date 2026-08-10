@@ -166,7 +166,7 @@ export default function Orders({ session }) {
       
       // Add Notification
       await supabase.from('notifications').insert({
-        user_id: messageTarget.partnerId,
+        student_id: messageTarget.partnerId,
         title: 'ข้อความใหม่',
         message: `มีข้อความใหม่จาก ${userProfile.full_name}`,
         link: '/chat'

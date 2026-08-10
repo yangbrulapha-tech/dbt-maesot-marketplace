@@ -135,7 +135,7 @@ export default function AdminDashboard({ session }) {
         
         if (orderData?.product?.seller_id) {
           await supabase.from('notifications').insert({
-            user_id: orderData.product.seller_id,
+            student_id: orderData.product.seller_id,
             title: `แอดมินอนุมัติการคืนเงิน (ออเดอร์ #ORD-${refund.order_id})`,
             message: `แอดมินอนุมัติให้คืนเงินผู้ซื้อแล้ว กรุณาโอนเงินคืนผู้ซื้อ และรอให้ผู้ซื้อกดยืนยันการรับเงินคืนในระบบ หมายเหตุ: ${reply}`,
             link: '/orders'
@@ -145,7 +145,7 @@ export default function AdminDashboard({ session }) {
 
       if (refund) {
         await supabase.from('notifications').insert({
-          user_id: refund.buyer_id,
+          student_id: refund.buyer_id,
           title: `คำขอคืนเงินถูก${action === 'approved' ? 'อนุมัติ' : 'ปฏิเสธ'}`,
           message: `คำขอคืนเงินสำหรับออเดอร์ #ORD-${refund.order_id} ถูก${action === 'approved' ? 'อนุมัติ' : 'ปฏิเสธ'} หมายเหตุ: ${reply}`,
           link: '/orders'
@@ -171,7 +171,7 @@ export default function AdminDashboard({ session }) {
       
       if (report && report.reporter_id) {
         await supabase.from('notifications').insert({
-          user_id: report.reporter_id,
+          student_id: report.reporter_id,
           title: `รายงานของคุณได้รับการตอบกลับ`,
           message: `รายงานสำหรับสินค้า "${report.product?.title || 'สินค้า'}" ได้ถูกอัปเดตสถานะ หมายเหตุจากผู้ดูแล: ${reply}`,
           link: '/reports'

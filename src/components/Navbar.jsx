@@ -87,7 +87,7 @@ export default function Navbar({ session }) {
 
       const { count: orderCount } = await supabase.from('notifications')
         .select('*', { count: 'exact', head: true })
-        .eq('user_id', userProfile.student_id)
+        .eq('student_id', userProfile.student_id)
         .eq('link', '/orders')
         .eq('is_read', false)
       if (orderCount) badges['/orders'] = orderCount
