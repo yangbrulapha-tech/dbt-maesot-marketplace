@@ -127,17 +127,17 @@ export default function ProductList({ session }) {
       // Enrich with seller profile safely
       const enrichedProducts = await Promise.all(
         (data || []).map(async (p) => {
-          const sId = p.student_id || p.seller_id
+          const sId = String(p.student_id || p.seller_id || '')
           if (!sId) return { ...p, seller: null }
 
-          // Try profiles table first
+          // 1. Try profiles table by student_id
           let { data: sellerData } = await supabase
             .from('profiles')
             .select('student_id, full_name, role')
-            .or(`student_id.eq.${sId},id.eq.${sId}`)
+            .eq('student_id', sId)
             .maybeSingle()
 
-          // Fallback to users table if not found in profiles
+          // 2. Try users table by student_id
           if (!sellerData) {
             const { data: uData } = await supabase
               .from('users')
@@ -525,8 +525,15 @@ export default function ProductList({ session }) {
             const currentStudentId = String(userProfile?.student_id || '')
             const currentUserId = String(userProfile?.id || '')
             const isSeller = Boolean(userProfile && productSellerId && (productSellerId === currentStudentId || productSellerId === currentUserId))
-            const canDelete = isAdmin || isSeller
-            const sellerDisplayName = product.seller?.full_name || product.student_id || product.seller_id || 'ผู้ขายทั่วไป'
+            const sellerFullName = product.seller?.full_name?.trim()
+            let sellerDisplayName = sellerFullName
+            if (!sellerDisplayName || sellerDisplayName === productSellerId) {
+              if (isSeller && userProfile?.full_name?.trim()) {
+                sellerDisplayName = userProfile.full_name.trim()
+              } else {
+                sellerDisplayName = product.seller?.full_name || 'ผู้ขายทั่วไป'
+              }
+            }
 
             return (
               <div key={product.product_id} className="ecommerce-card group relative">
