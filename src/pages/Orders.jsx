@@ -39,28 +39,49 @@ export default function Orders({ session }) {
       if (profileError) throw profileError
       setUserProfile(profile)
 
-      // orders join products (title, price, image_url, seller_id)
-      // แล้ว join seller user และ buyer user จาก student_id
-      const { data, error } = await supabase
+      // Fetch all orders directly without PostgREST relation joins to prevent FK errors
+      const { data: rawOrders, error: ordersError } = await supabase
         .from('orders')
-        .select('*, product:products(*)')
+        .select('*')
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (ordersError) throw ordersError
 
-      // Enrich orders with buyer, seller, and rider profiles
+      // Enrich orders with product, buyer, seller, and rider profiles
       const ordersWithDetails = await Promise.all(
-        (data || []).map(async (order) => {
+        (rawOrders || []).map(async (order) => {
+          // Fetch product
+          let productData = null
+          if (order.product_id) {
+            const { data: p } = await supabase
+              .from('products')
+              .select('*')
+              .eq('product_id', order.product_id)
+              .maybeSingle()
+            productData = p
+          }
+
+          // Fetch buyer
           let buyerData = null
           if (order.buyer_id) {
-            const { data: b } = await supabase
+            let { data: b } = await supabase
               .from('profiles')
-              .select('student_id, full_name')
+              .select('student_id, full_name, email')
               .eq('student_id', order.buyer_id)
               .maybeSingle()
+
+            if (!b) {
+              const { data: u } = await supabase
+                .from('users')
+                .select('student_id, full_name, email')
+                .eq('student_id', order.buyer_id)
+                .maybeSingle()
+              b = u
+            }
             buyerData = b
           }
 
+          // Fetch rider
           let riderData = null
           if (order.rider_id) {
             const { data: r } = await supabase
@@ -71,12 +92,13 @@ export default function Orders({ session }) {
             riderData = r
           }
 
+          // Fetch seller (from product.student_id or product.seller_id)
           let sellerData = null
-          const sId = String(order.product?.student_id || order.product?.seller_id || '')
+          const sId = String(productData?.student_id || productData?.seller_id || '')
           if (sId) {
             let { data: s } = await supabase
               .from('profiles')
-              .select('student_id, full_name, department')
+              .select('student_id, full_name, department, email')
               .eq('student_id', sId)
               .maybeSingle()
 
@@ -88,11 +110,16 @@ export default function Orders({ session }) {
                 .maybeSingle()
               s = u
             }
-
             sellerData = s
           }
 
-          return { ...order, buyer: buyerData, seller: sellerData, rider: riderData }
+          return { 
+            ...order, 
+            product: productData, 
+            buyer: buyerData, 
+            seller: sellerData, 
+            rider: riderData 
+          }
         })
       )
 
@@ -112,9 +139,11 @@ export default function Orders({ session }) {
 
       if (!hasBuyerOrders && hasSellerOrders) {
         setActiveTab('seller')
+      } else if (hasBuyerOrders) {
+        setActiveTab('buyer')
       }
     } catch (err) {
-      setErrorMsg('เกิดข้อผิดพลาด: ' + (err.message || JSON.stringify(err)))
+      setErrorMsg('เกิดข้อผิดพลาดในการดึงรายการสั่งซื้อ: ' + (err.message || JSON.stringify(err)))
     } finally {
       setLoading(false)
     }
