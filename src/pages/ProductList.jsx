@@ -335,14 +335,34 @@ export default function ProductList({ session }) {
         throw new Error('ไม่พบข้อมูลรหัสนักศึกษาของผู้ขาย (กรุณาลบประกาศเดิมแล้วลงขายใหม่)')
       }
 
-      const { error } = await supabase.from('messages').insert({
+      // Ensure both sender and receiver exist in profiles table
+      try {
+        await supabase.from('profiles').upsert({
+          student_id: targetReceiverId,
+          full_name: messageProduct.seller?.full_name || '',
+          role: 'student'
+        }, { onConflict: 'student_id' })
+      } catch (_) {}
+
+      const baseMsg = {
         sender_id: userProfile.student_id,
         receiver_id: targetReceiverId,
-        product_id: messageProduct.product_id || null,
         content: messageText.trim(),
         is_read: false,
+      }
+
+      // Try 1: with product_id
+      let insertRes = await supabase.from('messages').insert({
+        ...baseMsg,
+        product_id: messageProduct.product_id || null,
       })
-      if (error) throw error
+
+      // Try 2: without product_id (in case product_id FK constraint fails)
+      if (insertRes.error) {
+        insertRes = await supabase.from('messages').insert(baseMsg)
+      }
+
+      if (insertRes.error) throw insertRes.error
 
       try {
         await supabase.from('notifications').insert({
