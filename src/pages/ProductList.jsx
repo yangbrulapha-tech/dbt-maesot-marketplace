@@ -461,14 +461,14 @@ export default function ProductList({ session }) {
           {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-sm text-center py-20 px-4 max-w-xl mx-auto animate-scale-up">
-          <Tag className="mx-auto h-16 w-16 text-primary-300 mb-4" />
-          <h3 className="text-xl font-black text-navy-950">ไม่มีสินค้าในขณะนี้</h3>
+        <div className="bg-white dark:bg-slate-800/90 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-sm text-center py-20 px-4 max-w-xl mx-auto animate-scale-up">
+          <Tag className="mx-auto h-16 w-16 text-primary-500 dark:text-primary-400 mb-4" />
+          <h3 className="text-xl font-black text-slate-900 dark:text-white">ไม่มีสินค้าในขณะนี้</h3>
           <p className="text-slate-500 dark:text-slate-300 text-sm mt-2">คุณต้องการเป็นผู้ลงประกาศขายสินค้าชิ้นแรกไหม?</p>
           {session && (
             <button onClick={() => setIsProductModalOpen(true)}
-              className="mt-6 inline-flex items-center space-x-2 bg-navy-900 hover:bg-navy-800 text-white font-bold px-6 py-3 rounded-xl shadow-md transition-all">
-              <Plus className="h-4 w-4 text-primary-400" /><span>ลงประกาศขาย</span>
+              className="mt-6 inline-flex items-center space-x-2 bg-primary-600 hover:bg-primary-500 dark:bg-primary-600 dark:hover:bg-primary-500 text-white font-bold px-6 py-3 rounded-xl shadow-lg shadow-primary-500/25 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+              <Plus className="h-4 w-4 text-white" /><span>ลงประกาศขาย</span>
             </button>
           )}
         </div>
