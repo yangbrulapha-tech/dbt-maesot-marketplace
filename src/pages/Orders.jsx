@@ -97,6 +97,22 @@ export default function Orders({ session }) {
       )
 
       setOrders(ordersWithDetails)
+
+      // สลับไปแท็บ "ฉันเป็นผู้ขาย" อัตโนมัติ หากมีรายการขายสินค้า
+      const mySId = String(profile?.student_id || '').trim()
+      const myId = String(profile?.id || '').trim()
+      const hasBuyerOrders = ordersWithDetails.some(o => {
+        const bId = String(o.buyer_id || '').trim()
+        return (mySId && bId === mySId) || (myId && bId === myId)
+      })
+      const hasSellerOrders = ordersWithDetails.some(o => {
+        const pSellerId = String(o.product?.student_id || o.product?.seller_id || '').trim()
+        return (mySId && pSellerId === mySId) || (myId && pSellerId === myId)
+      })
+
+      if (!hasBuyerOrders && hasSellerOrders) {
+        setActiveTab('seller')
+      }
     } catch (err) {
       setErrorMsg('เกิดข้อผิดพลาด: ' + (err.message || JSON.stringify(err)))
     } finally {
@@ -239,9 +255,23 @@ export default function Orders({ session }) {
     }
   }
 
-  // แยกออเดอร์ตาม buyer_id และ seller_id (seller อยู่ใน product.seller_id)
-  const buyerOrders = orders.filter((o) => userProfile && o.buyer_id === userProfile.student_id)
-  const sellerOrders = orders.filter((o) => userProfile && o.product?.seller_id === userProfile.student_id)
+  // แยกออเดอร์ตาม buyer_id และ seller_id (seller อยู่ใน product.student_id หรือ product.seller_id)
+  const buyerOrders = orders.filter((o) => {
+    if (!userProfile) return false
+    const bId = String(o.buyer_id || '').trim()
+    const mySId = String(userProfile.student_id || '').trim()
+    const myId = String(userProfile.id || '').trim()
+    return (mySId && bId === mySId) || (myId && bId === myId)
+  })
+
+  const sellerOrders = orders.filter((o) => {
+    if (!userProfile) return false
+    const pSellerId = String(o.product?.student_id || o.product?.seller_id || '').trim()
+    const mySId = String(userProfile.student_id || '').trim()
+    const myId = String(userProfile.id || '').trim()
+    return (mySId && pSellerId === mySId) || (myId && pSellerId === myId)
+  })
+
   const displayed = activeTab === 'buyer' ? buyerOrders : sellerOrders
 
   const getStatusBadge = (status) => {
