@@ -42,6 +42,14 @@ export default function Navbar({ session }) {
       setUserRole(null)
       setIsRiderActive(false)
     }
+  }, [session, location.pathname])
+
+  useEffect(() => {
+    const handleProfileUpdate = () => {
+      if (session) fetchRoleAndRider()
+    }
+    window.addEventListener('profileUpdated', handleProfileUpdate)
+    return () => window.removeEventListener('profileUpdated', handleProfileUpdate)
   }, [session])
 
   const fetchRoleAndRider = async () => {
@@ -243,8 +251,8 @@ export default function Navbar({ session }) {
                   ) : (
                     <User className="h-5 w-5 text-sky-300 shrink-0" />
                   )}
-                  <span className="text-xs font-semibold truncate max-w-[120px]">
-                    {userProfile?.full_name || session.user.email}
+                  <span className="text-xs font-semibold truncate max-w-[160px]">
+                    {userProfile?.full_name?.trim() ? userProfile.full_name : session.user.email}
                   </span>
                 </div>
                 <button

@@ -38,14 +38,22 @@ export default function Profile({ session }) {
     setSaveLoading(true)
     setErrorMsg('')
     setSuccessMsg('')
-    try {
-      // อัปเดตตาราง profiles — unique key คือ student_id
+      // อัปเดตตาราง profiles และ users
       const { error } = await supabase
         .from('profiles')
         .update({ full_name: fullName.trim() })
         .eq('student_id', profile.student_id)
       if (error) throw error
+
+      try {
+        await supabase
+          .from('users')
+          .update({ full_name: fullName.trim() })
+          .eq('student_id', profile.student_id)
+      } catch (_) {}
+
       setSuccessMsg('บันทึกข้อมูลเรียบร้อยแล้ว!')
+      window.dispatchEvent(new Event('profileUpdated'))
       fetchProfile()
     } catch (err) {
       setErrorMsg('ไม่สามารถบันทึกได้: ' + (err.message || JSON.stringify(err)))
@@ -83,7 +91,7 @@ export default function Profile({ session }) {
         .from('product-images')
         .getPublicUrl(fileName)
 
-      // 3. อัปเดตตาราง profiles ช่อง avatar_url
+      // 3. อัปเดตตาราง profiles และ users ช่อง avatar_url
       const { error: updateError } = await supabase
         .from('profiles')
         .update({ avatar_url: publicUrl })
@@ -91,7 +99,15 @@ export default function Profile({ session }) {
 
       if (updateError) throw updateError
 
+      try {
+        await supabase
+          .from('users')
+          .update({ avatar_url: publicUrl })
+          .eq('student_id', profile.student_id)
+      } catch (_) {}
+
       setSuccessMsg('อัปเดตรูปภาพโปรไฟล์เรียบร้อยแล้ว!')
+      window.dispatchEvent(new Event('profileUpdated'))
       await fetchProfile()
     } catch (err) {
       setErrorMsg('ไม่สามารถอัปเดตรูปภาพได้: ' + err.message)
