@@ -370,25 +370,43 @@ export default function ProductList({ session }) {
         category: newProduct.category,
         image_url: publicUrl,
         status: 'available',
-        stock: parseInt(newProduct.stock || 1, 10),
       }
 
-      // Try inserting with student_id (matching Table 3.3 spec)
-      let { error: dbError } = await supabase.from('products').insert({
+      const stockValue = parseInt(newProduct.stock || 1, 10)
+
+      // Try 1: student_id + stock
+      let res = await supabase.from('products').insert({
         ...basePayload,
+        stock: stockValue,
         student_id: userProfile.student_id,
       })
 
-      // Fallback to seller_id if student_id column doesn't exist in cache
-      if (dbError && (dbError.message?.includes('student_id') || dbError.code === '42703' || dbError.message?.includes('schema cache'))) {
-        const fallbackRes = await supabase.from('products').insert({
+      // Try 2: seller_id + stock
+      if (res.error) {
+        res = await supabase.from('products').insert({
           ...basePayload,
-          seller_id: userProfile.student_id,
+          stock: stockValue,
+          seller_id: userProfile.id || userProfile.student_id,
         })
-        dbError = fallbackRes.error
       }
 
-      if (dbError) throw dbError
+      // Try 3: student_id without stock (in case stock column does not exist)
+      if (res.error) {
+        res = await supabase.from('products').insert({
+          ...basePayload,
+          student_id: userProfile.student_id,
+        })
+      }
+
+      // Try 4: seller_id without stock
+      if (res.error) {
+        res = await supabase.from('products').insert({
+          ...basePayload,
+          seller_id: userProfile.id || userProfile.student_id,
+        })
+      }
+
+      if (res.error) throw res.error
 
       addToast('ลงประกาศขายสินค้าเรียบร้อยแล้ว!', 'success')
       setIsProductModalOpen(false)
