@@ -363,16 +363,31 @@ export default function ProductList({ session }) {
 
       const { data: { publicUrl } } = supabase.storage.from('product-images').getPublicUrl(fileName)
 
-      const { error: dbError } = await supabase.from('products').insert({
-        seller_id: userProfile.student_id,
+      const basePayload = {
         title: newProduct.title.trim(),
         description: newProduct.description.trim(),
         price: parseFloat(newProduct.price),
         category: newProduct.category,
         image_url: publicUrl,
         status: 'available',
-        stock: parseInt(newProduct.stock || 1, 10), // บันทึกจำนวนสินค้า
+        stock: parseInt(newProduct.stock || 1, 10),
+      }
+
+      // Try inserting with student_id (matching Table 3.3 spec)
+      let { error: dbError } = await supabase.from('products').insert({
+        ...basePayload,
+        student_id: userProfile.student_id,
       })
+
+      // Fallback to seller_id if student_id column doesn't exist in cache
+      if (dbError && (dbError.message?.includes('student_id') || dbError.code === '42703' || dbError.message?.includes('schema cache'))) {
+        const fallbackRes = await supabase.from('products').insert({
+          ...basePayload,
+          seller_id: userProfile.student_id,
+        })
+        dbError = fallbackRes.error
+      }
+
       if (dbError) throw dbError
 
       addToast('ลงประกาศขายสินค้าเรียบร้อยแล้ว!', 'success')
