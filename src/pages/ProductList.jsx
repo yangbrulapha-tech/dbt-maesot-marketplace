@@ -56,6 +56,7 @@ export default function ProductList({ session }) {
   const [isRiderModalOpen, setIsRiderModalOpen] = useState(false)
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false)
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false)
+  const [isMessageSuccessModalOpen, setIsMessageSuccessModalOpen] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
   const [orderLoading, setOrderLoading] = useState(false)
   const [msgLoading, setMsgLoading] = useState(false)
@@ -376,6 +377,7 @@ export default function ProductList({ session }) {
       addToast(`ส่งข้อความหาผู้ขายเรียบร้อยแล้ว`, 'success')
       setIsMessageModalOpen(false)
       setMessageText('')
+      setIsMessageSuccessModalOpen(true)
     } catch (err) {
       addToast('ไม่สามารถส่งข้อความได้: ' + (err.message || JSON.stringify(err)), 'error')
     } finally {
@@ -1054,6 +1056,39 @@ export default function ProductList({ session }) {
                 )}
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+    )}
+
+    {/* MODAL: MESSAGE SUCCESS */}
+    {isMessageSuccessModalOpen && (
+      <div className="fixed inset-0 z-[110] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
+        <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700/80 p-6 max-w-sm w-full text-center animate-scale-up">
+          <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-4">
+            <CheckCircle2 className="h-10 w-10 animate-bounce" />
+          </div>
+          <h3 className="text-xl font-black text-slate-900 dark:text-white">ส่งข้อความสำเร็จ!</h3>
+          <p className="text-slate-500 dark:text-slate-300 text-xs mt-2 font-medium leading-relaxed">
+            ข้อความของคุณถูกส่งไปยังผู้ขายเรียบร้อยแล้ว คุณสามารถพูดคุยโต้ตอบต่อได้ในเมนู "ข้อความ"
+          </p>
+          <div className="mt-6 flex space-x-2">
+            <button
+              onClick={() => setIsMessageSuccessModalOpen(false)}
+              className="flex-1 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs transition-all"
+            >
+              ตกลง
+            </button>
+            <button
+              onClick={() => {
+                setIsMessageSuccessModalOpen(false)
+                navigate('/chat')
+              }}
+              className="flex-1 bg-primary-600 hover:bg-primary-500 text-white font-bold py-2.5 rounded-xl text-xs shadow-md transition-all flex items-center justify-center space-x-1"
+            >
+              <MessageSquare className="h-3.5 w-3.5" />
+              <span>ไปที่แชท</span>
+            </button>
           </div>
         </div>
       </div>
