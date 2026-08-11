@@ -73,21 +73,26 @@ export default function AdminDashboard({ session }) {
     }
   }
 
+  const safeFetch = async (queryPromise) => {
+    try {
+      const res = await queryPromise
+      return res?.data || []
+    } catch (_) {
+      return []
+    }
+  }
+
   const loadAllData = async () => {
     setDataLoading(true)
     try {
-      const pRes = await supabase.from('products').select('*').order('created_at', { ascending: false }).catch(() => ({ data: [] }))
-      const uRes = await supabase.from('profiles').select('*').order('created_at', { ascending: false }).catch(() => ({ data: [] }))
-      const oRes = await supabase.from('orders').select('*').order('created_at', { ascending: false }).limit(50).catch(() => ({ data: [] }))
-      const rRes = await supabase.from('riders').select('*').catch(() => ({ data: [] }))
-      const refRes = await supabase.from('refund_requests').select('*').order('created_at', { ascending: false }).catch(() => ({ data: [] }))
-      const repRes = await supabase.from('product_reports').select('*').order('created_at', { ascending: false }).catch(() => ({ data: [] }))
-
-      const productsData = pRes.data || []
-      const usersData = uRes.data || []
-      const rawOrders = oRes.data || []
-      const rawRiders = rRes.data || []
-      const rawReports = repRes.data || []
+      const [productsData, usersData, rawOrders, rawRiders, refData, rawReports] = await Promise.all([
+        safeFetch(supabase.from('products').select('*').order('created_at', { ascending: false })),
+        safeFetch(supabase.from('profiles').select('*').order('created_at', { ascending: false })),
+        safeFetch(supabase.from('orders').select('*').order('created_at', { ascending: false }).limit(50)),
+        safeFetch(supabase.from('riders').select('*')),
+        safeFetch(supabase.from('refund_requests').select('*').order('created_at', { ascending: false })),
+        safeFetch(supabase.from('product_reports').select('*').order('created_at', { ascending: false }))
+      ])
 
       // Map product data into orders
       const mappedOrders = rawOrders.map(order => {
@@ -121,7 +126,7 @@ export default function AdminDashboard({ session }) {
       setUsers(usersData)
       setOrders(mappedOrders)
       setRiders(mappedRiders)
-      setRefunds(refRes.data || [])
+      setRefunds(refData)
       setReportsData(mappedReports)
     } catch (err) {
       addToast('เกิดข้อผิดพลาดในการดึงข้อมูล: ' + (err.message || ''), 'error')
