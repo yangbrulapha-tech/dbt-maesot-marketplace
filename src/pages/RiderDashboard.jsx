@@ -616,12 +616,12 @@ export default function RiderDashboard({ session }) {
               <div className="space-y-6">
                 {myJobs.map((order) => (
                   <div key={order.order_id} className="bg-white dark:bg-slate-800 rounded-2xl border border-emerald-400/80 shadow-md overflow-hidden animate-scale-up">
-                    <div className="bg-emerald-50 px-6 py-4 border-b border-emerald-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <div className="bg-emerald-100/80 dark:bg-emerald-950/90 px-6 py-4 border-b border-emerald-200 dark:border-emerald-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                       <div>
-                        <span className="text-[10px] text-emerald-800 dark:text-emerald-200 font-extrabold uppercase font-mono bg-emerald-100 dark:bg-emerald-900/50 px-2 py-0.5 rounded-md">ออเดอร์ระหว่างจัดส่ง</span>
-                        <span className="text-xs font-bold text-slate-500 dark:text-slate-400 ml-2">#ORD-{order.order_id}</span>
+                        <span className="text-[11px] text-white font-black uppercase font-mono bg-emerald-700 dark:bg-emerald-600 px-3 py-1 rounded-md shadow-sm">ออเดอร์ระหว่างจัดส่ง</span>
+                        <span className="text-sm font-extrabold text-slate-800 dark:text-emerald-200 ml-3">#ORD-{order.order_id}</span>
                       </div>
-                      <span className="text-base font-black text-emerald-600 font-outfit">฿{Number(order.product?.price || 0).toLocaleString()}</span>
+                      <span className="text-lg font-black text-emerald-800 dark:text-emerald-300 font-outfit">฿{Number(order.product?.price || 0).toLocaleString()}</span>
                     </div>
 
                     <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -631,8 +631,8 @@ export default function RiderDashboard({ session }) {
                           <img src={order.product?.image_url} alt={order.product?.title} className="w-full h-full object-cover" />
                         </div>
                         <div>
-                          <h4 className="font-extrabold text-navy-900 dark:text-white text-sm sm:text-base">{order.product?.title || 'สินค้าทั่วไป'}</h4>
-                          <p className="text-xs text-slate-500 dark:text-slate-300 mt-1">
+                          <h4 className="font-extrabold text-slate-900 dark:text-white text-base">{order.product?.title || 'สินค้าทั่วไป'}</h4>
+                          <p className="text-xs text-slate-700 dark:text-slate-200 mt-1 font-medium leading-relaxed">
                             รับของจากฝั่งผู้ขายแล้วนำไปเก็บเงิน+ส่งมอบให้ฝั่งผู้ซื้อ นัดหมายส่งของภายในวิทยาลัย
                           </p>
                         </div>
@@ -641,22 +641,22 @@ export default function RiderDashboard({ session }) {
                       {/* Contact Buyer/Seller */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {/* Seller Contact */}
-                        <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
-                          <span className="text-[9px] font-extrabold text-amber-700 dark:text-amber-400 uppercase tracking-wider block mb-1">1. นัดรับสินค้าจาก (ผู้ขาย)</span>
-                          <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{order.seller?.full_name || '-'}</p>
-                          <p className="text-[10px] text-slate-400 dark:text-slate-300 font-mono mt-0.5">รหัส: {order.product?.seller_id}</p>
+                        <div className="bg-amber-50/90 dark:bg-amber-950/50 p-4 rounded-xl border border-amber-300 dark:border-amber-800/80">
+                          <span className="text-[10px] font-black text-amber-900 dark:text-amber-300 uppercase tracking-wider block mb-1">1. นัดรับสินค้าจาก (ผู้ขาย)</span>
+                          <p className="text-base font-black text-slate-900 dark:text-white">{order.seller?.full_name || '-'}</p>
+                          <p className="text-xs text-slate-600 dark:text-slate-300 font-mono font-bold mt-1">รหัส: {order.product?.seller_id}</p>
                         </div>
 
                         {/* Buyer Contact */}
-                        <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
-                          <span className="text-[9px] font-extrabold text-primary-700 dark:text-primary-400 uppercase tracking-wider block mb-1">2. นัดส่งมอบและรับเงินจาก (ผู้ซื้อ)</span>
-                          <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{order.buyer?.full_name || '-'}</p>
-                          <p className="text-[10px] text-slate-400 dark:text-slate-300 font-mono mt-0.5">รหัส: {order.buyer_id}</p>
+                        <div className="bg-sky-50/90 dark:bg-sky-950/50 p-4 rounded-xl border border-sky-300 dark:border-sky-800/80">
+                          <span className="text-[10px] font-black text-sky-900 dark:text-sky-300 uppercase tracking-wider block mb-1">2. นัดส่งมอบและรับเงินจาก (ผู้ซื้อ)</span>
+                          <p className="text-base font-black text-slate-900 dark:text-white">{order.buyer?.full_name || '-'}</p>
+                          <p className="text-xs text-slate-600 dark:text-slate-300 font-mono font-bold mt-1">รหัส: {order.buyer_id}</p>
                           
-                          <div className="mt-2 bg-emerald-100/50 dark:bg-emerald-900/40 p-2 rounded border border-emerald-200 dark:border-emerald-800/60 flex items-start space-x-1.5">
-                            <MapPin className="h-3 w-3 text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0" />
-                            <p className="text-[11px] text-emerald-900 dark:text-emerald-100 font-medium">
-                              จุดส่ง: <span className="font-bold">{order.delivery_location || 'ไม่ได้ระบุ'}</span>
+                          <div className="mt-2 bg-emerald-100 dark:bg-emerald-900/70 p-2.5 rounded-lg border border-emerald-300 dark:border-emerald-700 flex items-start space-x-1.5">
+                            <MapPin className="h-4 w-4 text-emerald-700 dark:text-emerald-300 mt-0.5 shrink-0" />
+                            <p className="text-xs text-emerald-950 dark:text-emerald-100 font-bold">
+                              จุดส่ง: <span className="font-extrabold text-emerald-900 dark:text-emerald-200">{order.delivery_location || 'ไม่ได้ระบุ'}</span>
                             </p>
                           </div>
                         </div>
@@ -664,14 +664,14 @@ export default function RiderDashboard({ session }) {
                     </div>
 
                     {/* อัปโหลดหลักฐานส่งของ */}
-                    <div className="px-6 pb-5 pt-1 border-t border-slate-100 bg-emerald-50/20">
-                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase tracking-wider">
+                    <div className="px-6 pb-5 pt-3 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60">
+                      <label className="block text-xs font-black text-slate-900 dark:text-white mb-2 uppercase tracking-wider">
                         📸 รูปภาพหลักฐานยืนยันการจัดส่ง <span className="text-red-500">*</span>
                       </label>
                       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                         <label htmlFor={`proof-upload-${order.order_id}`}
-                          className="px-4 py-2 border border-dashed border-emerald-400 bg-white dark:bg-slate-800 hover:bg-emerald-50/50 rounded-xl text-xs font-bold text-emerald-800 cursor-pointer transition-colors shrink-0">
-                          {proofFiles[order.order_id] ? 'เปลี่ยนรูปภาพ' : 'เลือก/ถ่ายรูปหลักฐาน'}
+                          className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black cursor-pointer transition-colors shrink-0 shadow-md flex items-center gap-1.5">
+                          <span>{proofFiles[order.order_id] ? 'เปลี่ยนรูปภาพ' : 'เลือก/ถ่ายรูปหลักฐาน'}</span>
                           <input
                             id={`proof-upload-${order.order_id}`}
                             type="file"
@@ -681,24 +681,24 @@ export default function RiderDashboard({ session }) {
                           />
                         </label>
                         {proofPreviews[order.order_id] ? (
-                          <div className="h-16 w-24 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-0.5 shrink-0">
+                          <div className="h-16 w-24 rounded-lg overflow-hidden border-2 border-emerald-500 bg-white dark:bg-slate-800 p-0.5 shrink-0 shadow-sm">
                             <img src={proofPreviews[order.order_id]} alt="proof-preview" className="w-full h-full object-cover rounded-md" />
                           </div>
                         ) : (
-                          <span className="text-xs text-slate-400 dark:text-slate-300">กรุณาอัปโหลดรูปภาพขณะส่งมอบสินค้าเพื่อบันทึกงานจัดส่งสำเร็จ</span>
+                          <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">กรุณาอัปโหลดรูปภาพขณะส่งมอบสินค้าเพื่อบันทึกงานจัดส่งสำเร็จ</span>
                         )}
                       </div>
                     </div>
 
                     {/* Actions */}
-                    <div className="bg-slate-50 dark:bg-slate-900/50 px-6 py-4 border-t border-slate-100 flex justify-end space-x-3">
+                    <div className="bg-slate-100 dark:bg-slate-900 px-6 py-4 border-t border-slate-200 dark:border-slate-700 flex justify-end space-x-3">
                       <button onClick={() => handleCancelJob(order.order_id)} disabled={actionLoadingId === order.order_id}
-                        className="px-4 py-2 border border-slate-300 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:bg-slate-900/50 disabled:opacity-50">
+                        className="px-4 py-2.5 border-2 border-slate-300 dark:border-slate-600 rounded-xl text-xs font-extrabold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors disabled:opacity-50">
                         คืนงานจัดส่ง
                       </button>
                       <button onClick={() => handleCompleteJob(order.order_id)} disabled={actionLoadingId === order.order_id}
-                        className="flex items-center space-x-1.5 px-6 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-extrabold shadow-sm transition-all disabled:opacity-50">
-                        {actionLoadingId === order.order_id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <><CheckCircle2 className="h-3.5 w-3.5" /><span>จัดส่งสำเร็จเรียบร้อย</span></>}
+                        className="flex items-center space-x-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-black shadow-md transition-all disabled:opacity-50">
+                        {actionLoadingId === order.order_id ? <Loader2 className="h-4 w-4 animate-spin" /> : <><CheckCircle2 className="h-4 w-4" /><span>จัดส่งสำเร็จเรียบร้อย</span></>}
                       </button>
                     </div>
                   </div>
