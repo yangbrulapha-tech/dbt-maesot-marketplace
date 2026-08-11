@@ -42,6 +42,18 @@ export default function AdminDashboard({ session }) {
   const [deleteLoading, setDeleteLoading] = useState(null)
   const [riderActionLoading, setRiderActionLoading] = useState(null)
 
+  // State สำหรับ Modal ใส่หมายเหตุการแก้ปัญหา/ขอคืนเงิน (แทน window.prompt)
+  const [noteModal, setNoteModal] = useState({
+    isOpen: false,
+    title: '',
+    subtitle: '',
+    noteText: '',
+    targetType: '',
+    targetId: null,
+    actionType: '',
+  })
+  const [modalLoading, setModalLoading] = useState(false)
+
   const [toasts, setToasts] = useState([])
   const addToast = useCallback((message, type = 'success') => {
     const id = Date.now()
@@ -135,72 +147,90 @@ export default function AdminDashboard({ session }) {
     }
   }
 
-  const handleRefundAction = async (refundId, action) => {
-    const reply = window.prompt(`ระบุหมายเหตุสำหรับการ${action === 'approved' ? 'อนุมัติ' : 'ปฏิเสธ'}:`)
-    if (reply === null) return
+  const openActionModal = (targetType, targetId, actionType, subtitle) => {
+    let title = ''
+    if (targetType === 'report') {
+      title = actionType === 'resolved' ? 'ดำเนินการแก้ไขรายงานปัญหา' : 'ยกเลิก / ปฏิเสธรายงานปัญหา'
+    } else if (targetType === 'refund') {
+      title = actionType === 'approved' ? 'อนุมัติคำขอคืนเงิน' : 'ปฏิเสธคำขอคืนเงิน'
+    }
+    setNoteModal({
+      isOpen: true,
+      title,
+      subtitle: subtitle || '',
+      noteText: '',
+      targetType,
+      targetId,
+      actionType,
+    })
+  }
+
+  const handleConfirmActionModal = async (e) => {
+    e.preventDefault()
+    if (!noteModal.noteText.trim()) {
+      addToast('กรุณาระบุหมายเหตุหรือรายละเอียดเพิ่มเติม', 'error')
+      return
+    }
+    setModalLoading(true)
+    const { targetType, targetId, actionType, noteText } = noteModal
+    const reply = noteText.trim()
+
     try {
-      const { error } = await supabase.from('refund_requests')
-        .update({ status: action, admin_reply: reply })
-        .eq('id', refundId)
-      if (error) throw error
-      
-      const refund = refunds.find(r => r.id === refundId)
-      setRefunds(prev => prev.map(r => r.id === refundId ? { ...r, status: action, admin_reply: reply } : r))
-      
-      if (action === 'approved' && refund) {
-        // อัปเดตสถานะออเดอร์เป็น refund_approved
-        await supabase.from('orders').update({ status: 'refund_approved' }).eq('order_id', refund.order_id)
-        
-        // ดึงข้อมูล seller_id เพื่อส่งแจ้งเตือน
-        const { data: orderData } = await supabase.from('orders').select('product:products(seller_id)').eq('order_id', refund.order_id).single()
-        
-        if (orderData?.product?.seller_id) {
+      if (targetType === 'report') {
+        const { error } = await supabase.from('product_reports')
+          .update({ status: actionType, admin_notes: reply })
+          .eq('id', targetId)
+        if (error) throw error
+
+        const report = reportsData.find(r => r.id === targetId)
+        setReportsData(prev => prev.map(r => r.id === targetId ? { ...r, status: actionType, admin_notes: reply } : r))
+
+        if (report && report.student_id) {
           await supabase.from('notifications').insert({
-            student_id: orderData.product.seller_id,
-            title: `แอดมินอนุมัติการคืนเงิน (ออเดอร์ #ORD-${refund.order_id})`,
-            message: `แอดมินอนุมัติให้คืนเงินผู้ซื้อแล้ว กรุณาโอนเงินคืนผู้ซื้อ และรอให้ผู้ซื้อกดยืนยันการรับเงินคืนในระบบ หมายเหตุ: ${reply}`,
+            student_id: report.student_id,
+            title: `รายงานของคุณได้รับการตอบกลับ`,
+            message: `รายงานสำหรับสินค้า "${report.product?.title || 'สินค้า'}" ได้ถูกอัปเดตสถานะ หมายเหตุจากผู้ดูแล: ${reply}`,
+            link: '/reports'
+          })
+        }
+        addToast('ดำเนินการตอบกลับรายงานเรียบร้อยแล้ว', 'success')
+      } else if (targetType === 'refund') {
+        const { error } = await supabase.from('refund_requests')
+          .update({ status: actionType, admin_reply: reply })
+          .eq('id', targetId)
+        if (error) throw error
+
+        const refund = refunds.find(r => r.id === targetId)
+        setRefunds(prev => prev.map(r => r.id === targetId ? { ...r, status: actionType, admin_reply: reply } : r))
+
+        if (actionType === 'approved' && refund) {
+          await supabase.from('orders').update({ status: 'refund_approved' }).eq('order_id', refund.order_id)
+          const { data: orderData } = await supabase.from('orders').select('product:products(seller_id)').eq('order_id', refund.order_id).single()
+          if (orderData?.product?.seller_id) {
+            await supabase.from('notifications').insert({
+              student_id: orderData.product.seller_id,
+              title: `แอดมินอนุมัติการคืนเงิน (ออเดอร์ #ORD-${refund.order_id})`,
+              message: `แอดมินอนุมัติให้คืนเงินผู้ซื้อแล้ว กรุณาโอนเงินคืนผู้ซื้อ และรอให้ผู้ซื้อกดยืนยันการรับเงินคืนในระบบ หมายเหตุ: ${reply}`,
+              link: '/orders'
+            })
+          }
+        }
+
+        if (refund) {
+          await supabase.from('notifications').insert({
+            student_id: refund.buyer_id,
+            title: `คำขอคืนเงินถูก${actionType === 'approved' ? 'อนุมัติ' : 'ปฏิเสธ'}`,
+            message: `คำขอคืนเงินสำหรับออเดอร์ #ORD-${refund.order_id} ถูก${actionType === 'approved' ? 'อนุมัติ' : 'ปฏิเสธ'} หมายเหตุ: ${reply}`,
             link: '/orders'
           })
         }
+        addToast('ทำรายการคืนเงินเรียบร้อยแล้ว', 'success')
       }
-
-      if (refund) {
-        await supabase.from('notifications').insert({
-          student_id: refund.buyer_id,
-          title: `คำขอคืนเงินถูก${action === 'approved' ? 'อนุมัติ' : 'ปฏิเสธ'}`,
-          message: `คำขอคืนเงินสำหรับออเดอร์ #ORD-${refund.order_id} ถูก${action === 'approved' ? 'อนุมัติ' : 'ปฏิเสธ'} หมายเหตุ: ${reply}`,
-          link: '/orders'
-        })
-      }
-      addToast(`ทำรายการคืนเงินเรียบร้อยแล้ว`, 'success')
+      setNoteModal(prev => ({ ...prev, isOpen: false }))
     } catch (err) {
       addToast('ทำรายการไม่สำเร็จ: ' + err.message, 'error')
-    }
-  }
-
-  const handleReportReply = async (reportId, action) => {
-    const reply = window.prompt(`ระบุหมายเหตุสำหรับการ${action === 'resolved' ? 'ดำเนินการแก้ไข' : 'ยกเลิก/ปฏิเสธ'}รายงานนี้:`)
-    if (reply === null) return
-    try {
-      const { error } = await supabase.from('product_reports')
-        .update({ status: action, admin_notes: reply })
-        .eq('id', reportId)
-      if (error) throw error
-      
-      const report = reportsData.find(r => r.id === reportId)
-      setReportsData(prev => prev.map(r => r.id === reportId ? { ...r, status: action, admin_notes: reply } : r))
-      
-      if (report && report.student_id) {
-        await supabase.from('notifications').insert({
-          student_id: report.student_id,
-          title: `รายงานของคุณได้รับการตอบกลับ`,
-          message: `รายงานสำหรับสินค้า "${report.product?.title || 'สินค้า'}" ได้ถูกอัปเดตสถานะ หมายเหตุจากผู้ดูแล: ${reply}`,
-          link: '/reports'
-        })
-      }
-      addToast(`ตอบกลับรายงานสำเร็จ`, 'success')
-    } catch (err) {
-      addToast('เกิดข้อผิดพลาดในการตอบกลับ: ' + err.message, 'error')
+    } finally {
+      setModalLoading(false)
     }
   }
 
@@ -562,8 +592,8 @@ export default function AdminDashboard({ session }) {
                     )}
                     {r.status === 'pending' && (
                       <div className="flex flex-col space-y-2 shrink-0">
-                        <button onClick={() => handleRefundAction(r.id, 'approved')} className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg shadow-sm">อนุมัติ</button>
-                        <button onClick={() => handleRefundAction(r.id, 'rejected')} className="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded-lg shadow-sm">ปฏิเสธ</button>
+                        <button onClick={() => openActionModal('refund', r.id, 'approved', `#ORD-${r.order_id}`)} className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-md transition-all">อนุมัติ</button>
+                        <button onClick={() => openActionModal('refund', r.id, 'rejected', `#ORD-${r.order_id}`)} className="px-3.5 py-2 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded-xl shadow-md transition-all">ปฏิเสธ</button>
                       </div>
                     )}
                   </div>
@@ -620,14 +650,67 @@ export default function AdminDashboard({ session }) {
                     </div>
                     {report.status === 'pending' && (
                       <div className="flex flex-col space-y-2 shrink-0">
-                        <button onClick={() => handleReportReply(report.id, 'resolved')} className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg shadow-sm">ดำเนินการแก้ไข</button>
-                        <button onClick={() => handleReportReply(report.id, 'dismissed')} className="px-3 py-1.5 bg-slate-600 hover:bg-slate-500 text-white text-xs font-bold rounded-lg shadow-sm">ยกเลิก/ปฏิเสธ</button>
+                        <button onClick={() => openActionModal('report', report.id, 'resolved', report.product?.title || `#REP-${report.id}`)} className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-md transition-all">ดำเนินการแก้ไข</button>
+                        <button onClick={() => openActionModal('report', report.id, 'dismissed', report.product?.title || `#REP-${report.id}`)} className="px-3.5 py-2 bg-slate-600 hover:bg-slate-500 text-white text-xs font-bold rounded-xl shadow-md transition-all">ยกเลิก/ปฏิเสธ</button>
                       </div>
                     )}
                   </div>
                 ))}
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: ADMIN ACTION NOTE */}
+      {noteModal.isOpen && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700/80 p-6 max-w-md w-full animate-scale-up">
+            <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-700">
+              <h3 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center space-x-2">
+                <ShieldCheck className="h-5 w-5 text-primary-500" />
+                <span>{noteModal.title}</span>
+              </h3>
+              <button onClick={() => setNoteModal(prev => ({ ...prev, isOpen: false }))} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            {noteModal.subtitle && (
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-3 font-medium">
+                รายการ: <span className="font-bold text-slate-700 dark:text-slate-200">{noteModal.subtitle}</span>
+              </p>
+            )}
+            <form onSubmit={handleConfirmActionModal} className="mt-4 space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                  ระบุหมายเหตุ / ชี้แจงรายละเอียด <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  value={noteModal.noteText}
+                  onChange={(e) => setNoteModal(prev => ({ ...prev, noteText: e.target.value }))}
+                  rows={4}
+                  required
+                  placeholder="กรอกหมายเหตุสำหรับการดำเนินการครั้งนี้ เพื่อส่งการตอบกลับไปยังผู้ใช้งาน..."
+                  className="w-full px-3.5 py-2.5 border border-slate-300 dark:border-slate-600 rounded-xl text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all resize-none"
+                />
+              </div>
+              <div className="pt-2 flex justify-end space-x-2">
+                <button
+                  type="button"
+                  onClick={() => setNoteModal(prev => ({ ...prev, isOpen: false }))}
+                  className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-xl text-slate-700 dark:text-slate-300 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-700 transition-all"
+                >
+                  ยกเลิก
+                </button>
+                <button
+                  type="submit"
+                  disabled={modalLoading || !noteModal.noteText.trim()}
+                  className="px-5 py-2 bg-primary-600 hover:bg-primary-500 disabled:opacity-50 text-white rounded-xl text-xs font-bold shadow-md transition-all flex items-center space-x-1.5"
+                >
+                  {modalLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <span>บันทึกและส่งตอบกลับ</span>}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
