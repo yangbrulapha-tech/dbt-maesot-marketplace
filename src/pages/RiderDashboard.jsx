@@ -279,27 +279,42 @@ export default function RiderDashboard({ session }) {
 
       // Notifications to Buyer & Seller
       try {
-        const targetOrder = availableOrders.find(o => o.order_id === orderId)
-        if (targetOrder) {
-          if (targetOrder.buyer_id) {
-            await supabase.from('notifications').insert({
-              student_id: targetOrder.buyer_id,
-              title: `🛵 ไรเดอร์รับงานจัดส่งแล้ว!`,
-              message: `ไรเดอร์ (${userProfile.full_name || userProfile.student_id}) ได้รับงานจัดส่งออเดอร์ #ORD-${orderId} เรียบร้อยแล้ว`,
-              link: '/orders'
-            })
-          }
-          const sellerId = targetOrder.seller?.student_id || targetOrder.product?.student_id || targetOrder.product?.seller_id
-          if (sellerId) {
-            await supabase.from('notifications').insert({
-              student_id: sellerId,
-              title: `🛵 ไรเดอร์รับงานจัดส่งแล้ว!`,
-              message: `ไรเดอร์กำลังดำเนินการรับและจัดส่งสินค้าออเดอร์ #ORD-${orderId} ของคุณ`,
-              link: '/orders'
-            })
+        let targetOrder = availableOrders.find(o => String(o.order_id) === String(orderId))
+        let productTitle = targetOrder?.product?.title || 'สินค้า'
+        let buyerId = targetOrder?.buyer_id
+        let sellerId = targetOrder?.seller?.student_id || targetOrder?.product?.student_id || targetOrder?.product?.seller_id
+
+        if (!buyerId || !sellerId) {
+          const { data: oDb } = await supabase.from('orders').select('*, product:products(*)').eq('order_id', orderId).maybeSingle()
+          if (oDb) {
+            buyerId = buyerId || oDb.buyer_id
+            productTitle = oDb.product?.title || productTitle
+            sellerId = sellerId || oDb.product?.student_id || oDb.product?.seller_id || oDb.seller_id
           }
         }
-      } catch (_) {}
+
+        // 1. Send to Buyer
+        if (buyerId) {
+          await supabase.from('notifications').insert({
+            student_id: buyerId,
+            title: `🛵 ไรเดอร์รับงานจัดส่งแล้ว!`,
+            message: `ไรเดอร์ (${userProfile.full_name || userProfile.student_id}) ได้รับงานจัดส่งสินค้า "${productTitle}" (ออเดอร์ #ORD-${orderId}) เรียบร้อยแล้ว`,
+            link: '/orders'
+          })
+        }
+
+        // 2. Send to Seller
+        if (sellerId) {
+          await supabase.from('notifications').insert({
+            student_id: sellerId,
+            title: `🛵 ไรเดอร์รับงานจัดส่งแล้ว!`,
+            message: `ไรเดอร์ (${userProfile.full_name || userProfile.student_id}) ได้รับงานจัดส่งสินค้า "${productTitle}" (ออเดอร์ #ORD-${orderId}) ของคุณเพื่อนำส่งให้ผู้ซื้อ`,
+            link: '/orders'
+          })
+        }
+      } catch (nErr) {
+        console.warn('Rider notification error:', nErr)
+      }
 
       setSuccessMsg('รับงานจัดส่งสินค้าสำเร็จ! กรุณาติดต่อผู้ซื้อและผู้ขายเพื่อดำเนินการจัดส่ง')
       await loadRiderJobs(userProfile.student_id)
@@ -385,25 +400,35 @@ export default function RiderDashboard({ session }) {
 
       // Notifications to Buyer & Seller
       try {
-        const targetOrder = myJobs.find(o => o.order_id === orderId)
-        if (targetOrder) {
-          if (targetOrder.buyer_id) {
-            await supabase.from('notifications').insert({
-              student_id: targetOrder.buyer_id,
-              title: `🎉 สินค้าจัดส่งสำเร็จ!`,
-              message: `ไรเดอร์ได้นำส่งสินค้าออเดอร์ #ORD-${orderId} ถึงผู้รับเรียบร้อยแล้ว พร้อมหลักฐานรูปถ่าย`,
-              link: '/orders'
-            })
+        let targetOrder = myJobs.find(o => String(o.order_id) === String(orderId))
+        let productTitle = targetOrder?.product?.title || 'สินค้า'
+        let buyerId = targetOrder?.buyer_id
+        let sellerId = targetOrder?.seller?.student_id || targetOrder?.product?.student_id || targetOrder?.product?.seller_id
+
+        if (!buyerId || !sellerId) {
+          const { data: oDb } = await supabase.from('orders').select('*, product:products(*)').eq('order_id', orderId).maybeSingle()
+          if (oDb) {
+            buyerId = buyerId || oDb.buyer_id
+            productTitle = oDb.product?.title || productTitle
+            sellerId = sellerId || oDb.product?.student_id || oDb.product?.seller_id || oDb.seller_id
           }
-          const sellerId = targetOrder.seller?.student_id || targetOrder.product?.student_id || targetOrder.product?.seller_id
-          if (sellerId) {
-            await supabase.from('notifications').insert({
-              student_id: sellerId,
-              title: `🎉 สินค้าจัดส่งสำเร็จ!`,
-              message: `ไรเดอร์ได้ส่งสินค้าออเดอร์ #ORD-${orderId} ถึงผู้ซื้อเรียบร้อยแล้ว`,
-              link: '/orders'
-            })
-          }
+        }
+
+        if (buyerId) {
+          await supabase.from('notifications').insert({
+            student_id: buyerId,
+            title: `🎉 สินค้าจัดส่งสำเร็จ!`,
+            message: `ไรเดอร์ได้นำส่งสินค้า "${productTitle}" (ออเดอร์ #ORD-${orderId}) ถึงคุณเรียบร้อยแล้ว พร้อมหลักฐานรูปถ่าย`,
+            link: '/orders'
+          })
+        }
+        if (sellerId) {
+          await supabase.from('notifications').insert({
+            student_id: sellerId,
+            title: `🎉 สินค้าจัดส่งสำเร็จ!`,
+            message: `ไรเดอร์ได้ส่งสินค้า "${productTitle}" (ออเดอร์ #ORD-${orderId}) ถึงผู้ซื้อเรียบร้อยแล้ว`,
+            link: '/orders'
+          })
         }
       } catch (_) {}
 
