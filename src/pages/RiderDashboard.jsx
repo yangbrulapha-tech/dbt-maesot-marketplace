@@ -133,12 +133,15 @@ export default function RiderDashboard({ session }) {
     setDataLoading(true)
     setErrorMsg('')
     try {
-      // 1. งานที่สามารถกดรับได้: status = 'pending' และ rider_id เป็น NULL
+      // ดึงข้อมูลสินค้าทั้งหมดเตรียมไว้สำหรับแมปเพื่อความเสถียร 100%
+      const { data: allProducts } = await supabase.from('products').select('*')
+      const productsList = allProducts || []
+
+      // 1. งานที่สามารถกดรับได้: status = 'pending' และ rider_id เป็น NULL (รวมถึงสินค้าของผู้ขายเองที่เป็นไรเดอร์)
       const { data: avail, error: aErr } = await supabase
         .from('orders')
-        .select('*, product:products(*)')
+        .select('*')
         .eq('status', 'pending')
-        .eq('needs_delivery', true)
         .is('rider_id', null)
         .order('created_at', { ascending: false })
 
@@ -146,6 +149,7 @@ export default function RiderDashboard({ session }) {
 
       const availWithSeller = await Promise.all(
         (avail || []).map(async (order) => {
+          const product = productsList.find(p => String(p.product_id) === String(order.product_id)) || null
           let buyerData = null
           if (order.buyer_id) {
             const { data: b } = await supabase
@@ -156,7 +160,7 @@ export default function RiderDashboard({ session }) {
             buyerData = b
           }
           let sellerData = null
-          const sId = String(order.product?.student_id || order.product?.seller_id || '')
+          const sId = String(product?.student_id || product?.seller_id || order.seller_id || '')
           if (sId) {
             let { data: s } = await supabase
               .from('profiles')
@@ -174,16 +178,16 @@ export default function RiderDashboard({ session }) {
             }
             sellerData = s
           }
-          return { ...order, buyer: buyerData, seller: sellerData }
+          return { ...order, product, buyer: buyerData, seller: sellerData }
         })
       )
 
       setAvailableOrders(availWithSeller)
 
-      // 2. งานที่ตัวไรเดอร์คนนี้รับจัดส่งอยู่: rider_id = ของเรา และ status != 'completed' / 'cancelled'
+      // 2. งานที่ตัวไรเดอร์คนนี้รับจัดส่งอยู่: rider_id = ของเรา และ status in ['shipping', 'pending']
       const { data: active, error: acErr } = await supabase
         .from('orders')
-        .select('*, product:products(*)')
+        .select('*')
         .eq('rider_id', riderStudentId)
         .in('status', ['shipping', 'pending'])
         .order('created_at', { ascending: false })
@@ -192,6 +196,7 @@ export default function RiderDashboard({ session }) {
 
       const activeWithSeller = await Promise.all(
         (active || []).map(async (order) => {
+          const product = productsList.find(p => String(p.product_id) === String(order.product_id)) || null
           let buyerData = null
           if (order.buyer_id) {
             const { data: b } = await supabase
@@ -202,7 +207,7 @@ export default function RiderDashboard({ session }) {
             buyerData = b
           }
           let sellerData = null
-          const sId = String(order.product?.student_id || order.product?.seller_id || '')
+          const sId = String(product?.student_id || product?.seller_id || order.seller_id || '')
           if (sId) {
             let { data: s } = await supabase
               .from('profiles')
@@ -220,7 +225,7 @@ export default function RiderDashboard({ session }) {
             }
             sellerData = s
           }
-          return { ...order, buyer: buyerData, seller: sellerData }
+          return { ...order, product, buyer: buyerData, seller: sellerData }
         })
       )
 
@@ -229,13 +234,19 @@ export default function RiderDashboard({ session }) {
       // 3. ประวัติงานที่จัดส่งสำเร็จแล้ว: status = 'completed' และ rider_id = ของเรา
       const { data: completed, error: cErr } = await supabase
         .from('orders')
-        .select('*, product:products(*)')
+        .select('*')
         .eq('rider_id', riderStudentId)
         .eq('status', 'completed')
         .order('created_at', { ascending: false })
 
       if (cErr) throw cErr
-      setHistoryJobs(completed || [])
+
+      const completedWithDetails = (completed || []).map(order => ({
+        ...order,
+        product: productsList.find(p => String(p.product_id) === String(order.product_id)) || null
+      }))
+
+      setHistoryJobs(completedWithDetails)
 
     } catch (err) {
       setErrorMsg('ไม่สามารถโหลดข้อมูลงานได้: ' + err.message)
@@ -554,7 +565,12 @@ export default function RiderDashboard({ session }) {
                     <div>
                       <div className="flex justify-between items-start mb-3 border-b border-slate-100 pb-3">
                         <div>
-                          <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase font-mono">#ORD-{order.order_id}</span>
+                          <div className="flex items-center space-x-1.5 flex-wrap">
+                            <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase font-mono">#ORD-{order.order_id}</span>
+                            {userProfile?.student_id && String(order.product?.student_id || order.product?.seller_id || order.seller_id) === String(userProfile.student_id) && (
+                              <span className="px-2 py-0.5 bg-indigo-100 dark:bg-indigo-900/60 text-indigo-800 dark:text-indigo-200 text-[10px] font-extrabold rounded-full">📦 สินค้าของคุณเอง</span>
+                            )}
+                          </div>
                           <h3 className="font-extrabold text-navy-950 dark:text-white text-sm sm:text-base line-clamp-1 mt-0.5">{order.product?.title || 'สินค้าทั่วไป'}</h3>
                         </div>
                         <span className="text-lg font-black text-emerald-600 font-outfit">
