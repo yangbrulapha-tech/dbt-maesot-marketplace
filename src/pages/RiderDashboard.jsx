@@ -149,23 +149,27 @@ export default function RiderDashboard({ session }) {
 
       const availWithSeller = await Promise.all(
         (avail || []).map(async (order) => {
-          const product = productsList.find(p => String(p.product_id) === String(order.product_id)) || null
+          let product = productsList.find(p => String(p.product_id) === String(order.product_id)) || null
+          if (!product && order.product_id) {
+            const { data: pSingle } = await supabase.from('products').select('*').eq('product_id', order.product_id).maybeSingle()
+            if (pSingle) product = pSingle
+          }
           let buyerData = null
           if (order.buyer_id) {
             const { data: b } = await supabase
               .from('profiles')
               .select('student_id, full_name')
-              .eq('student_id', order.buyer_id)
+              .or(`student_id.eq.${order.buyer_id},id.eq.${isNaN(Number(order.buyer_id)) ? -1 : order.buyer_id}`)
               .maybeSingle()
-            buyerData = b
+            buyerData = b ? { ...b, student_id: b.student_id || order.buyer_id } : { student_id: order.buyer_id, full_name: 'ผู้ซื้อ' }
           }
           let sellerData = null
-          const sId = String(product?.student_id || product?.seller_id || order.seller_id || '')
+          const sId = String(product?.student_id || product?.seller_id || order.seller_id || '').trim()
           if (sId) {
             let { data: s } = await supabase
               .from('profiles')
               .select('student_id, full_name')
-              .eq('student_id', sId)
+              .or(`student_id.eq.${sId},id.eq.${isNaN(Number(sId)) ? -1 : sId}`)
               .maybeSingle()
 
             if (!s) {
@@ -176,7 +180,7 @@ export default function RiderDashboard({ session }) {
                 .maybeSingle()
               s = u
             }
-            sellerData = s
+            sellerData = s ? { ...s, student_id: s.student_id || sId } : { student_id: sId, full_name: 'ผู้ขาย' }
           }
           return { ...order, product, buyer: buyerData, seller: sellerData }
         })
@@ -196,23 +200,27 @@ export default function RiderDashboard({ session }) {
 
       const activeWithSeller = await Promise.all(
         (active || []).map(async (order) => {
-          const product = productsList.find(p => String(p.product_id) === String(order.product_id)) || null
+          let product = productsList.find(p => String(p.product_id) === String(order.product_id)) || null
+          if (!product && order.product_id) {
+            const { data: pSingle } = await supabase.from('products').select('*').eq('product_id', order.product_id).maybeSingle()
+            if (pSingle) product = pSingle
+          }
           let buyerData = null
           if (order.buyer_id) {
             const { data: b } = await supabase
               .from('profiles')
               .select('student_id, full_name')
-              .eq('student_id', order.buyer_id)
+              .or(`student_id.eq.${order.buyer_id},id.eq.${isNaN(Number(order.buyer_id)) ? -1 : order.buyer_id}`)
               .maybeSingle()
-            buyerData = b
+            buyerData = b ? { ...b, student_id: b.student_id || order.buyer_id } : { student_id: order.buyer_id, full_name: 'ผู้ซื้อ' }
           }
           let sellerData = null
-          const sId = String(product?.student_id || product?.seller_id || order.seller_id || '')
+          const sId = String(product?.student_id || product?.seller_id || order.seller_id || '').trim()
           if (sId) {
             let { data: s } = await supabase
               .from('profiles')
               .select('student_id, full_name')
-              .eq('student_id', sId)
+              .or(`student_id.eq.${sId},id.eq.${isNaN(Number(sId)) ? -1 : sId}`)
               .maybeSingle()
 
             if (!s) {
@@ -223,7 +231,7 @@ export default function RiderDashboard({ session }) {
                 .maybeSingle()
               s = u
             }
-            sellerData = s
+            sellerData = s ? { ...s, student_id: s.student_id || sId } : { student_id: sId, full_name: 'ผู้ขาย' }
           }
           return { ...order, product, buyer: buyerData, seller: sellerData }
         })
