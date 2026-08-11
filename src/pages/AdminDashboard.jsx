@@ -260,6 +260,15 @@ export default function AdminDashboard({ session }) {
         .eq('student_id', studentId)
       
       if (error) throw error
+
+      try {
+        await supabase.from('notifications').insert({
+          student_id: studentId,
+          title: `🛵 ใบสมัคร Rider ได้รับการอนุมัติแล้ว!`,
+          message: `ยินดีด้วย! บัญชีของคุณได้รับการอนุมัติเป็น Rider เรียบร้อยแล้ว สามารถเริ่มรับงานจัดส่งได้ทันที`,
+          link: '/rider'
+        })
+      } catch (_) {}
       
       addToast(`อนุมัติให้คุณ "${fullName}" เป็น Rider เรียบร้อย`, 'success')
       await loadAllData()

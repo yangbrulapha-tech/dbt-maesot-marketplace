@@ -126,6 +126,15 @@ export default function Reports({ session }) {
 
       if (error) throw error
 
+      try {
+        await supabase.from('notifications').insert({
+          student_id: userProfile.student_id,
+          title: `⚠️ ส่งรายงานปัญหาสำเร็จ`,
+          message: `รายงานปัญหาของคุณได้รับการบันทึกแล้ว เจ้าหน้าที่จะตรวจสอบโดยเร็วที่สุด`,
+          link: '/reports'
+        })
+      } catch (_) {}
+
       setSuccessMsg('ส่งรายงานปัญหาเรียบร้อยแล้ว! ฝ่ายธุรการ/อาจารย์จะตรวจสอบข้อเท็จจริงโดยเร็วที่สุด')
       setIsModalOpen(false)
       setDescription('')

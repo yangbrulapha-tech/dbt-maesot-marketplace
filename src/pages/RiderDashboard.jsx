@@ -277,6 +277,30 @@ export default function RiderDashboard({ session }) {
 
       if (error) throw error
 
+      // Notifications to Buyer & Seller
+      try {
+        const targetOrder = availableOrders.find(o => o.order_id === orderId)
+        if (targetOrder) {
+          if (targetOrder.buyer_id) {
+            await supabase.from('notifications').insert({
+              student_id: targetOrder.buyer_id,
+              title: `🛵 ไรเดอร์รับงานจัดส่งแล้ว!`,
+              message: `ไรเดอร์ (${userProfile.full_name || userProfile.student_id}) ได้รับงานจัดส่งออเดอร์ #ORD-${orderId} เรียบร้อยแล้ว`,
+              link: '/orders'
+            })
+          }
+          const sellerId = targetOrder.seller?.student_id || targetOrder.product?.student_id || targetOrder.product?.seller_id
+          if (sellerId) {
+            await supabase.from('notifications').insert({
+              student_id: sellerId,
+              title: `🛵 ไรเดอร์รับงานจัดส่งแล้ว!`,
+              message: `ไรเดอร์กำลังดำเนินการรับและจัดส่งสินค้าออเดอร์ #ORD-${orderId} ของคุณ`,
+              link: '/orders'
+            })
+          }
+        }
+      } catch (_) {}
+
       setSuccessMsg('รับงานจัดส่งสินค้าสำเร็จ! กรุณาติดต่อผู้ซื้อและผู้ขายเพื่อดำเนินการจัดส่ง')
       await loadRiderJobs(userProfile.student_id)
       setActiveTab('my_jobs')
@@ -358,6 +382,30 @@ export default function RiderDashboard({ session }) {
         .eq('order_id', orderId)
 
       if (error) throw error
+
+      // Notifications to Buyer & Seller
+      try {
+        const targetOrder = myJobs.find(o => o.order_id === orderId)
+        if (targetOrder) {
+          if (targetOrder.buyer_id) {
+            await supabase.from('notifications').insert({
+              student_id: targetOrder.buyer_id,
+              title: `🎉 สินค้าจัดส่งสำเร็จ!`,
+              message: `ไรเดอร์ได้นำส่งสินค้าออเดอร์ #ORD-${orderId} ถึงผู้รับเรียบร้อยแล้ว พร้อมหลักฐานรูปถ่าย`,
+              link: '/orders'
+            })
+          }
+          const sellerId = targetOrder.seller?.student_id || targetOrder.product?.student_id || targetOrder.product?.seller_id
+          if (sellerId) {
+            await supabase.from('notifications').insert({
+              student_id: sellerId,
+              title: `🎉 สินค้าจัดส่งสำเร็จ!`,
+              message: `ไรเดอร์ได้ส่งสินค้าออเดอร์ #ORD-${orderId} ถึงผู้ซื้อเรียบร้อยแล้ว`,
+              link: '/orders'
+            })
+          }
+        }
+      } catch (_) {}
 
       setSuccessMsg('อัปเดตสถานะจัดส่งสำเร็จ พร้อมส่งหลักฐานรูปถ่ายให้ผู้รับแล้ว! ขอบคุณครับ')
       

@@ -159,6 +159,21 @@ export default function Orders({ session }) {
         .update({ status: newStatus })
         .eq('order_id', orderId)
       if (error) throw error
+
+      // Notification to Buyer
+      const targetOrder = orders.find(o => o.order_id === orderId)
+      if (targetOrder && targetOrder.buyer_id) {
+        try {
+          let statusText = newStatus === 'completed' ? 'เสร็จสิ้นสมบูรณ์' : newStatus === 'cancelled' ? 'ถูกยกเลิกโดยผู้ขาย' : 'อัปเดตสถานะ'
+          await supabase.from('notifications').insert({
+            student_id: targetOrder.buyer_id,
+            title: `ออเดอร์ #ORD-${orderId} ${statusText}`,
+            message: `ออเดอร์สินค้า "${targetOrder.product?.title || 'สินค้า'}" ของคุณได้รับการ${statusText}`,
+            link: '/orders'
+          })
+        } catch (_) {}
+      }
+
       await fetchProfileAndOrders()
       setSuccessMsg(`อัปเดตสถานะออเดอร์ #ORD-${orderId} เรียบร้อย`)
       setTimeout(() => setSuccessMsg(''), 3000)
@@ -179,6 +194,20 @@ export default function Orders({ session }) {
         .update({ needs_delivery: true })
         .eq('order_id', orderId)
       if (error) throw error
+
+      const targetOrder = orders.find(o => o.order_id === orderId)
+      const sellerId = targetOrder?.product?.student_id || targetOrder?.product?.seller_id
+      if (sellerId) {
+        try {
+          await supabase.from('notifications').insert({
+            student_id: sellerId,
+            title: `มีการเรียกใช้บริการ Rider`,
+            message: `ผู้ซื้อออเดอร์ #ORD-${orderId} ได้ส่งคำขอเรียกใช้บริการ Rider`,
+            link: '/orders'
+          })
+        } catch (_) {}
+      }
+
       await fetchProfileAndOrders()
       setSuccessMsg(`ส่งคำขอใช้บริการ Rider สำหรับออเดอร์ #ORD-${orderId} สำเร็จ!`)
       setTimeout(() => setSuccessMsg(''), 3000)
@@ -270,6 +299,20 @@ export default function Orders({ session }) {
       const { error: orderError } = await supabase.from('orders').update({ status: 'refunding' }).eq('order_id', refundOrderId)
       if (orderError) throw orderError
 
+      // Notify seller
+      const targetOrder = orders.find(o => o.order_id === refundOrderId)
+      const sellerId = targetOrder?.product?.student_id || targetOrder?.product?.seller_id
+      if (sellerId) {
+        try {
+          await supabase.from('notifications').insert({
+            student_id: sellerId,
+            title: `มีคำขอคืนเงิน!`,
+            message: `ผู้ซื้อได้ส่งคำขอคืนเงินสำหรับออเดอร์ #ORD-${refundOrderId} (เหตุผล: ${refundReason})`,
+            link: '/orders'
+          })
+        } catch (_) {}
+      }
+
       setOrders(prev => prev.map(o => o.order_id === refundOrderId ? { ...o, status: 'refunding' } : o))
 
       setSuccessMsg('ส่งคำขอคืนเงินเรียบร้อยแล้ว แอดมินจะตรวจสอบและแจ้งผลให้ทราบ')
@@ -325,6 +368,19 @@ export default function Orders({ session }) {
       
       const { error: productError } = await supabase.from('products').update({ status: 'available' }).eq('product_id', productId)
       if (productError) throw productError
+
+      const targetOrder = orders.find(o => o.order_id === orderId)
+      const sellerId = targetOrder?.product?.student_id || targetOrder?.product?.seller_id
+      if (sellerId) {
+        try {
+          await supabase.from('notifications').insert({
+            student_id: sellerId,
+            title: `ผู้ซื้อยืนยันได้รับเงินคืนแล้ว!`,
+            message: `ผู้ซื้อได้ยืนยันการรับเงินคืนสำหรับออเดอร์ #ORD-${orderId} เรียบร้อยแล้ว`,
+            link: '/orders'
+          })
+        } catch (_) {}
+      }
 
       setOrders(prev => prev.map(o => o.order_id === orderId ? { ...o, status: 'refunded' } : o))
       setSuccessMsg(`ยืนยันการรับเงินคืนสำหรับออเดอร์ #ORD-${orderId} สำเร็จ`)
