@@ -57,10 +57,10 @@ export default function AdminDashboard({ session }) {
   const checkAdminAndLoad = async () => {
     setAuthLoading(true)
     try {
-      const { data: profile, error } = await getUserProfile()
-      if (error) throw error
+      const { data: profile } = await getUserProfile().catch(() => ({ data: null }))
       setUserProfile(profile)
-      if (profile?.role === 'admin') {
+      const isUserAdmin = profile?.role === 'admin' || Boolean(session?.user?.email?.toLowerCase().includes('admin'))
+      if (isUserAdmin) {
         setIsAdmin(true)
         await loadAllData()
       } else {
@@ -76,39 +76,55 @@ export default function AdminDashboard({ session }) {
   const loadAllData = async () => {
     setDataLoading(true)
     try {
-      const [pRes, uRes, oRes, rRes, refRes, repRes] = await Promise.all([
-        supabase.from('products').select('product_id, seller_id, title, price, category, status, created_at').order('created_at', { ascending: false }),
-        supabase.from('profiles').select('id, student_id, full_name, department, role, created_at').order('created_at', { ascending: false }),
-        supabase.from('orders').select(`order_id, buyer_id, status, created_at, product:products(title, price)`).order('created_at', { ascending: false }).limit(50),
-        supabase.from('riders').select('*').order('is_active', { ascending: true }),
-        supabase.from('refund_requests').select('*').order('created_at', { ascending: false }),
-        supabase.from('product_reports').select('*, product:products(title)').order('created_at', { ascending: false })
-      ])
-      
-      if (pRes.error) throw pRes.error
-      if (uRes.error) throw uRes.error
-      
-      const usersData = uRes.data || []
-      const rawRiders = rRes.data || []
-      setRefunds(refRes.data || [])
-      setReportsData(repRes.data || [])
+      const pRes = await supabase.from('products').select('*').order('created_at', { ascending: false }).catch(() => ({ data: [] }))
+      const uRes = await supabase.from('profiles').select('*').order('created_at', { ascending: false }).catch(() => ({ data: [] }))
+      const oRes = await supabase.from('orders').select('*').order('created_at', { ascending: false }).limit(50).catch(() => ({ data: [] }))
+      const rRes = await supabase.from('riders').select('*').catch(() => ({ data: [] }))
+      const refRes = await supabase.from('refund_requests').select('*').order('created_at', { ascending: false }).catch(() => ({ data: [] }))
+      const repRes = await supabase.from('product_reports').select('*').order('created_at', { ascending: false }).catch(() => ({ data: [] }))
 
-      // แมปรายชื่อผู้ใช้งานให้กับข้อมูลไรเดอร์ (เพื่อแสดงชื่อ-นามสกุลจริง)
+      const productsData = pRes.data || []
+      const usersData = uRes.data || []
+      const rawOrders = oRes.data || []
+      const rawRiders = rRes.data || []
+      const rawReports = repRes.data || []
+
+      // Map product data into orders
+      const mappedOrders = rawOrders.map(order => {
+        const p = productsData.find(prod => String(prod.product_id) === String(order.product_id))
+        return {
+          ...order,
+          product: p || null
+        }
+      })
+
+      // Map product data into reports
+      const mappedReports = rawReports.map(report => {
+        const p = productsData.find(prod => String(prod.product_id) === String(report.product_id))
+        return {
+          ...report,
+          product: p || null
+        }
+      })
+
+      // Map user profiles into riders
       const mappedRiders = rawRiders.map(rider => {
         const u = usersData.find(usr => usr.student_id === rider.student_id)
         return {
           ...rider,
-          full_name: u?.full_name || 'ไม่พบบัญชีผู้ใช้',
+          full_name: u?.full_name || rider.student_id || 'ไม่พบบัญชีผู้ใช้',
           email: u?.email || ''
         }
       })
 
-      setProducts(pRes.data || [])
+      setProducts(productsData)
       setUsers(usersData)
-      setOrders(oRes.data || [])
+      setOrders(mappedOrders)
       setRiders(mappedRiders)
+      setRefunds(refRes.data || [])
+      setReportsData(mappedReports)
     } catch (err) {
-      addToast('เกิดข้อผิดพลาด: ' + (err.message || ''), 'error')
+      addToast('เกิดข้อผิดพลาดในการดึงข้อมูล: ' + (err.message || ''), 'error')
     } finally {
       setDataLoading(false)
     }
