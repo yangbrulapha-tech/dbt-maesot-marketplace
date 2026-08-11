@@ -581,11 +581,11 @@ export default function RiderDashboard({ session }) {
                       <div className="space-y-2 text-xs text-slate-600 dark:text-slate-300 mb-4 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700/50">
                         <div className="flex items-center space-x-2">
                           <User className="h-3.5 w-3.5 text-slate-400 dark:text-slate-300 shrink-0" />
-                          <span>ผู้รับเงิน/ผู้ขาย: <span className="font-bold text-slate-800 dark:text-slate-200">{order.seller?.full_name || order.product?.seller_id}</span></span>
+                          <span>ผู้รับเงิน/ผู้ขาย: <span className="font-bold text-slate-800 dark:text-slate-200">{order.seller?.full_name || '-'} (รหัส: {order.seller?.student_id || order.product?.student_id || order.product?.seller_id || order.seller_id || '-'})</span></span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <User className="h-3.5 w-3.5 text-slate-400 dark:text-slate-300 shrink-0" />
-                          <span>ผู้จ่ายเงิน/ผู้ซื้อ: <span className="font-bold text-slate-800 dark:text-slate-200">{order.buyer?.full_name || order.buyer_id}</span></span>
+                          <span>ผู้จ่ายเงิน/ผู้ซื้อ: <span className="font-bold text-slate-800 dark:text-slate-200">{order.buyer?.full_name || '-'} (รหัส: {order.buyer?.student_id || order.buyer_id || '-'})</span></span>
                         </div>
                         <div className="flex items-start space-x-2 bg-emerald-100/50 dark:bg-emerald-900/40 p-2 rounded border border-emerald-200 dark:border-emerald-800/60 mt-1">
                           <MapPin className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
@@ -644,14 +644,18 @@ export default function RiderDashboard({ session }) {
                         <div className="bg-amber-50/90 dark:bg-amber-950/50 p-4 rounded-xl border border-amber-300 dark:border-amber-800/80">
                           <span className="text-[10px] font-black text-amber-900 dark:text-amber-300 uppercase tracking-wider block mb-1">1. นัดรับสินค้าจาก (ผู้ขาย)</span>
                           <p className="text-base font-black text-slate-900 dark:text-white">{order.seller?.full_name || '-'}</p>
-                          <p className="text-xs text-slate-600 dark:text-slate-300 font-mono font-bold mt-1">รหัส: {order.product?.seller_id}</p>
+                          <p className="text-xs text-amber-900 dark:text-amber-200 font-mono font-bold mt-1">
+                            รหัส: <span className="font-black text-slate-900 dark:text-white">{order.seller?.student_id || order.product?.student_id || order.product?.seller_id || order.seller_id || '-'}</span>
+                          </p>
                         </div>
 
                         {/* Buyer Contact */}
                         <div className="bg-sky-50/90 dark:bg-sky-950/50 p-4 rounded-xl border border-sky-300 dark:border-sky-800/80">
                           <span className="text-[10px] font-black text-sky-900 dark:text-sky-300 uppercase tracking-wider block mb-1">2. นัดส่งมอบและรับเงินจาก (ผู้ซื้อ)</span>
                           <p className="text-base font-black text-slate-900 dark:text-white">{order.buyer?.full_name || '-'}</p>
-                          <p className="text-xs text-slate-600 dark:text-slate-300 font-mono font-bold mt-1">รหัส: {order.buyer_id}</p>
+                          <p className="text-xs text-sky-900 dark:text-sky-200 font-mono font-bold mt-1">
+                            รหัส: <span className="font-black text-slate-900 dark:text-white">{order.buyer?.student_id || order.buyer_id || '-'}</span>
+                          </p>
                           
                           <div className="mt-2 bg-emerald-100 dark:bg-emerald-900/70 p-2.5 rounded-lg border border-emerald-300 dark:border-emerald-700 flex items-start space-x-1.5">
                             <MapPin className="h-4 w-4 text-emerald-700 dark:text-emerald-300 mt-0.5 shrink-0" />
