@@ -115,11 +115,6 @@ export default function ProductList({ session }) {
   const fetchProducts = async () => {
     setLoading(true)
     try {
-      // 1. ลบสินค้าที่สต็อกหมด (stock <= 0) อัตโนมัติจากฐานข้อมูล
-      try {
-        await supabase.from('products').delete().lte('stock', 0)
-      } catch (_) {}
-
       let query = supabase
         .from('products')
         .select('*')
@@ -337,13 +332,13 @@ export default function ProductList({ session }) {
         } catch (_) {}
       }
 
-      // ปรับลดสต็อกตามจำนวนชิ้นที่สั่งจริง หรือลบสินค้าออกจากระบบอัตโนมัติหากสต็อกหมด
+      // 2. ปรับลดสต็อกตามจำนวนชิ้นที่สั่งจริง หรือเปลี่ยนสถานะเป็น sold_out เมื่อสินค้าขายหมด
       const currentStock = Number(checkoutProduct.stock ?? 1)
       const newStock = currentStock - qty
 
       if (newStock <= 0) {
-        // ลบสินค้าออกจากฐานข้อมูลทันทีเมื่อสต็อกหมด
-        await supabase.from('products').delete().eq('product_id', checkoutProduct.product_id)
+        // เมื่อสินค้าขายหมด ให้เปลี่ยนสถานะเป็น sold_out และสต็อกเป็น 0 (ไม่ลบแถวออก เพื่อรักษาประวัติคำสั่งซื้อให้แสดงชื่อและราคาได้ครบถ้วน)
+        await supabase.from('products').update({ status: 'sold_out', stock: 0 }).eq('product_id', checkoutProduct.product_id)
       } else {
         // อัปเดตสต็อกคงเหลือ
         await supabase.from('products').update({ stock: newStock }).eq('product_id', checkoutProduct.product_id)

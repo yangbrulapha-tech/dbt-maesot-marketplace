@@ -463,9 +463,11 @@ export default function Orders({ session }) {
                       onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=200' }} />
                   </div>
                   <div className="space-y-1">
-                    <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">{order.product?.title || 'สินค้า (ถูกลบแล้ว)'}</h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-300">ผู้ขาย: <span className="font-bold">{order.seller?.full_name || order.product?.seller_id}</span></p>
-                    <p className="text-xs text-slate-500 dark:text-slate-300">ผู้ซื้อ: <span className="font-bold">{order.buyer?.full_name || order.buyer_id}</span></p>
+                    <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">
+                      {order.product?.title || (order.product_id ? `รายการสินค้า #${order.product_id}` : 'สินค้าที่สั่งซื้อ')}
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-300">ผู้ขาย: <span className="font-bold">{order.seller?.full_name || order.product?.seller_id || order.seller_id || '-'}</span></p>
+                    <p className="text-xs text-slate-500 dark:text-slate-300">ผู้ซื้อ: <span className="font-bold">{order.buyer?.full_name || order.buyer_id || '-'}</span></p>
                     
                     {/* ข้อมูล Rider */}
                     <div className="pt-1.5 flex flex-wrap gap-1.5 items-center">
