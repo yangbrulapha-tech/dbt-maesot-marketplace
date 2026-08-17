@@ -777,13 +777,13 @@ export default function ProductList({ session }) {
 
     {/* MODAL: CHECKOUT */}
     {isCheckoutModalOpen && checkoutProduct && (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-md overflow-hidden animate-scale-up">
-          <div className="bg-navy-900 text-white p-4 flex items-center justify-between">
-            <div className="flex items-center space-x-2"><ShoppingCart className="h-5 w-5 text-primary-400" /><h2 className="text-lg font-bold">ยืนยันสั่งซื้อ</h2></div>
-            <button onClick={() => setIsCheckoutModalOpen(false)}><X className="h-5 w-5 text-slate-400 dark:text-slate-300" /></button>
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-3 sm:p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden animate-scale-up">
+          <div className="bg-navy-900 text-white px-4 py-3 sm:py-4 flex items-center justify-between shrink-0">
+            <div className="flex items-center space-x-2"><ShoppingCart className="h-5 w-5 text-primary-400" /><h2 className="text-base sm:text-lg font-bold">ยืนยันสั่งซื้อ</h2></div>
+            <button onClick={() => setIsCheckoutModalOpen(false)}><X className="h-5 w-5 text-slate-400 dark:text-slate-300 hover:text-white" /></button>
           </div>
-          <form onSubmit={handleConfirmOrder} className="p-6 space-y-4">
+          <form onSubmit={handleConfirmOrder} className="p-4 sm:p-5 space-y-3 overflow-y-auto flex-1 scrollbar-thin">
             <div className="flex space-x-3.5 bg-slate-50 dark:bg-slate-900/50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
               <div className="h-16 w-16 bg-slate-200 dark:bg-slate-700 rounded-lg overflow-hidden shrink-0">
                 <img src={checkoutProduct.image_url} alt={checkoutProduct.title} className="w-full h-full object-cover" />
