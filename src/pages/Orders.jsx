@@ -486,9 +486,30 @@ export default function Orders({ session }) {
                       )}
                     </div>
 
-                    <p className="text-base font-black text-navy-900 dark:text-white pt-1.5 font-outfit">
-                      ฿{Number(order.product?.price || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                    </p>
+                    {/* คำนวณจำนวนชิ้นและราคารวม */}
+                    {(() => {
+                      const qty = Number(order.quantity) || Number(order.delivery_location?.match(/\[จำนวน\s*(\d+)\s*ชิ้น\]/)?.[1]) || 1
+                      const unitPrice = Number(order.product?.price || 0)
+                      const totalPrice = unitPrice * qty
+
+                      return (
+                        <div className="pt-2 space-y-1">
+                          <div className="flex items-center space-x-2">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-black bg-sky-100 dark:bg-sky-950/60 text-sky-800 dark:text-sky-300 border border-sky-200 dark:border-sky-800/80">
+                              จำนวนสั่งซื้อ: {qty} ชิ้น
+                            </span>
+                          </div>
+                          <p className="text-base font-black text-navy-900 dark:text-white font-outfit">
+                            ราคารวม: ฿{totalPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                            {qty > 1 && (
+                              <span className="text-xs font-normal text-slate-400 dark:text-slate-400 ml-2">
+                                (ชิ้นละ ฿{unitPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })})
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                      )
+                    })()}
 
                     {/* แสดงจุดส่งของ/นัดรับ */}
                     {order.delivery_location && (

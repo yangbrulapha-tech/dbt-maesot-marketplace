@@ -264,6 +264,7 @@ export default function ProductList({ session }) {
   const [requestRider, setRequestRider] = useState(false)
   const [selectedSpot, setSelectedSpot] = useState('หน้าวิทยาลัย')
   const [deliveryNote, setDeliveryNote] = useState('')
+  const [buyQuantity, setBuyQuantity] = useState(1)
 
   const locationOptions = [
     'หน้าวิทยาลัย',
@@ -286,6 +287,7 @@ export default function ProductList({ session }) {
     setRequestRider(false) // reset ทุกครั้งที่เปิด
     setSelectedSpot('หน้าวิทยาลัย')
     setDeliveryNote('')
+    setBuyQuantity(1)
     setIsCheckoutModalOpen(true)
   }
 
@@ -295,7 +297,9 @@ export default function ProductList({ session }) {
     setOrderLoading(true)
     try {
       const targetSellerId = checkoutProduct.student_id || checkoutProduct.seller_id
-      const fullLocation = selectedSpot + (deliveryNote.trim() ? ` (${deliveryNote.trim()})` : '')
+      const qty = Math.min(Math.max(1, parseInt(buyQuantity, 10) || 1), Number(checkoutProduct.stock ?? 1))
+      const fullLocation = `${selectedSpot}${deliveryNote.trim() ? ` (${deliveryNote.trim()})` : ''} [จำนวน ${qty} ชิ้น]`
+
       const baseOrder = {
         product_id: checkoutProduct.product_id,
         buyer_id: userProfile.student_id,
@@ -303,31 +307,37 @@ export default function ProductList({ session }) {
         needs_delivery: requestRider,
         delivery_location: fullLocation,
         delivery_address: fullLocation,
+        quantity: qty,
       }
 
-      // Try inserting with seller_id included
+      // Try inserting with quantity and seller_id
       let { error } = await supabase.from('orders').insert({
         ...baseOrder,
         seller_id: targetSellerId || null,
       })
 
       if (error) {
-        const res = await supabase.from('orders').insert(baseOrder)
+        // Fallback without quantity column if schema does not have it yet
+        const { quantity, ...orderWithoutQty } = baseOrder
+        const res = await supabase.from('orders').insert({
+          ...orderWithoutQty,
+          seller_id: targetSellerId || null,
+        })
         if (res.error) throw res.error
       }
 
       if (checkoutProduct.seller_id) {
         await supabase.from('notifications').insert({
           student_id: checkoutProduct.seller_id,
-          title: `คำสั่งซื้อใหม่!`,
-          message: `มีผู้ซื้อสั่งซื้อสินค้า "${checkoutProduct.title}" ของคุณ`,
+          title: `คำสั่งซื้อใหม่! (${qty} ชิ้น)`,
+          message: `มีผู้ซื้อสั่งซื้อสินค้า "${checkoutProduct.title}" จำนวน ${qty} ชิ้น ของคุณ`,
           link: '/orders'
         })
       }
 
-      // 2. ปรับลดสต็อก หรือ ลบสินค้าออกจากระบบอัตโนมัติถ้าสต็อกหมด (เหลือ 0 ชิ้น)
+      // 2. ปรับลดสต็อกตามจำนวนชิ้นที่สั่งจริง หรือลบสินค้าออกจากระบบอัตโนมัติหากสต็อกหมด
       const currentStock = Number(checkoutProduct.stock ?? 1)
-      const newStock = currentStock - 1
+      const newStock = currentStock - qty
 
       if (newStock <= 0) {
         // ลบสินค้าออกจากฐานข้อมูลทันทีเมื่อสต็อกหมด
@@ -337,7 +347,7 @@ export default function ProductList({ session }) {
         await supabase.from('products').update({ stock: newStock }).eq('product_id', checkoutProduct.product_id)
       }
 
-      addToast(`สั่งซื้อ "${checkoutProduct.title}" สำเร็จแล้ว!`, 'success')
+      addToast(`สั่งซื้อ "${checkoutProduct.title}" จำนวน ${qty} ชิ้น สำเร็จแล้ว!`, 'success')
       setIsCheckoutModalOpen(false)
       fetchProducts()
     } catch (err) {
@@ -778,11 +788,68 @@ export default function ProductList({ session }) {
               <div className="h-16 w-16 bg-slate-200 dark:bg-slate-700 rounded-lg overflow-hidden shrink-0">
                 <img src={checkoutProduct.image_url} alt={checkoutProduct.title} className="w-full h-full object-cover" />
               </div>
-              <div>
+              <div className="flex-1">
                 <h4 className="font-bold text-sm text-slate-900 dark:text-white">{checkoutProduct.title}</h4>
                 <p className="text-xs text-slate-500 dark:text-slate-300 mt-0.5">ผู้ขาย: {checkoutProduct.seller?.full_name || checkoutProduct.seller_id}</p>
-                <p className="text-sm font-black text-navy-900 dark:text-white mt-1">฿{Number(checkoutProduct.price).toLocaleString()}</p>
+                <div className="flex justify-between items-center mt-1">
+                  <p className="text-sm font-black text-navy-900 dark:text-white">฿{Number(checkoutProduct.price).toLocaleString()}</p>
+                  <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
+                    สต็อก: {checkoutProduct.stock ?? 1} ชิ้น
+                  </span>
+                </div>
               </div>
+            </div>
+
+            {/* Selector เลือกจำนวนชิ้น */}
+            <div className="bg-slate-50 dark:bg-slate-900/50 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+              <div>
+                <label className="block text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">
+                  จำนวนสินค้าที่ต้องการ <span className="text-red-500">*</span>
+                </label>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400">
+                  (สูงสุดไม่เกินสต็อกที่มี)
+                </span>
+              </div>
+              
+              <div className="flex items-center space-x-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl p-1 shadow-sm">
+                <button
+                  type="button"
+                  onClick={() => setBuyQuantity(prev => Math.max(1, prev - 1))}
+                  disabled={buyQuantity <= 1}
+                  className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-800 dark:text-white font-black text-base flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                  -
+                </button>
+                <input
+                  type="number"
+                  min="1"
+                  max={checkoutProduct.stock ?? 1}
+                  value={buyQuantity}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value, 10)
+                    if (isNaN(val) || val < 1) setBuyQuantity(1)
+                    else if (val > Number(checkoutProduct.stock ?? 1)) setBuyQuantity(Number(checkoutProduct.stock ?? 1))
+                    else setBuyQuantity(val)
+                  }}
+                  className="w-12 text-center text-sm font-black text-navy-900 dark:text-white bg-transparent focus:outline-none font-outfit"
+                />
+                <button
+                  type="button"
+                  onClick={() => setBuyQuantity(prev => Math.min(Number(checkoutProduct.stock ?? 1), prev + 1))}
+                  disabled={buyQuantity >= Number(checkoutProduct.stock ?? 1)}
+                  className="w-8 h-8 rounded-lg bg-primary-600 hover:bg-primary-500 text-white font-black text-base flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            {/* แสดงราคารวมสุทธิ */}
+            <div className="flex justify-between items-center bg-navy-900/5 dark:bg-sky-950/40 p-3 rounded-xl border border-navy-900/10 dark:border-sky-800/50">
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">ราคารวมทั้งสิ้น ({buyQuantity} ชิ้น):</span>
+              <span className="text-base font-black text-navy-900 dark:text-sky-400 font-outfit">
+                ฿{(Number(checkoutProduct.price || 0) * buyQuantity).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+              </span>
             </div>
 
             {/* ตัวเลือกรูปแบบการจัดส่ง (Radio Cards) */}
