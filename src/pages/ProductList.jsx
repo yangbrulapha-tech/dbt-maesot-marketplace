@@ -300,42 +300,44 @@ export default function ProductList({ session }) {
       const qty = Math.min(Math.max(1, parseInt(buyQuantity, 10) || 1), Number(checkoutProduct.stock ?? 1))
       const fullLocation = `${selectedSpot}${deliveryNote.trim() ? ` (${deliveryNote.trim()})` : ''} [จำนวน ${qty} ชิ้น]`
 
-      const baseOrder = {
+      // โครงสร้างคำสั่งซื้อมาตรฐานตาม Schema ฐานข้อมูลจริง
+      const orderPayload = {
         product_id: checkoutProduct.product_id,
         buyer_id: userProfile.student_id,
         status: 'pending',
         needs_delivery: requestRider,
         delivery_location: fullLocation,
         delivery_address: fullLocation,
-        quantity: qty,
       }
 
-      // Try inserting with quantity and seller_id
-      let { error } = await supabase.from('orders').insert({
-        ...baseOrder,
+      // ลอง 1: แบบใส่ quantity และ seller_id
+      let insertErr = null
+      const tryWithAll = await supabase.from('orders').insert({
+        ...orderPayload,
+        quantity: qty,
         seller_id: targetSellerId || null,
       })
 
-      if (error) {
-        // Fallback without quantity column if schema does not have it yet
-        const { quantity, ...orderWithoutQty } = baseOrder
-        const res = await supabase.from('orders').insert({
-          ...orderWithoutQty,
-          seller_id: targetSellerId || null,
-        })
-        if (res.error) throw res.error
+      if (tryWithAll.error) {
+        // ลอง 2: แบบมาตรฐานไม่ใส่คอลัมน์เกิน
+        const tryClean = await supabase.from('orders').insert(orderPayload)
+        if (tryClean.error) insertErr = tryClean.error
       }
 
-      if (checkoutProduct.seller_id) {
-        await supabase.from('notifications').insert({
-          student_id: checkoutProduct.seller_id,
-          title: `คำสั่งซื้อใหม่! (${qty} ชิ้น)`,
-          message: `มีผู้ซื้อสั่งซื้อสินค้า "${checkoutProduct.title}" จำนวน ${qty} ชิ้น ของคุณ`,
-          link: '/orders'
-        })
+      if (insertErr) throw insertErr
+
+      if (targetSellerId) {
+        try {
+          await supabase.from('notifications').insert({
+            student_id: targetSellerId,
+            title: `คำสั่งซื้อใหม่! (${qty} ชิ้น)`,
+            message: `มีผู้ซื้อสั่งซื้อสินค้า "${checkoutProduct.title}" จำนวน ${qty} ชิ้น ของคุณ`,
+            link: '/orders'
+          })
+        } catch (_) {}
       }
 
-      // 2. ปรับลดสต็อกตามจำนวนชิ้นที่สั่งจริง หรือลบสินค้าออกจากระบบอัตโนมัติหากสต็อกหมด
+      // ปรับลดสต็อกตามจำนวนชิ้นที่สั่งจริง หรือลบสินค้าออกจากระบบอัตโนมัติหากสต็อกหมด
       const currentStock = Number(checkoutProduct.stock ?? 1)
       const newStock = currentStock - qty
 
@@ -351,7 +353,7 @@ export default function ProductList({ session }) {
       setIsCheckoutModalOpen(false)
       fetchProducts()
     } catch (err) {
-      addToast('เกิดข้อผิดพลาดในการสั่งซื้อ: ' + err.message, 'error')
+      addToast('เกิดข้อผิดพลาดในการสั่งซื้อ: ' + (err.message || 'กรุณาลองใหม่อีกครั้ง'), 'error')
     } finally {
       setOrderLoading(false)
     }
