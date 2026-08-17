@@ -356,7 +356,7 @@ export default function Orders({ session }) {
     if (status === 'refunding') return <span className="flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200 animate-pulse"><Clock className="h-3.5 w-3.5" /><span>รอแอดมินดำเนินการขอคืนเงิน</span></span>
     if (status === 'refund_approved') return <span className="flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 animate-pulse"><CheckCircle2 className="h-3.5 w-3.5" /><span>อนุมัติคืนเงิน (รอโอน)</span></span>
     if (status === 'refunded') return <span className="flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-300"><ShieldAlert className="h-3.5 w-3.5" /><span>คืนเงินสำเร็จ</span></span>
-    return <span className="flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200 animate-pulse"><Clock className="h-3.5 w-3.5" /><span>รอดำเนินการ</span></span>
+    return <span className="flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200 animate-pulse"><Clock className="h-3.5 w-3.5" /><span>รอยืนยันออเดอร์</span></span>
   }
 
   const handleConfirmRefund = async (orderId, productId) => {
@@ -549,12 +549,20 @@ export default function Orders({ session }) {
                       <span>ส่งข้อความ</span>
                     </button>
                   </div>
-                  {activeTab === 'buyer' && (order.status === 'completed' || order.status === 'pending') && (
+                  {/* ปุ่มขอคืนเงิน (อนุญาตเฉพาะออเดอร์ที่ผู้ขายยืนยันเสร็จสิ้นแล้วเท่านั้น) */}
+                  {activeTab === 'buyer' && order.status === 'completed' && (
                     <button onClick={() => openRefundModal(order.order_id)}
                       className="mt-2 mb-2 w-full flex items-center justify-center space-x-1 border border-red-500 text-red-500 hover:bg-red-500/10 px-2 py-1.5 rounded-lg text-[10px] font-bold transition-colors">
                       <ShieldAlert className="h-3.5 w-3.5" />
                       <span>ขอคืนเงิน (Refund)</span>
                     </button>
+                  )}
+                  {activeTab === 'buyer' && order.status === 'pending' && (
+                    <div className="mt-2 mb-2 w-full text-center py-1.5 px-2 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 rounded-lg">
+                      <span className="text-[10px] font-bold text-amber-700 dark:text-amber-300">
+                        ⏳ รอผู้ขายกดรับออเดอร์
+                      </span>
+                    </div>
                   )}
                   {activeTab === 'buyer' ? (
                     <div className="space-y-1 mt-2">
