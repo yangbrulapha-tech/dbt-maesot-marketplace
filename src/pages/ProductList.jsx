@@ -262,7 +262,18 @@ export default function ProductList({ session }) {
   }
 
   const [requestRider, setRequestRider] = useState(false)
-  const [deliveryLocation, setDeliveryLocation] = useState('')
+  const [selectedSpot, setSelectedSpot] = useState('หน้าวิทยาลัย')
+  const [deliveryNote, setDeliveryNote] = useState('')
+
+  const locationOptions = [
+    'หน้าวิทยาลัย',
+    'ป้อมยาม',
+    'อาคาร 1',
+    'อาคาร 2',
+    'อาคาร 3',
+    'อาคาร 4',
+    'ศูนย์วิทยบริการ',
+  ]
 
   const openCheckout = (product) => {
     if (!session || !userProfile) { addToast('กรุณาเข้าสู่ระบบก่อน', 'error'); return }
@@ -273,7 +284,8 @@ export default function ProductList({ session }) {
     }
     setCheckoutProduct(product)
     setRequestRider(false) // reset ทุกครั้งที่เปิด
-    setDeliveryLocation('')
+    setSelectedSpot('หน้าวิทยาลัย')
+    setDeliveryNote('')
     setIsCheckoutModalOpen(true)
   }
 
@@ -283,12 +295,14 @@ export default function ProductList({ session }) {
     setOrderLoading(true)
     try {
       const targetSellerId = checkoutProduct.student_id || checkoutProduct.seller_id
+      const fullLocation = selectedSpot + (deliveryNote.trim() ? ` (${deliveryNote.trim()})` : '')
       const baseOrder = {
         product_id: checkoutProduct.product_id,
         buyer_id: userProfile.student_id,
         status: 'pending',
         needs_delivery: requestRider,
-        delivery_location: requestRider ? deliveryLocation.trim() || null : null,
+        delivery_location: fullLocation,
+        delivery_address: fullLocation,
       }
 
       // Try inserting with seller_id included
@@ -823,16 +837,34 @@ export default function ProductList({ session }) {
               </div>
             </div>
 
-            {/* ช่องระบุสถานที่จัดส่ง/นัดรับ */}
+            {/* ช่องเลือกสถานที่จัดส่ง/นัดรับ */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">
-                ระบุสถานที่จัดส่ง / นัดรับของ <span className="text-red-500">*</span>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                เลือกสถานที่จัดส่ง / นัดรับของ <span className="text-red-500">*</span>
+              </label>
+              <select
+                required
+                value={selectedSpot}
+                onChange={(e) => setSelectedSpot(e.target.value)}
+                className="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all cursor-pointer"
+              >
+                {locationOptions.map((spot) => (
+                  <option key={spot} value={spot}>
+                    📍 {spot}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* ช่องพิมพ์หมายเหตุเพิ่มเติม (ไม่บังคับ) */}
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                หมายเหตุเพิ่มเติม <span className="text-slate-400 font-normal">(ไม่บังคับ)</span>
               </label>
               <textarea
-                required
-                value={deliveryLocation}
-                onChange={(e) => setDeliveryLocation(e.target.value)}
-                placeholder={requestRider ? "ระบุสถานที่ให้ไรเดอร์ไปส่งให้ชัดเจน (เช่น หน้าตึก A, โรงอาหาร)" : "ระบุสถานที่ที่คุณจะไปนัดเจอผู้ขาย"}
+                value={deliveryNote}
+                onChange={(e) => setDeliveryNote(e.target.value)}
+                placeholder="ระบุรายละเอียดเพิ่มเติม (เช่น ห้องเรียน, จุดสังเกตใกล้เคียง)"
                 className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all resize-none h-16 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
               />
             </div>
