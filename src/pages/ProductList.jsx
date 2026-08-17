@@ -115,10 +115,16 @@ export default function ProductList({ session }) {
   const fetchProducts = async () => {
     setLoading(true)
     try {
+      // 1. ลบสินค้าที่สต็อกหมด (stock <= 0) อัตโนมัติจากฐานข้อมูล
+      try {
+        await supabase.from('products').delete().lte('stock', 0)
+      } catch (_) {}
+
       let query = supabase
         .from('products')
         .select('*')
         .eq('status', 'available')
+        .gt('stock', 0)
 
       if (selectedCategory) query = query.eq('category', selectedCategory)
 
@@ -305,8 +311,21 @@ export default function ProductList({ session }) {
         })
       }
 
+      // 2. ปรับลดสต็อก หรือ ลบสินค้าออกจากระบบอัตโนมัติถ้าสต็อกหมด (เหลือ 0 ชิ้น)
+      const currentStock = Number(checkoutProduct.stock ?? 1)
+      const newStock = currentStock - 1
+
+      if (newStock <= 0) {
+        // ลบสินค้าออกจากฐานข้อมูลทันทีเมื่อสต็อกหมด
+        await supabase.from('products').delete().eq('product_id', checkoutProduct.product_id)
+      } else {
+        // อัปเดตสต็อกคงเหลือ
+        await supabase.from('products').update({ stock: newStock }).eq('product_id', checkoutProduct.product_id)
+      }
+
       addToast(`สั่งซื้อ "${checkoutProduct.title}" สำเร็จแล้ว!`, 'success')
       setIsCheckoutModalOpen(false)
+      fetchProducts()
     } catch (err) {
       addToast('เกิดข้อผิดพลาดในการสั่งซื้อ: ' + err.message, 'error')
     } finally {
@@ -645,9 +664,19 @@ export default function ProductList({ session }) {
                   <div>
                     <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base line-clamp-1 group-hover:text-primary-600 transition-colors">{product.title}</h3>
                     <p className="text-slate-500 dark:text-slate-300 text-xs mt-1.5 line-clamp-2 min-h-[2rem] font-light">{product.description || 'ไม่มีรายละเอียดเพิ่มเติม'}</p>
-                    <span className="text-lg font-black text-navy-900 dark:text-white font-outfit mt-2 block">
-                      ฿{Number(product.price).toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                    </span>
+                    <div className="mt-2.5 flex items-center justify-between">
+                      <span className="text-lg font-black text-navy-900 dark:text-white font-outfit">
+                        ฿{Number(product.price).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                      </span>
+                      <span className={`text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-full border shadow-sm flex items-center space-x-1 ${
+                        Number(product.stock ?? 1) <= 1
+                          ? 'bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-700/80 animate-pulse'
+                          : 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700/80'
+                      }`}>
+                        <span className="w-1.5 h-1.5 rounded-full bg-current mr-1" />
+                        <span>คลัง: {product.stock ?? 1} ชิ้น</span>
+                      </span>
+                    </div>
                   </div>
 
                   <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/60">
