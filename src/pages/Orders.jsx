@@ -64,53 +64,63 @@ export default function Orders({ session }) {
           // Fetch buyer
           let buyerData = null
           if (order.buyer_id) {
-            let { data: b } = await supabase
-              .from('profiles')
-              .select('student_id, full_name, email')
-              .eq('student_id', order.buyer_id)
-              .maybeSingle()
-
-            if (!b) {
-              const { data: u } = await supabase
-                .from('users')
+            try {
+              let { data: b } = await supabase
+                .from('profiles')
                 .select('student_id, full_name, email')
                 .eq('student_id', order.buyer_id)
                 .maybeSingle()
-              b = u
-            }
-            buyerData = b
+
+              if (!b) {
+                try {
+                  const { data: u } = await supabase
+                    .from('users')
+                    .select('student_id, full_name, email')
+                    .eq('student_id', order.buyer_id)
+                    .maybeSingle()
+                  b = u
+                } catch (_) {}
+              }
+              buyerData = b
+            } catch (_) {}
           }
 
           // Fetch rider
           let riderData = null
           if (order.rider_id) {
-            const { data: r } = await supabase
-              .from('profiles')
-              .select('student_id, full_name')
-              .eq('student_id', order.rider_id)
-              .maybeSingle()
-            riderData = r
+            try {
+              const { data: r } = await supabase
+                .from('profiles')
+                .select('student_id, full_name')
+                .eq('student_id', order.rider_id)
+                .maybeSingle()
+              riderData = r
+            } catch (_) {}
           }
 
           // Fetch seller (from product.student_id or product.seller_id)
           let sellerData = null
           const sId = String(productData?.student_id || productData?.seller_id || '')
           if (sId) {
-            let { data: s } = await supabase
-              .from('profiles')
-              .select('student_id, full_name, department, email')
-              .eq('student_id', sId)
-              .maybeSingle()
-
-            if (!s) {
-              const { data: u } = await supabase
-                .from('users')
-                .select('student_id, full_name, email')
+            try {
+              let { data: s } = await supabase
+                .from('profiles')
+                .select('student_id, full_name, department, email')
                 .eq('student_id', sId)
                 .maybeSingle()
-              s = u
-            }
-            sellerData = s
+
+              if (!s) {
+                try {
+                  const { data: u } = await supabase
+                    .from('users')
+                    .select('student_id, full_name, email')
+                    .eq('student_id', sId)
+                    .maybeSingle()
+                  s = u
+                } catch (_) {}
+              }
+              sellerData = s
+            } catch (_) {}
           }
 
           return { 

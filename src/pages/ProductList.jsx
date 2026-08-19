@@ -132,21 +132,28 @@ export default function ProductList({ session }) {
           const sId = String(p.student_id || p.seller_id || '')
           if (!sId) return { ...p, seller: null }
 
-          // 1. Try profiles table by student_id
-          let { data: sellerData } = await supabase
-            .from('profiles')
-            .select('student_id, full_name, role')
-            .eq('student_id', sId)
-            .maybeSingle()
+          let sellerData = null
 
-          // 2. Try users table by student_id
-          if (!sellerData) {
-            const { data: uData } = await supabase
-              .from('users')
+          // 1. Try profiles table by student_id
+          try {
+            const { data: prof } = await supabase
+              .from('profiles')
               .select('student_id, full_name, role')
               .eq('student_id', sId)
               .maybeSingle()
-            sellerData = uData
+            if (prof) sellerData = prof
+          } catch (_) {}
+
+          // 2. Try users table safely if profiles table does not have it
+          if (!sellerData) {
+            try {
+              const { data: uData } = await supabase
+                .from('users')
+                .select('student_id, full_name, role')
+                .eq('student_id', sId)
+                .maybeSingle()
+              if (uData) sellerData = uData
+            } catch (_) {}
           }
 
           return { ...p, seller: sellerData || null }
