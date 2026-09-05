@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { supabase, getUserProfile } from '../supabaseClient'
-import { Truck, CheckCircle2, AlertCircle, Loader2, MapPin, Phone, User, ClipboardList, Navigation, AlertTriangle, ArrowRight, Shield } from 'lucide-react'
+import { Truck, CheckCircle2, AlertCircle, Loader2, MapPin, Phone, User, ClipboardList, Navigation, AlertTriangle, ArrowRight, Shield, X } from 'lucide-react'
 import { Navigate } from 'react-router-dom'
 
 // Schema:
@@ -19,6 +19,9 @@ export default function RiderDashboard({ session }) {
   const [historyJobs, setHistoryJobs] = useState([])
   const [dataLoading, setDataLoading] = useState(true)
   const [actionLoadingId, setActionLoadingId] = useState(null)
+
+  const [isReturnModalOpen, setIsReturnModalOpen] = useState(false)
+  const [jobToReturn, setJobToReturn] = useState(null)
 
   const [successMsg, setSuccessMsg] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
@@ -345,11 +348,16 @@ export default function RiderDashboard({ session }) {
     }
   }
 
-  // ยกเลิกการรับงานจัดส่ง (Cancel job)
-  const handleCancelJob = async (orderId) => {
-    if (!userProfile) return
-    if (!window.confirm('ยืนยันที่จะยกเลิกการส่งออเดอร์นี้ใช่หรือไม่? ออเดอร์จะถูกส่งกลับเข้าส่วนกลางเพื่อให้ไรเดอร์คนอื่นรับงาน')) return
-    
+  const openReturnModal = (order) => {
+    setJobToReturn(order)
+    setIsReturnModalOpen(true)
+  }
+
+  // ยืนยันยกเลิก/คืนงานจัดส่ง (Confirm Return Job)
+  const handleConfirmReturnJob = async () => {
+    if (!userProfile || !jobToReturn) return
+    const orderId = jobToReturn.order_id
+
     setActionLoadingId(orderId)
     setErrorMsg('')
     setSuccessMsg('')
@@ -364,11 +372,13 @@ export default function RiderDashboard({ session }) {
 
       if (error) throw error
 
-      setSuccessMsg('ยกเลิกงานจัดส่งเรียบร้อย')
+      setSuccessMsg(`คืนงานจัดส่งสำหรับออเดอร์ #ORD-${orderId} เรียบร้อยแล้ว`)
       // ล้างข้อมูลรูปภาพหลักฐาน
       setProofFiles(prev => { const n = { ...prev }; delete n[orderId]; return n })
       setProofPreviews(prev => { const n = { ...prev }; delete n[orderId]; return n })
 
+      setIsReturnModalOpen(false)
+      setJobToReturn(null)
       await loadRiderJobs(userProfile.student_id)
       setActiveTab('available')
     } catch (err) {
@@ -704,7 +714,7 @@ export default function RiderDashboard({ session }) {
 
                     {/* Actions */}
                     <div className="bg-slate-100 dark:bg-slate-900 px-6 py-4 border-t border-slate-200 dark:border-slate-700 flex justify-end space-x-3">
-                      <button onClick={() => handleCancelJob(order.order_id)} disabled={actionLoadingId === order.order_id}
+                      <button onClick={() => openReturnModal(order)} disabled={actionLoadingId === order.order_id}
                         className="px-4 py-2.5 border-2 border-slate-300 dark:border-slate-600 rounded-xl text-xs font-extrabold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors disabled:opacity-50">
                         คืนงานจัดส่ง
                       </button>
@@ -764,6 +774,79 @@ export default function RiderDashboard({ session }) {
               </div>
             )
           )}
+        </div>
+      )}
+
+      {/* MODAL: CONFIRM RETURN JOB */}
+      {isReturnModalOpen && jobToReturn && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-md overflow-hidden animate-scale-up">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-red-600 to-rose-600 text-white p-4 flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <AlertTriangle className="h-5 w-5 text-amber-300 shrink-0" />
+                <h3 className="text-lg font-bold">ยืนยันการคืนงานจัดส่ง</h3>
+              </div>
+              <button 
+                onClick={() => { setIsReturnModalOpen(false); setJobToReturn(null); }}
+                className="text-white/80 hover:text-white transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-6 space-y-4">
+              <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center space-x-3.5">
+                <div className="h-14 w-14 bg-slate-200 dark:bg-slate-700 rounded-lg overflow-hidden shrink-0">
+                  <img 
+                    src={jobToReturn.product?.image_url} 
+                    alt={jobToReturn.product?.title} 
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=200' }} 
+                  />
+                </div>
+                <div>
+                  <span className="text-[10px] font-extrabold text-navy-900 dark:text-sky-400 block font-outfit">#ORD-{jobToReturn.order_id}</span>
+                  <h4 className="font-bold text-sm text-slate-900 dark:text-white line-clamp-1">{jobToReturn.product?.title || 'สินค้าทั่วไป'}</h4>
+                  <p className="text-xs font-black text-emerald-600 dark:text-emerald-400 mt-0.5">฿{Number(jobToReturn.product?.price || 0).toLocaleString()}</p>
+                </div>
+              </div>
+
+              <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 p-3.5 rounded-xl flex items-start space-x-2.5">
+                <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                <p className="text-xs text-amber-900 dark:text-amber-200 leading-relaxed font-medium">
+                  คุณต้องการคืนงานนี้ใช่หรือไม่? เมื่อคืนงานแล้ว ออเดอร์จะถูกส่งกลับเข้าส่วนกลางเพื่อให้ Rider คนอื่นในสถาบันรับงานแทนคุณ
+                </p>
+              </div>
+
+              {/* Buttons */}
+              <div className="pt-2 flex justify-end space-x-3">
+                <button
+                  type="button"
+                  onClick={() => { setIsReturnModalOpen(false); setJobToReturn(null); }}
+                  className="px-4 py-2.5 border border-slate-300 dark:border-slate-600 rounded-xl text-slate-700 dark:text-slate-200 text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                >
+                  ยกเลิก
+                </button>
+                <button
+                  type="button"
+                  onClick={handleConfirmReturnJob}
+                  disabled={actionLoadingId === jobToReturn.order_id}
+                  className="flex items-center space-x-1.5 px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-extrabold shadow-md transition-all disabled:opacity-50"
+                >
+                  {actionLoadingId === jobToReturn.order_id ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <>
+                      <AlertTriangle className="h-4 w-4" />
+                      <span>ยืนยันคืนงานจัดส่ง</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
