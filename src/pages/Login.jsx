@@ -35,35 +35,57 @@ export default function Login() {
       return
     }
 
-    const internalEmail = buildInternalEmail(studentId)
+    const cleanId = studentId.trim()
+    const internalEmail = buildInternalEmail(cleanId)
 
     try {
       if (isSignUp) {
         // --- สมัครสมาชิก ---
+        let authUser = null
+
         const { data, error } = await supabase.auth.signUp({
           email: internalEmail,
           password,
+          options: {
+            data: {
+              student_id: cleanId,
+              full_name: fullName.trim(),
+              department: department,
+            }
+          }
         })
-        if (error) throw error
 
-        // บันทึกข้อมูลลงตาราง profiles (student_id เป็น unique key)
-        if (data.user) {
-          const { error: userError } = await supabase
+        if (error) {
+          // หากเกิด error 500 หรือ user ซ้ำ ให้ลอง signInดู
+          const { data: signInData, error: signInErr } = await supabase.auth.signInWithPassword({
+            email: internalEmail,
+            password,
+          })
+          if (!signInErr && signInData?.user) {
+            authUser = signInData.user
+          } else {
+            throw error
+          }
+        } else {
+          authUser = data?.user
+        }
+
+        // บันทึก/อัปเดตข้อมูลลงตาราง profiles (student_id เป็น unique key)
+        try {
+          await supabase
             .from('profiles')
             .upsert(
               {
-                student_id: studentId.trim(),
+                student_id: cleanId,
                 full_name: fullName.trim(),
+                department: department,
                 role: 'student',
               },
               { onConflict: 'student_id' }
             )
-          if (userError) {
-            console.warn('Profiles upsert warning:', userError.message || JSON.stringify(userError))
-          }
-        }
+        } catch (_) {}
 
-        setSuccessMsg(`สมัครสมาชิกสำเร็จ! รหัสนักศึกษา: ${studentId.trim()} — เข้าสู่ระบบได้ทันที`)
+        setSuccessMsg(`สมัครสมาชิกสำเร็จ! รหัสนักศึกษา: ${cleanId} — เข้าสู่ระบบได้ทันที`)
         setIsSignUp(false)
         setStudentId('')
         setPassword('')
@@ -78,15 +100,15 @@ export default function Login() {
         navigate('/')
       }
     } catch (err) {
-      // ดึง error message รองรับหลาย format (AuthError, PostgrestError, plain object)
+      console.error('Auth error detail:', err)
       const msg =
         err?.message ||
         err?.error_description ||
         err?.msg ||
         (typeof err === 'string' ? err : '')
 
-      if (!msg || msg === '{}' || msg === '[object Object]') {
-        setErrorMsg('เกิดข้อผิดพลาด กรุณาตรวจสอบการเชื่อมต่อ Supabase หรือลองใหม่อีกครั้ง')
+      if (msg.includes('Database error') || msg.includes('500') || msg.includes('Internal Server Error')) {
+        setErrorMsg('รหัสนักศึกษานี้มีในระบบแล้ว หรือเกิดข้อผิดพลาดของฐานข้อมูล → กรุณาลองสลับไปที่ "เข้าสู่ระบบ"')
       } else if (msg.includes('Invalid login credentials') || msg.includes('invalid_credentials')) {
         setErrorMsg('รหัสนักศึกษาหรือรหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง')
       } else if (
@@ -103,9 +125,11 @@ export default function Login() {
       } else if (msg.includes('row-level security') || msg.includes('42501')) {
         setErrorMsg('RLS Policy บล็อก INSERT — กรุณารัน SQL Policy ใน Supabase Dashboard')
       } else if (msg.includes('Failed to fetch') || msg.includes('NetworkError') || msg.includes('fetch')) {
-        setErrorMsg('ไม่สามารถเชื่อมต่อ Supabase ได้ กรุณาตรวจสอบ VITE_SUPABASE_URL ใน .env')
+        setErrorMsg('ไม่สามารถเชื่อมต่อ Supabase ได้ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต')
       } else if (msg.includes('email') && !msg.includes('already')) {
-        setErrorMsg('รูปแบบอีเมลไม่ถูกต้อง กรุณาตรวจสอบรหัสนักศึกษา')
+        setErrorMsg('รูปแบบรหัสนักศึกษาไม่ถูกต้อง กรุณาตรวจสอบรหัสนักศึกษา')
+      } else if (!msg || msg === '{}' || msg === '[object Object]') {
+        setErrorMsg('เกิดข้อผิดพลาดในการลงทะเบียน กรุณาลองสลับไปหน้า "เข้าสู่ระบบ"')
       } else {
         setErrorMsg(msg)
       }
