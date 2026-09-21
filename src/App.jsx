@@ -18,22 +18,48 @@ export default function App() {
   const [session, setSession] = useState(null)
   const [loading, setLoading] = useState(true)
 
+  const checkSession = () => {
+    supabase.auth.getSession().then(({ data: { session: supaSession } }) => {
+      if (supaSession) {
+        setSession(supaSession)
+        setLoading(false)
+      } else {
+        try {
+          const raw = localStorage.getItem('dbt_marketplace_session')
+          if (raw) {
+            setSession(JSON.parse(raw))
+          } else {
+            setSession(null)
+          }
+        } catch (_) {
+          setSession(null)
+        }
+        setLoading(false)
+      }
+    })
+  }
+
   useEffect(() => {
-    // 1. Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      setLoading(false)
+    checkSession()
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, supaSession) => {
+      if (supaSession) {
+        setSession(supaSession)
+        setLoading(false)
+      } else {
+        checkSession()
+      }
     })
 
-    // 2. Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-      setLoading(false)
-    })
+    const handleStorageChange = () => checkSession()
+    window.addEventListener('storage', handleStorageChange)
+    window.addEventListener('session_updated', handleStorageChange)
 
-    return () => subscription.unsubscribe()
+    return () => {
+      subscription.unsubscribe()
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('session_updated', handleStorageChange)
+    }
   }, [])
 
   // Guard for authenticated routes

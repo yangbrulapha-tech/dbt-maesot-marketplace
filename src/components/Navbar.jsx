@@ -132,7 +132,9 @@ export default function Navbar({ session }) {
   }
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
+    try { await supabase.auth.signOut() } catch (_) {}
+    localStorage.removeItem('dbt_marketplace_session')
+    window.dispatchEvent(new Event('session_updated'))
     navigate('/login')
   }
 

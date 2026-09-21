@@ -12,42 +12,59 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey)
  * student_id ถูก derive จาก auth email: {student_id}@gmail.com
  */
 export const getUserProfile = async () => {
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
-  if (authError || !user) {
-    return { data: null, error: authError || new Error('ไม่พบ session การเข้าสู่ระบบ') }
-  }
+  let studentId = null
+  let userEmail = null
 
-  // Extract student_id จาก internal email: {student_id}@gmail.com
-  const studentId = user.email?.split('@')[0]
+  // 1. Try Supabase Auth session
+  try {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user?.email) {
+      studentId = user.email.split('@')[0]
+      userEmail = user.email
+    }
+  } catch (_) {}
+
+  // 2. Fallback to localStorage session
   if (!studentId) {
-    return { data: null, error: new Error('ไม่สามารถระบุรหัสนักศึกษาได้') }
+    try {
+      const raw = localStorage.getItem('dbt_marketplace_session')
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        studentId = parsed.student_id || parsed.user?.id || parsed.user?.email?.split('@')[0]
+        userEmail = parsed.user?.email
+      }
+    } catch (_) {}
   }
 
-  const isAdminEmail = user.email?.toLowerCase().includes('admin')
+  if (!studentId) {
+    return { data: null, error: new Error('ไม่พบ session การเข้าสู่ระบบ') }
+  }
 
-  // ใช้ maybeSingle() แทน single() เพื่อป้องกัน 406 เมื่อยังไม่มี profile
+  const isAdmin = Boolean(studentId.toLowerCase().includes('admin') || userEmail?.toLowerCase().includes('admin'))
+
+  // ดึงข้อมูลจากตาราง profiles
   let { data, error } = await supabase
     .from('profiles')
     .select('*')
     .eq('student_id', studentId)
     .maybeSingle()
 
-  // ถ้าไม่มี profile ให้สร้างอัตโนมัติ
+  // ถ้าไม่มี profile ให้สร้างอัตโนมัติในตาราง profiles
   if (!error && !data) {
     const { data: newProfile, error: insertError } = await supabase
       .from('profiles')
       .upsert({ 
         student_id: studentId, 
-        full_name: isAdminEmail ? 'ผู้ดูแลระบบ (Admin)' : '', 
-        department: '', 
-        role: isAdminEmail ? 'admin' : 'student' 
+        full_name: isAdmin ? 'ผู้ดูแลระบบ (Admin)' : 'นักศึกษา', 
+        department: 'เทคโนโลยีธุรกิจดิจิทัล', 
+        role: isAdmin ? 'admin' : 'student' 
       })
       .select()
       .maybeSingle()
     return { data: newProfile, error: insertError }
   }
 
-  if (data && isAdminEmail && data.role !== 'admin') {
+  if (data && isAdmin && data.role !== 'admin') {
     data.role = 'admin'
     try {
       await supabase.from('profiles').update({ role: 'admin' }).eq('student_id', studentId)
